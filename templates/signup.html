@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>sign up</h1>
+    <form action="/signup" method="post">
+        {{ form.hidden_tag() }}
+
+        {{ form.name.label }}:
+        {{ form.name(placeholder="ユーザーネーム") }}
+        {% for error in form.name.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+        <p></p>
+
+        {{ form.password.label }}:
+        {{ form.password(placeholder="パスワード") }}
+        <input type="submit" value="送信">
+    </form>
+    <a href="/">戻る</a>
+{% endblock %}
+
+
