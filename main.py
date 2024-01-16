@@ -9,7 +9,7 @@ from __init__ import app,db,metadata
 from forms import LoginForm,SignupForm
 from models import Users,Messages
 
-@app.route('/load/users')
+@app.route('/load_data')
 def users_load():
     message = "Users loading completed"
     #? Users tableの内容削除
