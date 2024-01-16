@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>フォーム</h1>
-    <a href="/login">login</a>
     <p>{{ message }}</p>
     <form action="/result" method="get">
         <label for="article">投稿</label>
@@ -11,4 +10,5 @@
         <input type="text" name="name">
         <button type="submit">送信する</button>
     </form>
+    <a href="/logout">ロクアウト</a>
 {% endblock %}

@@ -3,16 +3,55 @@ from flask import flash, redirect, url_for,render_template,request
 from flask_login import (
         current_user, login_user, logout_user, login_required
     )
-from __init__ import app
+from sqlalchemy import text
+import csv
+from __init__ import app,db,metadata
 from forms import LoginForm,SignupForm
-from models import Users
+from models import Users,Messages
+
+@app.route('/load/users')
+def users_load():
+    message = "Users loading completed"
+    #? Users tableの内容削除
+    db.drop_all()
+    db.create_all()
+
+    #? csvからUsersへの書き込み
+    with open("csv/users.csv","r",encoding="utf-8") as csvfile:
+        reader=csv.reader(csvfile)
+        add_users=[]
+        next(reader) #csvファイルの1行目(列名)を除く
+        for row in reader:
+            user=Users(name=row[0],password=row[1])
+            add_users.append(user)
+        db.session.add_all(add_users)
+        db.session.commit()
+    return messages_load()
+
+def messages_load():
+    message = "Data loading completed"
+
+    #? csvからMessageへの書き込み
+    with open("csv/message.csv","r",encoding="utf-8") as csvfile:
+        reader=csv.reader(csvfile)
+        add_message=[]
+        next(reader) #csvファイルの1行目(列名)を除く
+        for row in reader:
+            print(row[0],row[1])
+            messages=Messages(user_id=row[0],message=row[1])
+            add_message.append(messages)
+        db.session.add_all(add_message)
+        db.session.commit()
+    data1=db.session.query(Users).all()
+    data2=db.session.query(Messages).all()
+    return render_template('comp_load.html', message = message,data1=data1,data2=data2)
 
 @app.route('/index')
 @login_required
 def index():
     message = "Job list"
     # jobs = Job.query.all()
-    return render_template('view.html', message = message)
+    return render_template('index.html', message = message)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])

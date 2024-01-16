@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>login</h1>
+    <a href="/load/users">データのロード</a><br>
     <form action="/login" method="post">
         {{ form.hidden_tag() }}
 

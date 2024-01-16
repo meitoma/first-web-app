@@ -22,6 +22,18 @@ class Users(UserMixin,db.Model):
         self.set_password(self.password)
         db.session.add(self)
         db.session.commit()
+
+class Messages(UserMixin,db.Model):
+    __tablename__ = 'messages'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    message = db.Column(db.String(256))
+    def __repr__(self):
+        return f'<Messages {self.messages}>'
+    
+    def add_message(self):
+        db.session.add(self)
+        db.session.commit()
     
 @login_manager.user_loader
 def load_user(id):
