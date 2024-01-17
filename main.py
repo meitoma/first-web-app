@@ -37,7 +37,6 @@ def messages_load():
         add_message=[]
         next(reader) #csvファイルの1行目(列名)を除く
         for row in reader:
-            print(row[0],row[1])
             messages=Messages(user_id=row[0],message=row[1])
             add_message.append(messages)
         db.session.add_all(add_message)
@@ -49,9 +48,9 @@ def messages_load():
 @app.route('/index')
 @login_required
 def index():
-    message = "Job list"
-    # jobs = Job.query.all()
-    return render_template('index.html', message = message)
+    title = "message list"
+    messages = Messages.query.all()
+    return render_template('index.html', title = title, messages=messages)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
@@ -61,15 +60,15 @@ def login():
     form = LoginForm()
     # if form.validate_on_submit():
     if request.method == "POST":
-        # name:root, pass:root
+        # name:test, pass:test
         user = Users.query.filter_by(name=form.name.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid name or password')
+            flash('Invalid name or password','failed')
             return redirect(url_for('login'))
         login_user(user)
         return redirect(url_for('index'))
     else:
-        return render_template('login.html', title='Sign In', form=form)
+        return render_template('login.html', title='ログイン', form=form, develop=app.config['DEBUG'])
     
 @app.route('/logout')
 def logout():
@@ -88,7 +87,7 @@ def signup():
             user = Users(name=form.name.data ,password=form.password.data)
             user.add_user()
             return redirect(url_for('login'))
-    return render_template('signup.html', title='Sign Up', form=form)
+    return render_template('signup.html', title='新規登録', form=form)
 
 
 

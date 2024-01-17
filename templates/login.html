@@ -1,19 +1,39 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>login</h1>
-    <a href="/load_data">データのロード</a><br>
-    <form action="/login" method="post">
-        {{ form.hidden_tag() }}
-
-        {{ form.name.label }}:
-        {{ form.name(placeholder="ユーザーネーム") }}
-        <p></p>
-        {{ form.password.label }}:
-        {{ form.password(placeholder="パスワード") }}
-        <button type="submit">ログイン</button>
-    </form>
-    <a href="/signup">サインアップ</a><br>
-    <a href="/">戻る</a>
+        <h1 class="text-center">{{title}}</h1>
+        <form action="/login" method="post">
+            {{ form.hidden_tag() }}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class=flashes>
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+    
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    {{ form.name.label(class="col-form-label")}}<br>
+                    {{ form.name(placeholder="ユーザーネーム", class="form-control")}}
+                    <br>
+                    {{ form.password.label(class="col-form-label")}}<br>
+                    {{ form.password(placeholder="パスワード", class="form-control") }}
+                    <br><br>
+                </div>
+            </div>
+            <div class="text-center">
+                <a class="btn btn-primary" href="/signup">新規登録</a>
+                <button class="btn btn-primary" type="submit">ログイン</button>
+            </div>
+        </form>
+        <br><br>
+        {% if develop: %}
+            <div class="text-center">
+                <a href="/load_data">データのロード</a>
+            </div>
+        {% endif %}
 {% endblock %}
 
 

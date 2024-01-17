@@ -4,13 +4,13 @@ from wtforms.validators import DataRequired,ValidationError
 from models import Users
 
 class LoginForm(FlaskForm):
-    name = StringField('Name')
-    password = PasswordField('Password')
+    name = StringField('ユーザーネーム')
+    password = PasswordField('パスワード')
     # submit = SubmitField('Sign In')
 
 class SignupForm(FlaskForm):
-    name = StringField('Name')
-    password = PasswordField('Password')
+    name = StringField('ユーザーネーム')
+    password = PasswordField('パスワード')
     # submit = SubmitField('Sign up')
 
     def validate_name(self, name):
