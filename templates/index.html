@@ -1,14 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>フォーム</h1>
-    <p>{{ message }}</p>
+    <h1>{{ title }}</h1><br>
+    {%for m in messages %}
+        {% for key,value in m.__dict__.items()%}
+            {% if key!='_sa_instance_state' %}
+                <p>{{key}} : {{value}}</p>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
     <form action="/result" method="get">
         <label for="article">投稿</label>
         <input type="text" name="article">
-        <p></p>
-        <label for="name">名前</label>
-        <input type="text" name="name">
-        <button type="submit">送信する</button>
     </form>
     <a href="/logout">ロクアウト</a>
 {% endblock %}
