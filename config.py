@@ -17,9 +17,11 @@ class Config(object):
     HOSTNAME=os.environ.get("HOSTNAME")
     DB_NAME=os.environ.get("DB_NAME")
     SECRET_KEY = os.environ.get('SECRET_KEY')
+    PORT=os.environ.get("PORT") or ''
 
-    # SQLALCHEMY_DATABASE_URI=f'postgresql://{USER_NAME}:{PASSWORD}@{HOSTNAME}/{DB_NAME}'
-    SQLALCHEMY_DATABASE_URI=f'postgresql://{USER_NAME}@{HOSTNAME}/{DB_NAME}'
+    SQLALCHEMY_DATABASE_URI=f'postgresql://{USER_NAME}:{PASSWORD}@{HOSTNAME}{PORT}/{DB_NAME}'
+    print(SQLALCHEMY_DATABASE_URI)
+    # SQLALCHEMY_DATABASE_URI=f'postgresql://{USER_NAME}@{HOSTNAME}/{DB_NAME}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     def test_postges(USER_NAME,PASSWORD,HOSTNAME,DB_NAME):

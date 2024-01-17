@@ -3,12 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine,MetaData
 from sqlalchemy.orm import sessionmaker
 import flask_login
+from flask_wtf.csrf import CSRFProtect
 from config import Config
 import sys
 
 app = Flask(__name__)
 app.config.from_object(Config)
-
+csrf = CSRFProtect(app)
 db = SQLAlchemy(app)
 metadata = MetaData()
 
