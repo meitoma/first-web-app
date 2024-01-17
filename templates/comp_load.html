@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>{{ message }}</h1>
+    {%for d in data1%}
+        {% for key,value in d.__dict__.items()%}
+            {% if key!='_sa_instance_state' %}
+                <p>{{key}} : {{value}}</p>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    <br>
+    {%for d in data2%}
+        {% for key,value in d.__dict__.items()%}
+            {% if key!='_sa_instance_state' %}
+                <p>{{key}} : {{value}}</p>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    <a href="/login">戻る</a>
+
+{% endblock %}
