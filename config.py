@@ -18,9 +18,9 @@ class Config(object):
     HOSTNAME_EXTERNAL=os.environ.get("HOSTNAME_EXTERNAL") or ''
     DB_NAME=os.environ.get("DB_NAME")
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    PORT=os.environ.get("PORT") or ''
+    DB_PORT=os.environ.get("DB_PORT") or ''
 
-    SQLALCHEMY_DATABASE_URI=f'postgresql://{USER_NAME}:{PASSWORD}@{HOSTNAME}{HOSTNAME_EXTERNAL}{PORT}/{DB_NAME}'
+    SQLALCHEMY_DATABASE_URI=f'postgresql://{USER_NAME}:{PASSWORD}@{HOSTNAME}{HOSTNAME_EXTERNAL}{DB_PORT}/{DB_NAME}'
     print(SQLALCHEMY_DATABASE_URI)
     # SQLALCHEMY_DATABASE_URI=f'postgresql://{USER_NAME}@{HOSTNAME}/{DB_NAME}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
