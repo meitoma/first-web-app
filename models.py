@@ -1,7 +1,8 @@
 from __init__ import db,login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from sqlalchemy.schema import UniqueConstraint
+import datetime
+
  
 class Users(UserMixin,db.Model):
     __tablename__ = 'users'
@@ -28,6 +29,9 @@ class Messages(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
     message = db.Column(db.String(256))
+    # date=db.Column(db.Date)
+    time = db.Column(db.DateTime, default=datetime.datetime.now)
+
     def __repr__(self):
         return f'<Messages {self.messages}>'
     

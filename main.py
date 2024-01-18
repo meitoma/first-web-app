@@ -8,6 +8,8 @@ import csv
 from __init__ import app,db,metadata
 from forms import LoginForm,SignupForm,PostForm
 from models import Users,Messages
+import datetime
+
 
 @app.route('/load_data')
 def users_load():
@@ -51,9 +53,11 @@ def index():
     messages = Messages.query.all()
     form = PostForm()
     if request.method == "POST":
-        user_message = Messages(user_id=current_user.id,message=form.message.data)
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        user_message = Messages(user_id=current_user.id,message=form.message.data,time=current_time)
         db.session.add(user_message)
         db.session.commit()
+        db.session.close()
         return redirect(url_for('index'))
     else:
         return render_template('index.html', title = title, messages=messages,form=form)
