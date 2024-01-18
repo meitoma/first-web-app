@@ -6,7 +6,7 @@ from flask_login import (
 from sqlalchemy import text
 import csv
 from __init__ import app,db,metadata
-from forms import LoginForm,SignupForm
+from forms import LoginForm,SignupForm,PostForm
 from models import Users,Messages
 
 @app.route('/load_data')
@@ -30,7 +30,6 @@ def users_load():
 
 def messages_load():
     message = "Data loading completed"
-
     #? csvからMessageへの書き込み
     with open("csv/message.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
@@ -45,12 +44,19 @@ def messages_load():
     data2=db.session.query(Messages).all()
     return render_template('comp_load.html', message = message,data1=data1,data2=data2)
 
-@app.route('/index')
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    title = "message list"
+    title = "掲示板"
     messages = Messages.query.all()
-    return render_template('index.html', title = title, messages=messages)
+    form = PostForm()
+    if request.method == "POST":
+        user_message = Messages(user_id=current_user.id,message=form.message.data)
+        db.session.add(user_message)
+        db.session.commit()
+        return redirect(url_for('index'))
+    else:
+        return render_template('index.html', title = title, messages=messages,form=form)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])

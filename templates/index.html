@@ -1,17 +1,40 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>{{ title }}</h1><br>
-    {%for m in messages %}
-        {% for key,value in m.__dict__.items()%}
-            {% if key!='_sa_instance_state' %}
-                <p>{{key}} : {{value}}</p>
-            {% endif %}
-        {% endfor %}
-    {% endfor %}
-
-    <form action="/result" method="get">
-        <label for="article">投稿</label>
-        <input type="text" name="article">
-    </form>
-    <a href="/logout">ロクアウト</a>
+    <div class="row">
+        <div class="col-10">
+            <h1 style="color:white;">{{ title }}</h1>
+        </div>
+        <div class="col-2 align-self-center">
+                <a href="/logout">ログアウト</a>
+        </div>
+    </div>
+    <div class="bulletin-board">
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="scrollable-container">
+                    {%for m in messages %}
+                        <p>
+                            {% for key,value in m.__dict__.items()%}
+                                {% if key!='_sa_instance_state' and key!='id'%}
+                                    {{value}}
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                    {% endfor %}
+                </div>
+    
+                <form action="/index" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="row">
+                        <div class="col-10">
+                            {{ form.message(placeholder="投稿", class="form-control")}}
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-primary" type="submit">投稿</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

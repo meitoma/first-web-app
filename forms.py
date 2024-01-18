@@ -16,3 +16,6 @@ class SignupForm(FlaskForm):
     def validate_name(self, name):
         if Users.query.filter_by(name=name.data).one_or_none():
             raise ValidationError('この名前はすでに使われています')
+
+class PostForm(FlaskForm):
+    message = StringField('メッセージ')
