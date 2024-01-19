@@ -4,8 +4,7 @@
     {%for user in users %}
         {% for (key,value) in user.__dict__.items() %}
             {% if key!='_sa_instance_state'%}
-                <p>{{key}}</p>
-                <p>{{value}}</p>
+                <p>{{key}}:{{value}}</p>
             {% endif %}
         {% endfor %}
     {% endfor %}
