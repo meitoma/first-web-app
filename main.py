@@ -60,7 +60,7 @@ def index():
         db.session.close()
         return redirect(url_for('index'))
     else:
-        return render_template('index.html', title = title, messages=messages,form=form)
+        return render_template('index.html', title = title, current_user=current_user.id,messages=messages,form=form)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
@@ -73,7 +73,7 @@ def login():
         # name:test, pass:test
         user = Users.query.filter_by(name=form.name.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid name or password','failed')
+            flash('ユーザーネームもしくはパスワードが正しくありません','failed')
             return redirect(url_for('login'))
         login_user(user)
         return redirect(url_for('index'))

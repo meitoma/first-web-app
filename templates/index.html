@@ -14,22 +14,34 @@
             <div class="col-10">
                 <div class="scrollable-container">
                     {%for m in messages %}
-                        <p class="p-name-area">
-                            名前 : <span class="p-msg-name">{{m.__dict__['user_id']}} </span> :
-                            {{m.__dict__['time']}}
-                        </p>
-                        <p class="p-message">{{m.__dict__['message']}}</p>
+                        {% set jc="justify-content-start" %}
+                        {% set msbox="message-box" %}
+                        {% if m.__dict__['user_id']==current_user %}
+                            {% set jc="justify-content-end" %}
+                            {% set msbox="mymessage-box" %}
+                        {% endif %}
+                        <div class="row {{jc}}">
+                            <div class="col-6">
+                                <span class="p-msg-name">{{m.__dict__['user_id']}} </span> :
+                                {{m.__dict__['time']}}
+                                <p class={{msbox}}>{{m.__dict__['message']}}</p>
+                            </div> 
+                        </div>
                     {% endfor %}
                 </div>
     
                 <form action="/index" method="post">
                     {{ form.hidden_tag() }}
-                    <div class="row justify-content-center">
-                        <div class="col-10" style="padding-left: 40px;">
-                            {{ form.message(placeholder="投稿", class="form-control")}}
+                    <div class="row">
+                        <div class="col-11">
+                            {{ form.message(placeholder="メッセージを入力", class="form-control")}}
                         </div>
-                        <div class="col-2">
-                            <button class="btn btn-primary" type="submit">投稿</button>
+                        <div class="col-1">
+                            <div class="float-right">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </form>
