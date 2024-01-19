@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired,ValidationError
 from models import Users
+import re
 
 class LoginForm(FlaskForm):
     name = StringField('ユーザーネーム')
@@ -11,6 +12,7 @@ class LoginForm(FlaskForm):
 class SignupForm(FlaskForm):
     name = StringField('ユーザーネーム')
     password = PasswordField('パスワード (半角英数字4文字以上)')
+    password_confirm = PasswordField('パスワード (確認)')
     # submit = SubmitField('Sign up')
 
     def validate_name(self, name):
@@ -22,12 +24,24 @@ class SignupForm(FlaskForm):
             raise ValidationError('この名前はすでに使われています')
         
     def validate_password(self, password):
-        if len(password.data)<4:
-            raise ValidationError('パスワードは4文字以上である必要があります')
+        pw_pat = re.compile("^[0-9a-zA-Z]+$")
         set_pass=set(password.data)
         set_num=set([str(n) for n in range(10)])
+
+        if len(password.data)<4 or len(password.data) > 25:
+            raise ValidationError('パスワードは4文字以上25文字以下')
+        
         if not set_pass.intersection(set_num):
             raise ValidationError('パスワードは数字を含む必要があります')
+        
+        if not pw_pat.match(password.data):
+            raise ValidationError('使用できない文字が含まれています')
+        
+    def validate_password_confirm(self, password_confirm):
+        if password_confirm.data!=self.password.data:
+            raise ValidationError('パスワードが異なっています')
+
+        
 
 
 class PostForm(FlaskForm):
