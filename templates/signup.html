@@ -13,7 +13,11 @@
                 {% endfor %}
                 <br>
                 {{ form.password.label(class="col-form-label")}}<br>
-                {{ form.password(placeholder="パスワード", class="form-control")}}<br><br>
+                {{ form.password(placeholder="パスワード", class="form-control")}}
+                {% for error in form.password.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+                <br><br>
             </div>
         </div>
         <div class="text-center">

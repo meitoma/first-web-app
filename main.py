@@ -6,8 +6,10 @@ from flask_login import (
 from sqlalchemy import text
 import csv
 from __init__ import app,db,metadata
-from forms import LoginForm,SignupForm
+from forms import LoginForm,SignupForm,PostForm
 from models import Users,Messages
+import datetime
+
 
 @app.route('/load_data')
 def users_load():
@@ -30,7 +32,6 @@ def users_load():
 
 def messages_load():
     message = "Data loading completed"
-
     #? csvからMessageへの書き込み
     with open("csv/message.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
@@ -45,12 +46,21 @@ def messages_load():
     data2=db.session.query(Messages).all()
     return render_template('comp_load.html', message = message,data1=data1,data2=data2)
 
-@app.route('/index')
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    title = "message list"
+    title = "掲示板"
     messages = Messages.query.all()
-    return render_template('index.html', title = title, messages=messages)
+    form = PostForm()
+    if request.method == "POST":
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        user_message = Messages(user_id=current_user.id,message=form.message.data,sendtime=current_time)
+        db.session.add(user_message)
+        db.session.commit()
+        db.session.close()
+        return redirect(url_for('index'))
+    else:
+        return render_template('index.html', title = title, current_user=current_user.id,messages=messages,form=form)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
@@ -63,7 +73,7 @@ def login():
         # name:test, pass:test
         user = Users.query.filter_by(name=form.name.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid name or password','failed')
+            flash('ユーザーネームもしくはパスワードが正しくありません','failed')
             return redirect(url_for('login'))
         login_user(user)
         return redirect(url_for('index'))
