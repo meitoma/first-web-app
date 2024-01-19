@@ -91,7 +91,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return render_template('logout.html', title='Log out')
+    return redirect(url_for('login'))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():

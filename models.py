@@ -9,6 +9,8 @@ class Users(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(16), unique=True)
     password = db.Column(db.String(256))
+    messages = db.relationship('Messages', backref=db.backref('users', lazy=True))
+
     def __repr__(self):
         return f'<Users {self.name}>'
             
@@ -27,9 +29,8 @@ class Users(UserMixin,db.Model):
 class Messages(UserMixin,db.Model):
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     message = db.Column(db.String(256))
-    # date=db.Column(db.Date)
     sendtime = db.Column(db.DateTime, default=datetime.datetime.now)
 
     def __repr__(self):

@@ -28,7 +28,7 @@
                             {% endif %}
                               <div class="row {{jc}} layer1">
                                 <div class="col-6">
-                                    <p><span class="p-msg-name">{{m.__dict__['user_id']}} </span> :
+                                    <p><span class="p-msg-name">{{m.users.name}}</span> : <!-- {{m.__dict__['user_id']}}  -->
                                     {{m.__dict__['sendtime']}}</p>
                                     <p class="message-box {{msbox}}">{{m.__dict__['message']}}</p>
                                 </div> 
