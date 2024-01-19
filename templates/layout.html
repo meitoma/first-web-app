@@ -14,6 +14,15 @@
                 list-style:none;
                 background-color: deeppink;
             }
+            .message-hedder{
+                background-color: #b2ccd9ef;
+            }
+            .layer1{
+                z-index: 1;
+            }
+            .layer2{
+                z-index: 2;
+            }
             body {
                 padding-top: 50px;
                 background-color: #b2ccd9;
@@ -29,14 +38,16 @@
                 background-color: midnightblue;
             }
             .bulletin-board {
-                height: 600px;
                 padding: 40px 0px;
-                background-color: #b2ccd9;
+                margin-top: -100px;
+                /* background-color: #b2ccd9; */
 		    }
             .scrollable-container {
-                height: 490px; /* 任意の高さを設定 */
-                margin-bottom: 50px;
+                min-height: 85vh;
+                max-height: 85vh;
+                margin-bottom: 5px;
                 overflow-y: scroll; /* 縦方向のスクロールバーを表示 */
+                overflow-x: hidden
             }
             .logout-button{
                 align-self: center;
@@ -48,19 +59,24 @@
                 color:red;
             }
             .message-box{
-                background-color:#ffe0d1;
                 padding: 9px;
+                border-width: 3px;
+                border-style: solid;
+                border-color: white;
             }
-            .mymessage-box{
+            .othre-message-box{
+                background-color:#ffe0d1;
+            }
+            .my-message-box{
                 background-color:#ebffd1;
-                padding: 9px;
+                margin-right: 20px;
             }
         </style>
     </head>
     <body>
         <div class="container">
-                {% block content %}
-                {% endblock %}
+            {% block content %}
+            {% endblock %}
         </body>
     </body>
 </html>
