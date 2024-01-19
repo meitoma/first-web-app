@@ -54,7 +54,7 @@ def index():
     form = PostForm()
     if request.method == "POST":
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        user_message = Messages(user_id=current_user.id,message=form.message.data,time=current_time)
+        user_message = Messages(user_id=current_user.id,message=form.message.data,sendtime=current_time)
         db.session.add(user_message)
         db.session.commit()
         db.session.close()

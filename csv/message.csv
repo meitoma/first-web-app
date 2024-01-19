@@ -1,3 +1,3 @@
-userID,message,date,time
-2,hello python,2024-01-01,10:10:10
-3,hogehoge,2024-01-01,10:10:10
+userID,message,sendtime
+2,hello python,2024-01-01 10:10:10
+3,hogehoge,2024-01-01 10:10:10

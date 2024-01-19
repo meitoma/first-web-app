@@ -30,7 +30,7 @@ class Messages(UserMixin,db.Model):
     user_id = db.Column(db.Integer)
     message = db.Column(db.String(256))
     # date=db.Column(db.Date)
-    time = db.Column(db.DateTime, default=datetime.datetime.now)
+    sendtime = db.Column(db.DateTime, default=datetime.datetime.now)
 
     def __repr__(self):
         return f'<Messages {self.messages}>'
