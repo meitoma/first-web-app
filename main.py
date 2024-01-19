@@ -53,14 +53,22 @@ def index():
     messages = Messages.query.all()
     form = PostForm()
     if request.method == "POST":
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        user_message = Messages(user_id=current_user.id,message=form.message.data,sendtime=current_time)
-        db.session.add(user_message)
-        db.session.commit()
-        db.session.close()
+        if form.validate_on_submit():
+            current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            user_message = Messages(user_id=current_user.id,message=form.message.data,sendtime=current_time)
+            db.session.add(user_message)
+            db.session.commit()
+            db.session.close()
         return redirect(url_for('index'))
     else:
         return render_template('index.html', title = title, current_user=current_user.id,messages=messages,form=form)
+    
+@app.route('/confirm')
+@login_required
+def confirm():
+    title = "ユーザ一覧"
+    users = Users.query.all()
+    return render_template('confirm.html', title = title, current_user=current_user.id,users=users)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])

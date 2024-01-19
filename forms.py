@@ -16,6 +16,8 @@ class SignupForm(FlaskForm):
     def validate_name(self, name):
         if len(name.data)>16:
             raise ValidationError('ユーザーネームは16文字以内である必要があります')
+        if len(name.data)==0:
+            raise ValidationError('ユーザーネームを入力してください')
         if Users.query.filter_by(name=name.data).one_or_none():
             raise ValidationError('この名前はすでに使われています')
         
@@ -30,3 +32,8 @@ class SignupForm(FlaskForm):
 
 class PostForm(FlaskForm):
     message = StringField('メッセージ')
+    def validate_message(self, message):
+        if len(message.data)==0:
+            print("空文字")
+            raise ValidationError('')
+

@@ -2,7 +2,7 @@
 <html lang="ja">
     <head>
         <meta charset="utf-8">
-        <title>Flask - paiza</title>
+        <title>松下の⚪︎⚪︎を監視する...</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
@@ -15,7 +15,7 @@
                 background-color: deeppink;
             }
             .message-hedder{
-                background-color: #b2ccd9ef;
+                background-color: #b2ccd9e9;
             }
             .layer1{
                 z-index: 1;
@@ -27,12 +27,12 @@
                 padding-top: 50px;
                 background-color: #b2ccd9;
                 font-family: sans-serif;
-                /* background-image: url(../static/IMG_4936.jpg); */
-                /* background-size: cover;
+                /* background-image: url(../static/IMG_4936.jpg);
+                background-size: cover;
                 background-repeat: no-repeat;
                 background-attachment: fixed;
-                background-position: center center;
-                height: 100vh; */
+                background-position: center center; */
+                height: 100vh;
                 }
             .success {
                 background-color: midnightblue;
@@ -40,6 +40,7 @@
             .login-body{
                 overflow-y: hidden;
                 overflow-x: hidden;
+                max-height: 93vh;
             }
             .bulletin-board {
                 padding: 40px 0px;
@@ -48,8 +49,8 @@
 		    }
             .scrollable-container {
                 padding-top: 90px;
-                min-height: 83vh;
-                max-height: 83vh;
+                min-height: 82vh;
+                max-height: 82vh;
                 margin-bottom: 5px;
                 overflow-y: scroll; /* 縦方向のスクロールバーを表示 */
                 overflow-x: hidden
@@ -64,6 +65,8 @@
                 color:red;
             }
             .message-box{
+                margin-top: -10px;
+                margin-bottom: 30px;
                 padding: 9px;
                 border-width: 3px;
                 border-style: solid;
