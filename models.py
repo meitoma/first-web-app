@@ -2,8 +2,8 @@ from __init__ import db,login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 import datetime
+from zoneinfo import ZoneInfo
 
- 
 class Users(UserMixin,db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +31,7 @@ class Messages(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     message = db.Column(db.String(256))
-    sendtime = db.Column(db.DateTime, default=datetime.datetime.now)
+    sendtime = db.Column(db.DateTime, default=datetime.datetime.now(ZoneInfo("Asia/Tokyo")))
 
     def __repr__(self):
         return f'<Messages {self.messages}>'

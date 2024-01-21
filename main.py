@@ -9,7 +9,10 @@ from __init__ import app,db,metadata
 from forms import LoginForm,SignupForm,PostForm
 from models import Users,Messages
 import datetime
+from zoneinfo import ZoneInfo
 
+# ログアウト画面の削除
+# sendtimeのtimezone指定
 
 @app.route('/load_data')
 def users_load():
@@ -54,7 +57,7 @@ def index():
     form = PostForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            current_time = datetime.datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M:%S")
             user_message = Messages(user_id=current_user.id,message=form.message.data,sendtime=current_time)
             db.session.add(user_message)
             db.session.commit()
