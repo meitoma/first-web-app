@@ -10,9 +10,9 @@ from forms import LoginForm,SignupForm,PostForm
 from models import Users,Messages
 import datetime
 from zoneinfo import ZoneInfo
+from urllib.parse import urlparse
+from __init__ import login_manager
 
-# ログアウト画面の削除
-# sendtimeのtimezone指定
 
 @app.route('/load_data')
 def users_load():
@@ -49,9 +49,9 @@ def messages_load():
     data2=db.session.query(Messages).all()
     return render_template('comp_load.html', message = message,data1=data1,data2=data2)
 
-@app.route('/index', methods=['GET', 'POST'])
+@app.route('/bbs/1', methods=['GET', 'POST'])
 @login_required
-def index():
+def bbs():
     title = "掲示板"
     messages = Messages.query.all()
     form = PostForm()
@@ -62,9 +62,9 @@ def index():
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
-        return redirect(url_for('index'))
+        return redirect(url_for('bbs'))
     else:
-        return render_template('index.html', title = title, current_user=current_user.id,messages=messages,form=form)
+        return render_template('bbs.html', title = title, current_user=current_user.id,messages=messages,form=form)
     
 @app.route('/confirm')
 @login_required
@@ -77,19 +77,20 @@ def confirm():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('bbs'))
     form = LoginForm()
-    # if form.validate_on_submit():
-    if request.method == "POST":
+    if form.validate_on_submit():
         # name:test, pass:test
         user = Users.query.filter_by(name=form.name.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('ユーザーネームもしくはパスワードが正しくありません','failed')
             return redirect(url_for('login'))
         login_user(user)
-        return redirect(url_for('index'))
-    else:
-        return render_template('login.html', title='ログイン', form=form, develop=app.config['DEBUG'])
+        next_page = request.args.get('next')
+        if not next_page or urlparse(next_page).netloc != '':
+            next_page = url_for('bbs')
+        return redirect(next_page)
+    return render_template('login.html', title='ログイン', form=form, develop=app.config['DEBUG'],next_page=request.args.get('next'))
     
 @app.route('/logout')
 def logout():
@@ -99,7 +100,7 @@ def logout():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('bbs'))
     form = SignupForm()
     if request.method == "POST":
         print(form.name.data)
