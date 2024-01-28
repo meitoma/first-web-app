@@ -10,3 +10,10 @@ $(function() {
         $(".nav").toggleClass("open");
     });
 });
+
+$(function() {
+    $('button').on('click', function() {
+       $(this).prop('disabled', true);
+       $('form').submit();
+    });
+  });

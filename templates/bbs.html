@@ -35,7 +35,7 @@
                     </div>
                 </div>
     
-                <form action="/index" method="post">
+                <form action="/bbs/1" method="post">
                     {{ form.hidden_tag() }}
                     <div class="row">
                         <div class="col-11">
@@ -43,7 +43,7 @@
                         </div>
                         <div class="col-1">
                             <div class="float-right">
-                                <button class="btn btn-primary" type="submit">
+                                <button class="btn btn-primary one-clk-btn" type="submit">
                                     <i class="fas fa-paper-plane"></i>
                                 </button>
                             </div>
@@ -56,4 +56,5 @@
         const scrollerInner = document.getElementById("scroller__inner");
         scrollerInner.scrollIntoView(false);
     </script>
+    <script src="../static/js/bbs.js"></script>
 {% endblock %}
