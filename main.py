@@ -16,7 +16,6 @@ from __init__ import login_manager
 
 @app.route('/load_data')
 def users_load():
-    message = "Users loading completed"
     #? Users tableの内容削除
     db.drop_all()
     db.create_all()
@@ -27,7 +26,7 @@ def users_load():
         add_users=[]
         next(reader) #csvファイルの1行目(列名)を除く
         for row in reader:
-            user=Users(name=row[0],password=row[1])
+            user=Users(name=row[0],password=row[1],admin=bool(int(row[2])))
             add_users.append(user)
         db.session.add_all(add_users)
         db.session.commit()
@@ -64,14 +63,17 @@ def bbs():
             db.session.close()
         return redirect(url_for('bbs'))
     else:
-        return render_template('bbs.html', title = title, current_user=current_user.id,messages=messages,form=form)
+        return render_template('bbs.html', title = title, current_user=current_user,messages=messages,form=form)
     
 @app.route('/confirm')
 @login_required
 def confirm():
-    title = "ユーザ一覧"
-    users = Users.query.all()
-    return render_template('confirm.html', title = title, current_user=current_user.id,users=users)
+    if current_user.is_admin:
+        title = "ログインユーザ一覧"
+        users = Users.query.all()
+        return render_template('confirm.html', title = title, current_user=current_user,users=users)
+    else:
+        return redirect(url_for('bbs'))
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])

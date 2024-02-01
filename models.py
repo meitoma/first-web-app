@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo
 
 class Users(UserMixin,db.Model):
     __tablename__ = 'users'
+    admin=db.Column(db.Boolean, default=False)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(16), unique=True)
     password = db.Column(db.String(256))
@@ -13,7 +14,19 @@ class Users(UserMixin,db.Model):
 
     def __repr__(self):
         return f'<Users {self.name}>'
-            
+    
+    # @property
+    # def is_authenticated(self):
+    #     return True
+    
+    @property
+    def is_admin(self):
+        return self.admin
+    
+    @property
+    def is_anonymous(self):
+        return False
+    
     def set_password(self,password):
         self.password = generate_password_hash(password)
         print(self.password)

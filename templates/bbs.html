@@ -3,9 +3,14 @@
     <nav class="nav">
         <div class="inner">
         <ul>
-            <li><a href="/profile">プロフィール</a></li>
-            <li><a href="/confirm">ユーザ確認</a></li>
-            <li><a href="/logout">ログアウト</a></li>
+            <li><a href="/profile/{{current_user.id}}"><i class="fa-solid fa-user"></i>{{current_user.name}}</a></li>
+            <li><a href="/setting/{{current_user.id}}"><i class="fa-solid fa-gear"></i>設定</a></li>
+            {% if current_user.is_admin %}
+                <li><a href="/confirm"><i class="fa-solid fa-book"></i>ユーザ確認</a></li>
+                <li><a href="/admin"><i class="fa-solid fa-hammer"></i>管理者</a></li>
+                <li><a href="/load_data"><i class="fa-solid fa-download"></i>データのロード</a></li>
+            {% endif %}
+            <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>ログアウト</a></li>
         </ul>
         </div>
     </nav>
@@ -18,20 +23,20 @@
                 <div class="scrollable-container">
                     <div id="scroller__inner">
                         {%for m in messages %}
-                        {% set jc="justify-content-start" %}
-                        {% set msbox="othre-message-box" %}
-                        {% if m.__dict__['user_id']==current_user %}
-                            {% set jc="justify-content-end" %}
-                            {% set msbox="my-message-box" %}
-                        {% endif %}
-                            <div class="row {{jc}} layer1">
-                            <div class="col-6">
-                                <p><span class="p-msg-name">{{m.users.name}}</span> : <!-- {{m.__dict__['user_id']}}  -->
-                                {{m.__dict__['sendtime']}}</p>
-                                <p class="message-box {{msbox}}">{{m.__dict__['message']}}</p>
-                            </div> 
-                        </div>
-                    {% endfor %}
+                            {% set jc="justify-content-start" %}
+                            {% set msbox="othre-message-box" %}
+                            {% if m.__dict__['user_id']==current_user.id %}
+                                {% set jc="justify-content-end" %}
+                                {% set msbox="my-message-box" %}
+                            {% endif %}
+                                <div class="row {{jc}} layer1">
+                                <div class="col-6 fix-btn">
+                                    <p><span class="p-msg-name">{{m.users.name}}</span> : <!-- {{m.__dict__['user_id']}}  -->
+                                    {{m.__dict__['sendtime']}}<span><a href="#">編集</a></span></p>
+                                    <p class="message-box {{msbox}}">{{m.__dict__['message']}}</p>
+                                </div> 
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
     

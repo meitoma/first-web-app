@@ -2,19 +2,23 @@
 {% block content %}
     <h1>{{ message }}</h1>
     {%for d in data1%}
-        {% for key,value in d.__dict__.items()%}
+        <div class="card" style="background-color: #b2ccd9;padding:20px;">
+            {% for key,value in d.__dict__.items()%}
             {% if key!='_sa_instance_state' %}
                 <p>{{key}} : {{value}}</p>
             {% endif %}
         {% endfor %}
+        </div>
     {% endfor %}
     <br>
     {%for d in data2%}
-        {% for key,value in d.__dict__.items()%}
-            {% if key!='_sa_instance_state' %}
-                <p>{{key}} : {{value}}</p>
-            {% endif %}
-        {% endfor %}
+        <div class="card" style="background-color: #b2ccd9;padding:20px;">
+            {% for key,value in d.__dict__.items()%}
+                {% if key!='_sa_instance_state' %}
+                    <p>{{key}} : {{value}}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
     {% endfor %}
     <a href="/login">戻る</a>
 

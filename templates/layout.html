@@ -44,7 +44,7 @@
             .scrollable-container {
                 padding-top: 4vh;
                 margin-top: -2%;
-                min-height: 79vh;
+                min-height: 85vh;
                 max-height: 85vh;
                 margin-bottom: 5px;
                 overflow-y: scroll; /* 縦方向のスクロールバーを表示 */
@@ -84,6 +84,11 @@
             .nav .inner ul li {
                 margin: 0;
                 border-bottom: 1px solid #333;
+                text-align: left;
+            }
+
+            .nav .inner ul li i{
+                padding-right: 10px
             }
 
             .nav .inner ul li a {
@@ -198,6 +203,15 @@
                 border-style: solid;
                 border-color: white;
                 border-radius: 5px;
+            }
+            .fix-btn span:nth-child(2){
+                /* right:100%; */
+                opacity:0;/*透過0に*/
+            }
+            .fix-btn:hover span:nth-child(2){
+                position: absolute;
+                right:10px;
+                opacity:1;/*透過1に*/
             }
             .othre-message-box{
                 background-color:#ffe0d1;
