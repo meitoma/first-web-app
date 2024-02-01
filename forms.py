@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField,TextAreaField
 from wtforms.validators import DataRequired,ValidationError
 from models import Users
 import re
@@ -45,7 +45,7 @@ class SignupForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    message = StringField('メッセージ')
+    message = TextAreaField('メッセージ')
     def validate_message(self, message):
         if len(message.data)==0:
             print("空文字")
