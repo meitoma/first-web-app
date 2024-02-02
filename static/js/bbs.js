@@ -18,7 +18,6 @@ $(function() {
     });
   });
 
-
 var textarea = document.getElementById('text_area');
 var scrollable_box = document.getElementById('scrollable_box');
 textarea.rows=1;
@@ -38,5 +37,19 @@ textarea.addEventListener('input', ()=>{
         //textareaの高さに入力内容の高さを設定
         textarea.style.height = scrollHeight + 'px';
         scrollable_box.style.height = scroll_box_Height - scrollHeight + init_scrollHeight + 'px';
+    }
+});
+textarea.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        if (event.ctrlKey || event.metaKey){
+            // submitTextarea();
+            console.log("submit")
+            $('button').click();
+            // $.post( '/bbs/1', $('form').serialize() )
+            // .done(function( data ) {
+            //     console.log( data.form );
+            // })
+            event.preventDefault(); // デフォルトのEnterキーのd挙動を防ぐ
+        }
     }
 });
