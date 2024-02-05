@@ -7,7 +7,7 @@ from sqlalchemy import text
 import csv
 from __init__ import app,db,metadata
 from forms import LoginForm,SignupForm,PostForm
-from models import Users,Messages
+from models import Users,Messages,Threads,UserAccess
 import datetime
 from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
@@ -30,6 +30,32 @@ def users_load():
             add_users.append(user)
         db.session.add_all(add_users)
         db.session.commit()
+    return threads_load()
+
+def threads_load():
+    #? csvからUsersへの書き込み
+    with open("csv/threads.csv","r",encoding="utf-8") as csvfile:
+        reader=csv.reader(csvfile)
+        add_threads=[]
+        next(reader) #csvファイルの1行目(列名)を除く
+        for row in reader:
+            thread=Threads(thread_name=row[0])
+            add_threads.append(thread)
+        db.session.add_all(add_threads)
+        db.session.commit()
+    return user_access_load()
+
+def user_access_load():
+    #? csvからUsersへの書き込み
+    with open("csv/user_access.csv","r",encoding="utf-8") as csvfile:
+        reader=csv.reader(csvfile)
+        add_useraccess=[]
+        next(reader) #csvファイルの1行目(列名)を除く
+        for row in reader:
+            useraccess=UserAccess(user_id=row[0],thread_id=row[1])
+            add_useraccess.append(useraccess)
+        db.session.add_all(add_useraccess)
+        db.session.commit()
     return messages_load()
 
 def messages_load():
@@ -40,31 +66,48 @@ def messages_load():
         add_message=[]
         next(reader) #csvファイルの1行目(列名)を除く
         for row in reader:
-            messages=Messages(user_id=row[0],message=row[1])
+            tdatetime = datetime.datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')
+            messages=Messages(user_id=row[0],thread_id=row[1],message=row[2],sendtime=tdatetime)
             add_message.append(messages)
         db.session.add_all(add_message)
         db.session.commit()
-    data1=db.session.query(Users).all()
-    data2=db.session.query(Messages).all()
-    return render_template('comp_load.html', message = message,data1=data1,data2=data2)
+    # data1=db.session.query(Users).all()
+    # data2=db.session.query(Messages).all()
+    # data3=db.session.query(Threads).all()
+    # data4=db.session.query(UserAccess).all()
+    data=[db.session.query(Users).all(),
+          db.session.query(Messages).all(),
+          db.session.query(Threads).all(),
+          db.session.query(UserAccess).all()]
+    return render_template('comp_load.html', message = message,data=data)#,data1=data1,data2=data2,data3=data3,data4=data4)
 
-@app.route('/bbs/1', methods=['GET', 'POST'])
+@app.route('/bbs/<int:id>', methods=['GET', 'POST'])
 @login_required
-def bbs():
-    title = "掲示板"
-    messages = Messages.query.all()
+def bbs(id):
+    user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
+    accessible_threads=set([ua.thread_id for ua in user_access])
+    thread = Threads.query.get(id)
+    if id not in accessible_threads or thread is None : return redirect(url_for('not_found_bbs'))
+
+    title = thread.thread_name
+    messages = Messages.query.filter(Messages.thread_id == id)
+
     form = PostForm()
     if request.method == "POST":
         if form.validate_on_submit():
             current_time = datetime.datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M:%S")
-            user_message = Messages(user_id=current_user.id,message=form.message.data,sendtime=current_time)
+            user_message = Messages(user_id=current_user.id,message=form.message.data,sendtime=current_time,thread_id=id)
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
-        return redirect(url_for('bbs'))
+        return redirect(url_for('bbs',id=id))
     else:
-        return render_template('bbs.html', title = title, current_user=current_user,messages=messages,form=form)
-    
+        return render_template('bbs.html', title = title, id=id, user_access=user_access, current_user=current_user,messages=messages,form=form)
+
+@app.route('/bbs/not_found_bbs')
+def not_found_bbs():
+    return render_template('not_found_bbs.html')
+
 @app.route('/confirm')
 @login_required
 def confirm():
@@ -79,7 +122,7 @@ def confirm():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('bbs'))
+        return redirect(url_for('bbs',id=1))
     form = LoginForm()
     if form.validate_on_submit():
         # name:test, pass:test
@@ -90,7 +133,7 @@ def login():
         login_user(user)
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
-            next_page = url_for('bbs')
+            next_page = url_for('bbs',id=1)
         return redirect(next_page)
     return render_template('login.html', title='ログイン', form=form, develop=app.config['DEBUG'],next_page=request.args.get('next'))
     

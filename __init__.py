@@ -23,15 +23,43 @@ login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-from models import Users,Messages
+from models import Users,Messages,Threads,UserAccess
 admin = Admin(
     app,
     name='Flask-admin laboratory',
     template_mode='bootstrap4',
 )
-class MyModelView(sqla.ModelView):
-  def is_accessible(self):
-    return not login.current_user.is_anonymous and login.current_user.is_admin
 
-admin.add_view(MyModelView(Users, db.session))
-admin.add_view(MyModelView(Messages, db.session))
+class MyModelView1(sqla.ModelView):
+    can_view_details = True
+    def is_accessible(self):
+        return not login.current_user.is_anonymous and login.current_user.is_admin
+
+class MyModelView2(sqla.ModelView):
+    can_view_details = True
+    column_list = ["message","sendtime","user_id","thread_id"]
+    column_sortable_list = column_list
+    def is_accessible(self):
+        return not login.current_user.is_anonymous and login.current_user.is_admin
+    
+class MyModelView3(sqla.ModelView):
+    can_view_details = True
+    def is_accessible(self):
+        return not login.current_user.is_anonymous and login.current_user.is_admin
+
+class MyModelView4(sqla.ModelView):
+    can_view_details = True
+    column_list = ["user_id","thread_id"]
+    column_sortable_list = column_list
+    def is_accessible(self):
+        return not login.current_user.is_anonymous and login.current_user.is_admin
+    
+UsersAdminView = MyModelView1(Users, db.session)
+MessagesAdminView = MyModelView2(Messages, db.session)
+ThreadsAdminView = MyModelView3(Threads, db.session)
+UserAccessAdminView = MyModelView4(UserAccess, db.session)
+
+admin.add_view(UsersAdminView)
+admin.add_view(MessagesAdminView)
+admin.add_view(ThreadsAdminView)
+admin.add_view(UserAccessAdminView)

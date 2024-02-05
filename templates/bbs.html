@@ -4,6 +4,7 @@
         <div class="inner">
         <ul>
             <li><a href="/profile/{{current_user.id}}"><i class="fa-solid fa-user"></i>{{current_user.name}}</a></li>
+            <li><a href="/add_member/"><i class="fa-solid fa-user-group"></i>メンバー</a></li>
             <li><a href="/setting/{{current_user.id}}"><i class="fa-solid fa-gear"></i>設定</a></li>
             {% if current_user.is_admin %}
                 <li><a href="/confirm"><i class="fa-solid fa-book"></i>ユーザ確認</a></li>
@@ -11,6 +12,16 @@
                 <li><a href="/load_data"><i class="fa-solid fa-download"></i>データのロード</a></li>
             {% endif %}
             <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>ログアウト</a></li>
+        </ul>
+        </div>
+    </nav>
+    <nav class="nav2">
+        <div class="inner">
+        <ul>
+            {% for ua in user_access %}
+                <li><a href="/bbs/{{ua.thread_id}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+            {% endfor %}
+            <li class="new"><a href="/bbs/new"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
         </ul>
         </div>
     </nav>
@@ -40,7 +51,7 @@
                     </div>
                 </div>
     
-                <form action="/bbs/1" method="post">
+                <form action="/bbs/{{id}}" method="post">
                     {{ form.hidden_tag() }}
                     <div class="row">
                         <div class="col-11">

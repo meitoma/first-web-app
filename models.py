@@ -11,6 +11,8 @@ class Users(UserMixin,db.Model):
     name = db.Column(db.String(16), unique=True)
     password = db.Column(db.String(256))
     messages = db.relationship('Messages', backref=db.backref('users', lazy=True))
+    user_access = db.relationship('UserAccess', backref=db.backref('users', lazy=True))
+
 
     def __repr__(self):
         return f'<Users {self.name}>'
@@ -43,13 +45,38 @@ class Messages(UserMixin,db.Model):
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    thread_id = db.Column(db.Integer,db.ForeignKey('threads.id'))
     message = db.Column(db.String(256))
     sendtime = db.Column(db.DateTime, default=datetime.datetime.now(ZoneInfo("Asia/Tokyo")))
 
     def __repr__(self):
-        return f'<Messages {self.messages}>'
+        return f'<Messages {self.message}>'
     
     def add_message(self):
+        db.session.add(self)
+        db.session.commit()
+
+class Threads(UserMixin,db.Model):
+    __tablename__ = 'threads'
+    id = db.Column(db.Integer, primary_key=True)
+    thread_name = db.Column(db.String(256))
+    messages = db.relationship('Messages', backref=db.backref('threads', lazy=True))
+    user_access = db.relationship('UserAccess', backref=db.backref('threads', lazy=True))
+
+    def __repr__(self):
+        return f'<Threads {self.thread_name}>'
+
+    def add_threads(self):
+        db.session.add(self)
+        db.session.commit()
+
+class UserAccess(UserMixin,db.Model):
+    __tablename__ = 'user_access'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    thread_id = db.Column(db.Integer,db.ForeignKey('threads.id'))
+
+    def add_user_access(self):
         db.session.add(self)
         db.session.commit()
     
