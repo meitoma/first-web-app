@@ -1,4 +1,5 @@
 .scrollable-container {
+    position: relative;
     padding-top: 4vh;
     margin-top: -2%;
     /* min-height: 75vh; */
@@ -65,7 +66,6 @@ nav.nav{
 
 /* nav2 */
 nav.nav2{
-    /* display: block; */
     position: fixed;
     background-color: #b2ccd9;
     width: 220px;
@@ -74,7 +74,6 @@ nav.nav2{
     bottom: 0;
     transition: all 0.5s;
     z-index: 3;
-    /* opacity: 0; */
 }
 .nav2 .inner {
     padding: 25px;
@@ -94,6 +93,11 @@ nav.nav2{
 .nav2 .inner ul li.new{
     border-bottom: none;
 }
+.nav2 .inner ul li.delete{
+    border-bottom: none;
+    position: fixed;
+    bottom:10px;
+}
 
 .nav2 .inner ul li i{
     padding-right: 10px
@@ -106,6 +110,10 @@ nav.nav2{
     padding: 1rem;
     text-decoration: none;
     transition-duration: 0.2s;
+}
+
+.nav2 .inner ul li a.delete_thread{
+    color:rgb(254, 76, 76);
 }
 
 .nav2 .inner ul li a:hover {
@@ -130,6 +138,7 @@ nav.nav2{
     z-index: 4;
     cursor: pointer;
 }
+
 .openbtn1{
     position: relative;/*ボタン内側の基点となるためrelativeを指定*/
     background:#57a2c7;
@@ -139,7 +148,7 @@ nav.nav2{
     border-radius: 5px;
     left: 92%;
     top: 20px;
-    z-index: 4;
+    z-index: 3;
 }
 
 /*ボタン内側*/
@@ -166,8 +175,6 @@ nav.nav2{
     top:31px;
 }
 
-/*activeクラスが付与されると線が回転して×に*/
-
 .openbtn1.active span:nth-of-type(1) {
     top: 18px;
     left: 18px;
@@ -176,7 +183,7 @@ nav.nav2{
 }
 
 .openbtn1.active span:nth-of-type(2) {
-    opacity: 0;/*真ん中の線は透過*/
+    opacity: 0;
 }
 
 .openbtn1.active span:nth-of-type(3){
@@ -185,6 +192,68 @@ nav.nav2{
     transform: translateY(-6px) rotate(45deg);
     width: 30%;
 }
+
+/* 新規スレッド */
+.make_thread {
+    padding: 25px;
+    position: fixed;
+    background-color: #d7e7f0;
+    border-radius: 15px;
+    width: 550px;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.5s;
+    z-index: 0;
+    opacity: 0;
+}
+
+.make_thread.open{ 
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 5;
+    opacity: 1;
+}
+
+/* 削除スレッド */
+.delete_display {
+    padding: 25px;
+    position: fixed;
+    background-color: #d7e7f0;
+    border-radius: 15px;
+    width: auto;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.5s;
+    z-index: 0;
+    opacity: 0;
+}
+
+.delete_display.open{ 
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 5;
+    opacity: 1;
+}
+
+form ul{
+    overflow: hidden;
+}
+
+form.make_thread li{
+    list-style: none;
+    float: left;
+    margin: auto;
+    margin-right: 10px;
+}
+
+form.delete_display ul li{
+    list-style: none;
+}
+
 .h1-login-title{
     color:rgb(13, 13, 13);
     margin-top:5vh;
@@ -213,6 +282,7 @@ nav.nav2{
     border-style: solid;
     border-color: white;
     border-radius: 5px;
+    z-index: 2;
 }
 .form-control{
     resize: none;

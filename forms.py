@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField,TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectMultipleField, widgets, RadioField
 from wtforms.validators import DataRequired,ValidationError
 from models import Users
 import re
@@ -40,14 +40,36 @@ class SignupForm(FlaskForm):
     def validate_password_confirm(self, password_confirm):
         if password_confirm.data!=self.password.data:
             raise ValidationError('パスワードが異なっています')
-
         
-
-
-class PostForm(FlaskForm):
+class MessageForm(FlaskForm):
     message = TextAreaField('メッセージ')
     def validate_message(self, message):
         if len(message.data)==0:
             print("空文字")
             raise ValidationError('')
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+class NewThreadForm(FlaskForm):
+    def __init__(self,members,*args, **kwargs):
+        super(NewThreadForm, self).__init__(*args, **kwargs)
+        self.members=members
+        self.member.choices = [(str(i+1), name) for i, name in enumerate(self.members)]
+    thread_name = TextAreaField(label='スレッド名')
+    member = MultiCheckboxField(label='メンバー')
+
+    def validate_thread_name(self, thread_name):
+        if len(thread_name.data)==0:
+            print("空文字")
+            raise ValidationError('')
+
+
+class DeleteFort(FlaskForm):
+    choices = [
+        ('no', 'いいえ'),
+        ('yes', 'はい、削除します')
+    ]
+    radio_field = RadioField('Select an option', choices=choices, default='no')
 

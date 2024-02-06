@@ -4,7 +4,7 @@
         <div class="inner">
         <ul>
             <li><a href="/profile/{{current_user.id}}"><i class="fa-solid fa-user"></i>{{current_user.name}}</a></li>
-            <li><a href="/add_member/"><i class="fa-solid fa-user-group"></i>メンバー</a></li>
+            <li><a href="/add_member/"><i class="fa-solid fa-user-group"></i>{{title}}</a></li>
             <li><a href="/setting/{{current_user.id}}"><i class="fa-solid fa-gear"></i>設定</a></li>
             {% if current_user.is_admin %}
                 <li><a href="/confirm"><i class="fa-solid fa-book"></i>ユーザ確認</a></li>
@@ -21,7 +21,8 @@
             {% for ua in user_access %}
                 <li><a href="/bbs/{{ua.thread_id}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
             {% endfor %}
-            <li class="new"><a href="/bbs/new"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
+            <li class="new"><a class="new_thread"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
+            <li class="delete"><a class="delete_thread"><i class="fa-solid fa-trash"></i>スレッドを削除</a></li>
         </ul>
         </div>
     </nav>
@@ -43,7 +44,7 @@
                                 <div class="row {{jc}} layer1">
                                 <div class="col-6 {{jc}} fix-btn">
                                     <p><span class="p-msg-name">{{m.users.name}}</span> : <!-- {{m.__dict__['user_id']}}  -->
-                                    {{m.__dict__['sendtime']}}<span><a href="#">編集</a></span></p>
+                                    {{m.__dict__['sendtime']}}{% if m.user_id==current_user.id%}<span><a href="#">編集</a> <a href="#">削除</a>{% endif %}</span></p>
                                     <p class="message-box {{msbox}}" style="overflow-wrap: break-word; word-wrap: break-word;">{{m.__dict__['message']}}</p>
                                 </div> 
                             </div>
@@ -51,7 +52,7 @@
                     </div>
                 </div>
     
-                <form action="/bbs/{{id}}" method="post">
+                <form action="/bbs/{{thread_id}}" method="post", class="message-form">
                     {{ form.hidden_tag() }}
                     <div class="row">
                         <div class="col-11">
@@ -68,6 +69,31 @@
                 </form>
             </div>
         </div>
+    <form action="{{ url_for('new_thread', previous_thread = thread_id) }}" method="post" class="make_thread">
+        {{ new_thread_form.hidden_tag() }}
+        <h3>新しいスレッドを作成する</h3>
+        {{ new_thread_form.thread_name.label(class="col-form-label")}}
+        {{ new_thread_form.thread_name(placeholder="スレッド名", class="form-control",rows=1)}}
+        <br>
+        {{ new_thread_form.member.label(class="col-form-label")}}
+        <ul>
+            {% for member_form in new_thread_form.member %}
+                <li>{{ member_form }} {{ member_form.label }}</li>
+            {% endfor %}
+        </ul>
+        <div style="text-align: right;margin-top:10px;">
+            <a class="btn btn-primary btn-sm delete-cancel">キャンセル</a>
+            <button class="btn btn-primary btn-sm one-clk-btn" type="submit">スレッドを作成する</button>
+        </div>
+    </form>
+    <form action="{{ url_for('delete_thread', delete_thread = thread_id) }}" method="post" class="delete_display">
+        {{ delete_form.hidden_tag() }}
+        <h3>"{{title}}"を削除しますか?</h3>
+        {{ delete_form.radio_field()}}
+        <div style="text-align: right;margin-top:10px;">
+            <a class="btn btn-primary btn-sm delete_cancel">キャンセル</a>
+            <button class="btn btn-primary btn-sm one-clk-btn" type="submit">スレッドを削除</button>
+    </form>
     <script>
         const scrollerInner = document.getElementById("scroller__inner");
         scrollerInner.scrollIntoView(false);

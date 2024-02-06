@@ -5,16 +5,40 @@ $(function() {
         $(".nav").toggleClass("open");
     });
     $(".mask").on("click", function(){
-        $(".openbtn1").toggleClass("active");
         $(".mask").toggleClass("open");
-        $(".nav").toggleClass("open");
+        if ($(".mask").hasClass("mask2")) {
+            $(".make_thread").toggleClass("open");
+            $(".mask").toggleClass("mask2");
+          }
+        else if ($(".mask").hasClass("mask3")) {
+            $(".delete_display").toggleClass("open");
+            $(".mask").toggleClass("mask3");
+          }
+        else{
+            $(".openbtn1").toggleClass("active");
+            $(".nav").toggleClass("open");
+        }
+          
+    });
+    $(".new_thread, .cancel").on("click", function(){
+        $(".new_thread").toggleClass("active");
+        $(".make_thread").toggleClass("open");
+        $(".mask").toggleClass("open");
+        $(".mask").toggleClass("mask2");
+    });
+
+    $(".delete_thread, .delete_cancel").on("click", function(){
+        $(".delete_thread").toggleClass("active");
+        $(".delete_display").toggleClass("open");
+        $(".mask").toggleClass("open");
+        $(".mask").toggleClass("mask3");
     });
 });
 
 $(function() {
-    $('button').on('click', function() {
+    $('.message-form button').on('click', function() {
        $(this).prop('disabled', true);
-       $('form').submit();
+       $('.message-form').submit();
     });
   });
 
@@ -42,13 +66,8 @@ textarea.addEventListener('input', ()=>{
 textarea.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
         if (event.ctrlKey || event.metaKey){
-            // submitTextarea();
             console.log("submit")
-            $('button').click();
-            // $.post( '/bbs/1', $('form').serialize() )
-            // .done(function( data ) {
-            //     console.log( data.form );
-            // })
+            $('.message-form button').click();
             event.preventDefault(); // デフォルトのEnterキーのd挙動を防ぐ
         }
     }
