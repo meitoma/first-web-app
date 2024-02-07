@@ -3,15 +3,18 @@ from flask import flash, redirect, url_for,render_template,request
 from flask_login import (
         current_user, login_user, logout_user, login_required
     )
+from flask_socketio import SocketIO, emit, join_room, leave_room, \
+      close_room, rooms, disconnect      
 from sqlalchemy import text
 import csv
-from __init__ import app,db,metadata
+from __init__ import app,db,metadata,socketio
 from forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteFort
 from models import Users,Messages,Threads,UserAccess
 import datetime
 from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
 from __init__ import login_manager
+import time
 
 
 @app.route('/load_data')
@@ -80,6 +83,7 @@ def messages_load():
 
 @app.route('/bbs/<int:thread_id>', methods=['GET', 'POST'])
 @login_required
+@socketio.on('my_chat')
 def bbs(thread_id):
     user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
     accessible_threads=set([ua.thread_id for ua in user_access])
@@ -102,6 +106,7 @@ def bbs(thread_id):
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
+            emit('message', {'message': "data"},to=str(thread_id),namespace="/")
         return redirect(url_for('bbs',thread_id=thread_id))
     else:
         return render_template('bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,form=form,new_thread_form=new_thread_form, delete_form=delete_form)
@@ -203,5 +208,22 @@ def signup():
             return redirect(url_for('login'))
     return render_template('signup.html', title='新規登録', form=form)
 
+@socketio.on('connect')
+def handle_connect():
+    emit('client_echo',{'msg': 'server connected!'})
+
+@socketio.on('server_echo')
+def handle_server_echo(msg):
+    print('echo: ' + str(msg["data"]))
+
+@socketio.on('join')
+def handle_join(data):
+    room = data["room"]
+    join_room(room)
+
+@socketio.on('leave')
+def on_leave(data):
+    room = data['room']
+    leave_room(room)
 
 

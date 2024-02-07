@@ -4,7 +4,7 @@ import flask_login as login
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib import sqla
-
+from flask_socketio import SocketIO
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine,MetaData
 from sqlalchemy.orm import sessionmaker
@@ -18,6 +18,7 @@ app.config.from_object(Config)
 csrf = CSRFProtect(app)
 db = SQLAlchemy(app)
 metadata = MetaData()
+socketio = SocketIO(app)
 
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)

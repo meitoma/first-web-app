@@ -19,7 +19,11 @@
         <div class="inner">
         <ul>
             {% for ua in user_access %}
-                <li><a href="/bbs/{{ua.thread_id}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+                {% set active_thread="" %}
+                {% if ua.thread_id==thread_id%}
+                    {% set active_thread="active" %}
+                {% endif %}
+                <li><a href="/bbs/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
             {% endfor %}
             <li class="new"><a class="new_thread"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
             <li class="delete"><a class="delete_thread"><i class="fa-solid fa-trash"></i>スレッドを削除</a></li>
@@ -75,10 +79,10 @@
         {{ new_thread_form.thread_name.label(class="col-form-label")}}
         {{ new_thread_form.thread_name(placeholder="スレッド名", class="form-control",rows=1)}}
         <br>
-        {{ new_thread_form.member.label(class="col-form-label")}}
+        <p>メンバー</p>
         <ul>
             {% for member_form in new_thread_form.member %}
-                <li>{{ member_form }} {{ member_form.label }}</li>
+                <li>{{ member_form}} {{ member_form.label }}</li>
             {% endfor %}
         </ul>
         <div style="text-align: right;margin-top:10px;">
@@ -97,6 +101,8 @@
     <script>
         const scrollerInner = document.getElementById("scroller__inner");
         scrollerInner.scrollIntoView(false);
+        var thread_id = "{{ thread_id }}";
     </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
     <script src="../static/js/bbs.js"></script>
 {% endblock %}

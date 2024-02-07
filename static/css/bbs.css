@@ -98,6 +98,9 @@ nav.nav2{
     position: fixed;
     bottom:10px;
 }
+.nav2 .inner ul li a.active{
+    font-weight:bold;
+}
 
 .nav2 .inner ul li i{
     padding-right: 10px
