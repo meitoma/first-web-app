@@ -1,0 +1,1 @@
+url_parse(next_page).netloc != ''

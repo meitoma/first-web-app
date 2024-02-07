@@ -1,0 +1,22 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="row-fluid">
+
+    <div>
+        <h1>管理者画面</h1>
+        {% if current_user.is_admin %}
+        <p class="lead">
+            認証済
+        </p>
+        <p>
+            データの管理はこちらの画面からできます。
+        </p>
+        {% else %}
+        <p>管理者のみ閲覧できます。</p>
+        {% endif %}
+    </div>
+
+    <a class="btn btn-primary" href="/"><i class="icon-arrow-left icon-white"></i> 戻る</a>
+</div>
+{% endblock body %}

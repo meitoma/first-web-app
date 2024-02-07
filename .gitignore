@@ -3,4 +3,4 @@
 Pipfile
 Pipfile.lock
 __pycache__/
-static/
+/static/images/

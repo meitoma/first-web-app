@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1 class="text-center">{{title}}</h1>
+    <h1 class="text-center  h1-login-title">{{title}}</h1>
     <form action="/signup" method="post">
         {{ form.hidden_tag() }}
 
@@ -17,14 +17,21 @@
                 {% for error in form.password.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
+                <br>
+                {{ form.password_confirm.label(class="col-form-label")}}<br>
+                {{ form.password_confirm(placeholder="パスワード", class="form-control")}}
+                {% for error in form.password_confirm.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
                 <br><br>
             </div>
         </div>
         <div class="text-center">
             <a class="btn btn-primary"href="/">キャンセル</a>
-            <input class="btn btn-primary" type="submit" value="登録">
+            <input class="btn btn-primary one-clk-btn" type="submit" value="登録">
         </div>
     </form>
+    <script src="../static/js/signup.js"></script>
 {% endblock %}
 
 

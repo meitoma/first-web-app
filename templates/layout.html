@@ -2,11 +2,15 @@
 <html lang="ja">
     <head>
         <meta charset="utf-8">
-        <title>Flask - paiza</title>
+        <title>BBS APP</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="../static/css/bbs.css">
         <style>
-            li {
+            .scroll-lock{
+                overflow-y: hidden
+            }
+            .flashes li{
                 margin-left: -50px;
                 border-bottom: 0.5px solid white;
                 color: white;
@@ -14,75 +18,29 @@
                 list-style:none;
                 background-color: deeppink;
             }
-            .message-hedder{
-                background-color: #b2ccd9ef;
-            }
-            .layer1{
-                z-index: 1;
-            }
-            .layer2{
-                z-index: 2;
-            }
+
             body {
-                padding-top: 50px;
+                /* padding-top: 5vh; */
                 background-color: #b2ccd9;
                 font-family: sans-serif;
-                /* background-image: url(../static/IMG_4936.jpg); */
-                /* background-size: cover;
+                /* background-image: url(../static/IMG_4936.jpg);
+                background-size: cover;
                 background-repeat: no-repeat;
                 background-attachment: fixed;
-                background-position: center center;
-                height: 100vh; */
+                background-position: center center; */
+                /* height: 100vh; */
                 }
             .success {
                 background-color: midnightblue;
             }
-            .login-body{
-                overflow-y: hidden;
-                overflow-x: hidden;
-            }
-            .bulletin-board {
-                padding: 40px 0px;
-                margin-top: -100px;
-                /* background-color: #b2ccd9; */
-		    }
-            .scrollable-container {
-                padding-top: 90px;
-                min-height: 83vh;
-                max-height: 83vh;
-                margin-bottom: 5px;
-                overflow-y: scroll; /* 縦方向のスクロールバーを表示 */
-                overflow-x: hidden
-            }
-            .logout-button{
-                align-self: center;
-            }
-            .h1-title{
-                color:rgb(13, 13, 13);
-            }
-            .p-msg-name{
-                color:red;
-            }
-            .message-box{
-                padding: 9px;
-                border-width: 3px;
-                border-style: solid;
-                border-color: white;
-            }
-            .othre-message-box{
-                background-color:#ffe0d1;
-            }
-            .my-message-box{
-                background-color:#ebffd1;
-                margin-right: 20px;
-            }
         </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
     </head>
     <body>
         <div class="container">
             {% block content %}
             {% endblock %}
-        </body>
+        </div>
     </body>
 </html>
 
