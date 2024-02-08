@@ -270,7 +270,7 @@ form.delete_display ul li{
     width: 100%;
     padding-bottom: 5px;
     padding-left: 7%;
-    font-size: medium;
+    font-size:large;
     /* height: 0px; */
     z-index: 2;
     opacity: 0.9;
@@ -286,6 +286,7 @@ form.delete_display ul li{
     border-style: solid;
     border-color: white;
     border-radius: 5px;
+    font-size:small;
     z-index: 2;
 }
 .form-control{
@@ -306,7 +307,9 @@ form.delete_display ul li{
     right:4vh;
     opacity:1;/*透過1に*/
 }
-
+.inf-message{
+    font-size:small;
+}
 .othre-message-box{
     background-color:#ffe0d1;
 }

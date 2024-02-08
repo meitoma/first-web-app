@@ -1,3 +1,16 @@
+/* タブレット用スタイル */
+@media only screen and (min-width: 768px) and (max-width: 1130px) {
+    .custom-container {
+        margin-right: 5vh;
+    }
+  }
+  
+  /* デスクトップ用スタイル */
+  @media only screen and (min-width: 1131px) {
+    .custom-container{
+        margin-right: 15vh;
+    }
+  }
 .scrollable-container {
     position: relative;
     padding-top: 4vh;
@@ -150,7 +163,7 @@ nav.nav2{
         height:50px;
     border-radius: 5px;
     left: 92%;
-    top: 20px;
+    top: 0px;
     z-index: 3;
 }
 
@@ -262,13 +275,13 @@ form.delete_display ul li{
     margin-top:5vh;
 }
 .h1-title{
-    top: 30px;
+    top: 20px;
     color:rgb(13, 13, 13);
     display: block;
     position: fixed;
     background-color: #b2ccd9;
     width: 100%;
-    padding-bottom: 5px;
+    padding-bottom: 20px;
     padding-left: 7%;
     /* height: 0px; */
     z-index: 2;
