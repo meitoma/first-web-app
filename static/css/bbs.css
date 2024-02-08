@@ -7,7 +7,7 @@
     margin-bottom: 5px;
     overflow-y: scroll; /* 縦方向のスクロールバーを表示 */
     overflow-x: hidden;
-    z-index: 2;
+    z-index: 1;
 }
 .logout-button{
     align-self: center;

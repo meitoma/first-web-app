@@ -112,6 +112,7 @@ def bbs(thread_id):
         return render_template('bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,form=form,new_thread_form=new_thread_form, delete_form=delete_form)
 
 @app.route('/bbs/new', methods=['POST'])
+@socketio.on('create_thread')
 @login_required
 def new_thread():
     users = Users.query.all()
@@ -126,10 +127,12 @@ def new_thread():
         db.session.add_all(user_access)
         db.session.commit()
         db.session.close()
+        emit('message', {'message': "create thread"},namespace="/")
         return redirect(url_for('bbs',thread_id=new_thread_id))
     return redirect(url_for('bbs',thread_id=request.args.get('previous_thread')))
 
 @app.route('/bbs/delete', methods=['POST'])
+@socketio.on('delete_thread')
 @login_required
 def delete_thread():
     delete_thread=request.args.get('delete_thread')
@@ -143,6 +146,7 @@ def delete_thread():
             for user_access in user_access_records:
                 db.session.delete(user_access)
             db.session.commit()
+            emit('message', {'message': "delete thread"},namespace="/")
         return redirect(url_for('home',title=f'"{thread.thread_name}"を削除しました'))
     else:
         return redirect(url_for('home',title=f'削除に失敗しました'))
@@ -208,13 +212,13 @@ def signup():
             return redirect(url_for('login'))
     return render_template('signup.html', title='新規登録', form=form)
 
-@socketio.on('connect')
-def handle_connect():
-    emit('client_echo',{'msg': 'server connected!'})
+# @socketio.on('connect')
+# def handle_connect():
+#     emit('client_echo',{'msg': 'server connected!'})
 
-@socketio.on('server_echo')
-def handle_server_echo(msg):
-    print('echo: ' + str(msg["data"]))
+# @socketio.on('server_echo')
+# def handle_server_echo(msg):
+#     print('echo: ' + str(msg["data"]))
 
 @socketio.on('join')
 def handle_join(data):

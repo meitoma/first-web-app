@@ -33,21 +33,29 @@ $(function() {
         $(".mask").toggleClass("mask3");
     });
     $(".select_thread").on("click", function(){
-        socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
+        // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
         socketio.emit("leave", {room:String(thread_id)})
+    });
+    $(".create-thread").on("click", function(){
+        // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
+        socketio.emit("create_thread", {room:String(thread_id)})
+    });
+    $(".delete-thread").on("click", function(){
+        // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
+        socketio.emit("delete_thread", {room:String(thread_id)})
     });
 });
 
 // var socketio = io.connect('http://' + '127.0.0.1:5000');
 var socketio = io();
 $(function() {
-    socketio.on('connect', function() {
-        socketio.emit('server_echo', {data: 'client connected!'});
-        socketio.emit("join", {room:String(thread_id)})
-    });
-    socketio.on('client_echo', function(data) {
-        console.log("echo" + ': ' + data.msg);
-    });
+    // socketio.on('connect', function() {
+    //     socketio.emit('server_echo', {data: 'client connected!'});
+    //     socketio.emit("join", {room:String(thread_id)})
+    // });
+    // socketio.on('client_echo', function(data) {
+    //     console.log("echo" + ': ' + data.msg);
+    // });
     socketio.on('message', function (data) {
         console.log('Received message: reload');
         location.reload()
