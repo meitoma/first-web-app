@@ -52,13 +52,12 @@ $(function() {
     socketio.on('connect', function() {
         socketio.emit("join", {room:String(thread_id)})
     });
-    // socketio.on('client_echo', function(data) {
-    //     console.log("echo" + ': ' + data.msg);
-    // });
+
     socketio.on('message', function () {
         console.log('Received message: reload');
-        sleep(500);
-        location.reload()
+        setTimeout(function(){
+            location.reload()
+        }, 500 );
     });
 });
 

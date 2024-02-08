@@ -86,7 +86,6 @@ def messages_load():
 def bbs(thread_id):
     user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
     accessible_threads=set([ua.thread_id for ua in user_access])
-    print("thread_id",thread_id)
     thread = Threads.query.get(thread_id)
     if thread_id not in accessible_threads or thread is None : return redirect(url_for('home',title="アクセス権がありません"))
 
