@@ -63,9 +63,9 @@
                             {% endif %}
                                 <div class="row {{jc}} layer1">
                                 <div class="col-9 {{jc}} fix-btn">
-                                    <p class="inf-message"><span class="p-msg-name">{{m.users.name}}</span> : <!-- {{m.__dict__['user_id']}}  -->
-                                    {{m.__dict__['sendtime']}}{% if m.user_id==current_user.id%}<span><a href="#">編集</a> <a href="#">削除</a>{% endif %}</span></p>
-                                    <p class="message-box {{msbox}}" style="overflow-wrap: break-word; word-wrap: break-word;">{{m.__dict__['message']}}</p>
+                                    <p class="{{msbox}} inf-message"><span class="p-msg-name">{{m.users.name}}</span> :
+                                    {{m.__dict__['sendtime']}}{% if m.user_id==current_user.id%}<span><a href="#">編集</a>&ensp;<a href="#">削除</a>{% endif %}</span></p>
+                                    <p class="{{msbox}}" style="overflow-wrap: break-word; word-wrap: break-word;"><span class="message-box back-color">{{m.__dict__['message']}}</span></p>
                                 </div> 
                             </div>
                         {% endfor %}
@@ -75,7 +75,7 @@
                 <form action="/bbs/{{thread_id}}" method="post", class="message-form">
                     {{ form.hidden_tag() }}
                     <div class="row">
-                        <div class="col-11">
+                        <div class="col-11 submit-text">
                             {{ form.message(placeholder="メッセージを入力", class="form-control",id='text_area')}}
                         </div>
                         <div class="col-1">

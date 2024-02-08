@@ -38,11 +38,11 @@ $(function() {
     });
     $(".create-thread").on("click", function(){
         // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
-        socketio.emit("create_thread", {room:String(thread_id)})
+        socketio.emit("create_thread")
     });
     $(".delete-thread").on("click", function(){
         // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
-        socketio.emit("delete_thread", {room:String(thread_id)})
+        socketio.emit("delete_thread")
     });
 });
 
@@ -55,8 +55,9 @@ $(function() {
     // socketio.on('client_echo', function(data) {
     //     console.log("echo" + ': ' + data.msg);
     // });
-    socketio.on('message', function (data) {
+    socketio.on('message', function () {
         console.log('Received message: reload');
+        sleep(500);
         location.reload()
     });
 });

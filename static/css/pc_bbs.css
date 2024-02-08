@@ -13,6 +13,7 @@
 .scrollable-container {
     position: relative;
     padding-top: 4vh;
+    padding:1%;
     margin-top: -2%;
     /* min-height: 75vh; */
     height: 85vh;
@@ -304,25 +305,44 @@ form.delete_display ul li{
     resize: none;
 }
 .fix-btn span:nth-child(2){
-    /* right:100%; */
-    opacity:0;/*透過0に*/
+    display: none;
 }
-.justify-content-start .fix-btn:hover span:nth-child(2){
+/* .justify-content-start .fix-btn:hover span:nth-child(2){
     position: absolute;
     right:10px;
-    opacity:1;/*透過1に*/
-}
+    display: block;
+} */
 
 .justify-content-end .fix-btn:hover span:nth-child(2){
     position: absolute;
-    right:4vh;
-    opacity:1;/*透過1に*/
+    display: flex;
+    right:15px;
+    top:15px
+}
+.justify-content-end .fix-btn:hover .inf-message{
+    margin-right: 80px;
 }
 
-.othre-message-box{
-    background-color:#ffe0d1;
+
+.inf-message{
+    margin-top: 15px;
 }
+/* .othre-message-box{
+    background-color:#ffe0d1;
+    margin-right: 65%;
+} */
+.othre-message-box .back-color{
+    background-color:#ffe0d1;
+    padding: 9px;
+}
+
 .my-message-box{
+    text-align:end;
+}
+.my-message-box.inf-message{
+    text-align:end;
+}
+.my-message-box .back-color{
     background-color:#ebffd1;
-    margin-right: 20px;
+    padding: 9px;
 }

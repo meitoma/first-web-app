@@ -63,65 +63,13 @@ nav.nav{
 .nav .inner ul li a:hover {
     background: #e4e4e4;
 }
+.nav .inner ul li a.delete_thread{
+    color:rgb(254, 76, 76);
+}
 
 /* nav2 */
 nav.nav2{
     display: none;
-    position: fixed;
-    background-color: #b2ccd9;
-    width: 220px;
-    top: 0;
-    left: -200px;
-    bottom: 0;
-    transition: all 0.5s;
-    z-index: 3;
-}
-.nav2 .inner {
-    padding: 25px;
-}
-
-.nav2 .inner ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.nav2 .inner ul li {
-    margin: 0;
-    border-bottom: 1px solid #333;
-    text-align: left;
-}
-.nav2 .inner ul li.new{
-    border-bottom: none;
-}
-.nav2 .inner ul li.delete{
-    border-bottom: none;
-    position: fixed;
-    bottom:10px;
-}
-.nav2 .inner ul li a.active{
-    font-weight:bold;
-}
-
-.nav2 .inner ul li i{
-    padding-right: 10px
-}
-
-.nav2 .inner ul li a {
-    display: block;
-    color: #333;
-    font-size: 14px;
-    padding: 1rem;
-    text-decoration: none;
-    transition-duration: 0.2s;
-}
-
-.nav2 .inner ul li a.delete_thread{
-    color:rgb(254, 76, 76);
-}
-
-.nav2 .inner ul li a:hover {
-    background: #e4e4e4;
 }
 
 /* mask */
@@ -290,7 +238,6 @@ form.delete_display ul li{
 }
 .message-box{
     margin-top: -10px;
-    margin-bottom: 30px;
     padding: 9px;
     border-width: 3px;
     border-style: solid;
@@ -303,27 +250,43 @@ form.delete_display ul li{
     resize: none;
 }
 .fix-btn span:nth-child(2){
-    /* right:100%; */
-    opacity:0;/*透過0に*/
-}
-.justify-content-start .fix-btn:hover span:nth-child(2){
-    position: absolute;
-    right:10px;
-    opacity:1;/*透過1に*/
+    display: none;
 }
 
 .justify-content-end .fix-btn:hover span:nth-child(2){
     position: absolute;
-    right:4vh;
-    opacity:1;/*透過1に*/
+    display: flex;
+    right:15px;
+    top:15px
+}
+.justify-content-end .fix-btn:hover .inf-message{
+    margin-right: 70px;
 }
 .inf-message{
     font-size:small;
+    margin-top: 15px;
 }
-.othre-message-box{
+
+/* .othre-message-box{
+    margin-bottom: 20px;
+} */
+
+.othre-message-box .back-color{
     background-color:#ffe0d1;
+    padding: 9px;
 }
+
 .my-message-box{
+    text-align:end;
+}
+.my-message-box.inf-message{
+    text-align:end;
+}
+.my-message-box .back-color{
     background-color:#ebffd1;
-    margin-right: 20px;
+    padding: 9px;
+}
+
+.submit-text{
+    padding-right: 5%;
 }
