@@ -1,6 +1,6 @@
 {% extends "layout_bbs.html" %}
 {% block content %}
-    <nav class="nav">
+    <nav class="nav" style="overflow-y: scroll;">
         <div class="inner">
         <ul>
             <li><a href="/profile/{{current_user.id}}"><i class="fa-solid fa-user"></i>{{current_user.name}}</a></li>
@@ -14,6 +14,22 @@
             <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>ログアウト</a></li>
         </ul>
         </div>
+        <nav class="sp-nav2">
+            <div class="inner">
+                <p style="margin: 0px;">スレッド</p>
+                <ul>
+                    {% for ua in user_access %}
+                        {% set active_thread="" %}
+                        {% if ua.thread_id==thread_id%}
+                            {% set active_thread="active" %}
+                        {% endif %}
+                        <li><a href="/bbs/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+                    {% endfor %}
+                    <li class="new"><a class="new_thread"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
+                    <li class="delete"><a class="delete_thread"><i class="fa-solid fa-trash"></i>スレッドを削除</a></li>
+                </ul>
+            </div>
+        </nav>
     </nav>
     <nav class="nav2">
         <div class="inner">
@@ -86,7 +102,7 @@
             {% endfor %}
         </ul>
         <div style="text-align: right;margin-top:10px;">
-            <a class="btn btn-primary btn-sm delete-cancel">キャンセル</a>
+            <a class="btn btn-primary btn-sm cancel">キャンセル</a>
             <button class="btn btn-primary btn-sm one-clk-btn create-thread" type="submit">スレッドを作成する</button>
         </div>
     </form>

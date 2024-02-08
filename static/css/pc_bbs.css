@@ -166,6 +166,9 @@ nav.nav2{
     top: 0px;
     z-index: 3;
 }
+.openbtn1.active{
+    z-index: 5;
+}
 
 /*ボタン内側*/
 .openbtn1 span{
