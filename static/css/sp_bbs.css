@@ -3,7 +3,7 @@
     padding-top: 4vh;
     margin-top: -2%;
     /* min-height: 75vh; */
-    height: 70vh;
+    height: 75vh;
     margin-bottom: 5px;
     overflow-y: scroll; /* 縦方向のスクロールバーを表示 */
     overflow-x: hidden;
@@ -270,10 +270,6 @@ form.delete_display ul li{
     list-style: none;
 }
 
-.h1-login-title{
-    color:rgb(13, 13, 13);
-    margin-top:5vh;
-}
 .h1-title{
     top: 30px;
     color:rgb(13, 13, 13);

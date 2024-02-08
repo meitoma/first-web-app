@@ -4,7 +4,6 @@
         margin-right: 5vh;
     }
   }
-  
   /* デスクトップ用スタイル */
   @media only screen and (min-width: 1131px) {
     .custom-container{
@@ -76,7 +75,9 @@ nav.nav{
 .nav .inner ul li a:hover {
     background: #e4e4e4;
 }
-
+nav.sp-nav2{
+    display: none;
+}
 /* nav2 */
 nav.nav2{
     position: fixed;
@@ -273,10 +274,6 @@ form.delete_display ul li{
     list-style: none;
 }
 
-.h1-login-title{
-    color:rgb(13, 13, 13);
-    margin-top:5vh;
-}
 .h1-title{
     top: 20px;
     color:rgb(13, 13, 13);

@@ -26,3 +26,8 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+.h1-login-title{
+    padding-top: 10%;
+    color:rgb(13, 13, 13);
+    margin-top:5vh;
+}

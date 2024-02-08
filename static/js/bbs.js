@@ -49,10 +49,9 @@ $(function() {
 // var socketio = io.connect('http://' + '127.0.0.1:5000');
 var socketio = io();
 $(function() {
-    // socketio.on('connect', function() {
-    //     socketio.emit('server_echo', {data: 'client connected!'});
-    //     socketio.emit("join", {room:String(thread_id)})
-    // });
+    socketio.on('connect', function() {
+        socketio.emit("join", {room:String(thread_id)})
+    });
     // socketio.on('client_echo', function(data) {
     //     console.log("echo" + ': ' + data.msg);
     // });
