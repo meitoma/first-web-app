@@ -7,15 +7,18 @@
   /* デスクトップ用スタイル */
   @media only screen and (min-width: 1131px) {
     .custom-container{
-        margin-right: 15vh;
+        margin-left: 23vh;
     }
   }
 .scrollable-container {
     position: relative;
     padding-top: 4vh;
-    padding:1%;
+    padding-right: 40px;
+    padding-left: 40px;
+    /* padding:1%; */
     margin-top: -2%;
     /* min-height: 75vh; */
+    /* max-width: 90%; */
     height: 85vh;
     margin-bottom: 5px;
     overflow-y: scroll; /* 縦方向のスクロールバーを表示 */
