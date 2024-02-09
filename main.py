@@ -8,7 +8,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, \
 from sqlalchemy import text
 import csv
 from __init__ import app,db,metadata,socketio
-from forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteFort
+from forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteForm, AddMmemberForm
 from models import Users,Messages,Threads,UserAccess
 import datetime
 from zoneinfo import ZoneInfo
@@ -100,7 +100,7 @@ def bbs(thread_id):
     users = Users.query.all()
     members=[user.name for user in users]
     new_thread_form = NewThreadForm(members=members)
-    delete_form = DeleteFort()
+    delete_form = DeleteForm()
     new_thread_form.process([])
     if request.method == "POST":
         if form.validate_on_submit():
@@ -114,6 +114,27 @@ def bbs(thread_id):
     else:
         return render_template('bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,new_thread_form=new_thread_form, delete_form=delete_form)
 
+@app.route('/bbs/add_member', methods=['POST'])
+@login_required
+def add_member():
+    users = Users.query.all()
+    members=[user.name for user in users]
+    add_member_form = AddMmemberForm(members=members)
+    if add_member_form.validate_on_submit():
+        # new_thread = Threads(thread_name=new_thread_form.thread_name.data)
+        # db.session.add(new_thread)
+        # db.session.flush()
+        # new_thread_id = new_thread.id
+        thread_id=request.args.get('previous_thread')
+        user_access=[UserAccess(user_id=int(m),thread_id=thread_id) for m in add_member_form.member.data]
+        print(add_member_form.member.data)
+        db.session.add_all(user_access)
+        db.session.commit()
+        db.session.close()
+        emit('message', namespace="/",to=list(in_threads))
+    return redirect(url_for('bbs',thread_id=thread_id))
+
+
 @app.route('/bbs/new', methods=['POST'])
 @login_required
 def new_thread():
@@ -125,7 +146,7 @@ def new_thread():
         db.session.add(new_thread)
         db.session.flush()
         new_thread_id = new_thread.id
-        user_access=[UserAccess(user_id=i+1,thread_id=new_thread_id) for i,m in enumerate(new_thread_form.member.data) if m]
+        user_access=[UserAccess(user_id=int(m),thread_id=new_thread_id) for m in new_thread_form.member.data]
         db.session.add_all(user_access)
         db.session.commit()
         db.session.close()
@@ -137,7 +158,7 @@ def new_thread():
 @login_required
 def delete_thread():
     delete_thread=request.args.get('delete_thread')
-    delete_form = DeleteFort()
+    delete_form = DeleteForm()
     current_thread=request.referrer.split('/')[-1]
     if delete_form.radio_field.data=="yes" and delete_thread == current_thread and delete_thread != "1":
         thread = Threads.query.filter_by(id=delete_thread).first()

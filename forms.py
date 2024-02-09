@@ -65,8 +65,14 @@ class NewThreadForm(FlaskForm):
             print("空文字")
             raise ValidationError('')
 
+class AddMmemberForm(FlaskForm):
+    def __init__(self,members,*args, **kwargs):
+        super(AddMmemberForm, self).__init__(*args, **kwargs)
+        self.members=members
+        self.member.choices = [(str(i+1), name) for i, name in enumerate(self.members)]
+    member = MultiCheckboxField(label='メンバー')
 
-class DeleteFort(FlaskForm):
+class DeleteForm(FlaskForm):
     choices = [
         ('no', 'いいえ'),
         ('yes', 'はい、削除します')

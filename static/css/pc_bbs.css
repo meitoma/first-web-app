@@ -217,6 +217,29 @@ nav.nav2{
     width: 30%;
 }
 
+/* メンバ追加 */
+.add_member {
+    padding: 25px;
+    position: fixed;
+    background-color: #d7e7f0;
+    border-radius: 15px;
+    width: 450px;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.5s;
+    z-index: 0;
+    opacity: 0;
+}
+
+.add_member.open{ 
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 5;
+    opacity: 1;
+}
+
 /* 新規スレッド */
 .make_thread {
     padding: 25px;
@@ -265,6 +288,13 @@ nav.nav2{
 
 form ul{
     overflow: hidden;
+}
+
+form.add_member li{
+    list-style: none;
+    float: left;
+    margin: auto;
+    margin-right: 10px;
 }
 
 form.make_thread li{

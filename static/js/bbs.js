@@ -14,10 +14,19 @@ $(function() {
             $(".delete_display").toggleClass("open");
             $(".mask").toggleClass("mask3");
           }
+        else if ($(".mask").hasClass("mask4")) {
+            $(".add_member").toggleClass("open");
+            $(".mask").toggleClass("mask4");
+          }
         else{
             $(".openbtn1").toggleClass("active");
             $(".nav").toggleClass("open");
         }   
+    });
+    $(".add_member_btn, .add_cancel").on("click", function(){
+        $(".add_member_btn").toggleClass("active");
+        $(".add_member").toggleClass("open");
+        $(".mask").toggleClass("mask4");
     });
     $(".new_thread, .cancel").on("click", function(){
         $(".new_thread").toggleClass("active");
