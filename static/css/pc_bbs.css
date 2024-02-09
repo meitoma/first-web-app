@@ -304,6 +304,18 @@ form.delete_display ul li{
     border-radius: 5px;
     z-index: 2;
 }
+.small-screen-content.close{
+    display: none;
+}
+.small-screen-content .open{
+    display: block;
+}
+.large-screen-content.close{
+    display: none;
+}
+.large-screen-content .open{
+    display: block;
+}
 .form-control{
     resize: none;
 }
@@ -337,10 +349,23 @@ form.delete_display ul li{
 .othre-message-box .back-color{
     background-color:#ffe0d1;
     padding: 9px;
+    font-size: medium;
 }
 
 .my-message-box{
     text-align:end;
+    font-size: medium;
+}
+.my-message-box.multi-rows{
+    margin-top: -5px;
+    text-align:start;
+    background-color:#ebffd1;
+    border-color: white;
+    border-radius: 5px;
+    padding: 9px;
+    border-width: 3px;
+    border-style: solid;
+    font-size:medium;
 }
 .my-message-box.inf-message{
     text-align:end;

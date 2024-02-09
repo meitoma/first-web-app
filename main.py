@@ -14,6 +14,7 @@ import datetime
 from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
 from __init__ import login_manager
+import wcwidth
 import time
 
 in_threads=set()
@@ -81,6 +82,9 @@ def messages_load():
           db.session.query(UserAccess).all()]
     return render_template('comp_load.html', message = message,data=data)
 
+def count_characters(text):
+    return sum(wcwidth.wcwidth(char) if wcwidth.wcwidth(char) > 0 else 1 for char in text)
+
 @app.route('/bbs/<int:thread_id>', methods=['GET', 'POST'])
 @login_required
 def bbs(thread_id):
@@ -91,7 +95,7 @@ def bbs(thread_id):
 
     title = thread.thread_name or request.args.get('title')
     messages = Messages.query.filter(Messages.thread_id == thread_id)
-    
+    messages_count = [count_characters(message.message)for message in messages] #半角1,全角2でカウント
     form = MessageForm()
     users = Users.query.all()
     members=[user.name for user in users]
@@ -108,7 +112,7 @@ def bbs(thread_id):
             emit('message',to=str(thread_id),namespace="/")
         return redirect(url_for('bbs',thread_id=thread_id))
     else:
-        return render_template('bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,form=form,new_thread_form=new_thread_form, delete_form=delete_form)
+        return render_template('bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,new_thread_form=new_thread_form, delete_form=delete_form)
 
 @app.route('/bbs/new', methods=['POST'])
 @login_required

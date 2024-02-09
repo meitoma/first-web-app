@@ -96,3 +96,45 @@ $(function() {
     });
   });
 
+var pre_window=0
+function updateContent() {
+    const smallScreenContent = document.querySelectorAll('.small-screen-content');
+    const largeScreenContent = document.querySelectorAll('.large-screen-content');
+    // const smallScreenContent = document.querySelector('.a');
+    // const largeScreenContent = document.querySelector('.b');
+    var thresholdWidth = 600;
+    if (window.innerWidth <= thresholdWidth) {
+        // if (!$(".small-screen-content").contains("open")) {
+            // smallScreenContent.classList.remove("close");
+            smallScreenContent.forEach((element) => 
+                element.classList.replace("close","open")
+            );
+            largeScreenContent.forEach((element) => 
+                element.classList.replace("open","close")
+            );
+            // smallScreenContent.classList.add("open");
+            // smallScreenContent.style.display="block";
+            // largeScreenContent.style.display="none";
+            // largeScreenContent.classList.replace("open","close");
+            // console.log(smallScreenContent)
+            // console.log(largeScreenContent)
+        // }
+    } else {
+        // if (!$(".large-screen-content").contains("open")) {
+            // smallScreenContent.classList.replace("open","close");
+            // smallScreenContent.style.display="none";
+            // largeScreenContent.style.display="block";
+            // largeScreenContent.classList.replace("close","open");
+            smallScreenContent.forEach((element) => 
+                element.classList.replace("open","close")
+            );
+            largeScreenContent.forEach((element) => 
+                element.classList.replace("close","open")
+            );
+            // console.log(smallScreenContent)
+            // console.log(largeScreenContent)
+        // }
+    }
+}
+window.addEventListener('load', updateContent);
+window.addEventListener('resize', updateContent);

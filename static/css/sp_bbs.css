@@ -103,7 +103,7 @@ nav.nav2{
         height:25px;
     border-radius: 5px;
     left: 92%;
-    top: 20px;
+    top: 4px;
     z-index: 3;
 }
 .openbtn1.active{
@@ -250,6 +250,18 @@ form.delete_display ul li{
     font-size:small;
     z-index: 2;
 }
+.small-screen-content.close{
+    display: none;
+}
+.small-screen-content .open{
+    display: block;
+}
+.large-screen-content.close{
+    display: none;
+}
+.large-screen-content .open{
+    display: block;
+}
 .form-control{
     resize: none;
 }
@@ -282,6 +294,17 @@ form.delete_display ul li{
 
 .my-message-box{
     text-align:end;
+}
+.my-message-box.multi-rows{
+    margin-top: -5px;
+    text-align:start;
+    background-color:#ebffd1;
+    border-color: white;
+    border-radius: 5px;
+    padding: 9px;
+    border-width: 3px;
+    border-style: solid;
+    font-size:small;
 }
 .my-message-box.inf-message{
     text-align:end;
