@@ -351,6 +351,17 @@ form.delete_display ul li{
     padding: 9px;
     font-size: medium;
 }
+.othre-message-box.multi-rows{
+    margin-top: -5px;
+    text-align:start;
+    background-color:#ffe0d1;
+    border-color: white;
+    border-radius: 5px;
+    padding: 9px;
+    border-width: 3px;
+    border-style: solid;
+    font-size:medium;
+}
 
 .my-message-box{
     text-align:end;
