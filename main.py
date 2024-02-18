@@ -11,6 +11,9 @@ from __init__ import app,db,metadata,socketio
 from forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteForm, AddMmemberForm
 from models import Users,Messages,Threads,UserAccess
 import datetime
+import secrets
+import os
+from PIL import Image
 from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
 from __init__ import login_manager
@@ -18,6 +21,7 @@ import wcwidth
 import time
 
 in_threads=set()
+@login_required
 @app.route('/load_data')
 def users_load():
     #? Users tableの内容削除
@@ -70,8 +74,8 @@ def messages_load():
         add_message=[]
         next(reader) #csvファイルの1行目(列名)を除く
         for row in reader:
-            tdatetime = datetime.datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')
-            messages=Messages(user_id=row[0],thread_id=row[1],message=row[2],sendtime=tdatetime)
+            tdatetime = datetime.datetime.strptime(row[4], '%Y-%m-%d %H:%M:%S')
+            messages=Messages(user_id=row[0],thread_id=row[1],message_type=row[2],message=row[3],sendtime=tdatetime)
             add_message.append(messages)
         db.session.add_all(add_message)
         db.session.commit()
@@ -84,6 +88,18 @@ def messages_load():
 
 def count_characters(text):
     return sum(wcwidth.wcwidth(char) if wcwidth.wcwidth(char) > 0 else 1 for char in text)
+
+# 画像アップロードの関数
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'static/send_images', picture_fn)
+    i = Image.open(form_picture)
+    i.thumbnail((800, 800))
+    i.save(picture_path)
+    return picture_fn
 
 @app.route('/bbs/<int:thread_id>', methods=['GET', 'POST'])
 @login_required
@@ -105,7 +121,11 @@ def bbs(thread_id):
     if request.method == "POST":
         if form.validate_on_submit():
             current_time = datetime.datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M:%S")
-            user_message = Messages(user_id=current_user.id,message=form.message.data,sendtime=current_time,thread_id=thread_id)
+            if form.image.data:
+                picture_file = save_picture(form.image.data)
+                user_message = Messages(user_id=current_user.id,message_type="image",message=picture_file,sendtime=current_time,thread_id=thread_id)
+            else:
+                user_message = Messages(user_id=current_user.id,message_type="text",message=form.message.data,sendtime=current_time,thread_id=thread_id)
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
@@ -121,10 +141,6 @@ def add_member():
     members=[user.name for user in users]
     add_member_form = AddMmemberForm(members=members)
     if add_member_form.validate_on_submit():
-        # new_thread = Threads(thread_name=new_thread_form.thread_name.data)
-        # db.session.add(new_thread)
-        # db.session.flush()
-        # new_thread_id = new_thread.id
         thread_id=request.args.get('previous_thread')
         user_access=[UserAccess(user_id=int(m),thread_id=thread_id) for m in add_member_form.member.data]
         print(add_member_form.member.data)

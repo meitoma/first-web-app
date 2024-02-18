@@ -4,7 +4,7 @@
         margin-right: 5vh;
     }
   }
-  /* デスクトップ用スタイル */
+/* デスクトップ用スタイル */
   @media only screen and (min-width: 1131px) {
     .custom-container{
         margin-left: 23vh;
@@ -19,7 +19,7 @@
     margin-top: -2%;
     /* min-height: 75vh; */
     /* max-width: 90%; */
-    height: 85vh;
+    height: 84vh;
     margin-bottom: 5px;
     overflow-y: scroll; /* 縦方向のスクロールバーを表示 */
     overflow-x: hidden;
@@ -253,6 +253,7 @@ nav.nav2{
     transition: all 0.5s;
     z-index: 0;
     opacity: 0;
+    /* box-shadow: 10px 5px 5px black; */
 }
 
 .make_thread.open{ 
@@ -392,6 +393,14 @@ form.delete_display ul li{
     border-style: solid;
     font-size:medium;
 }
+.box .othre-message-box{
+    width: 100%; 
+    margin-right: auto;
+}
+.img-wrap .othre-message-box{
+    margin-right: auto; 
+    width:400px;
+}
 
 .my-message-box{
     text-align:end;
@@ -415,3 +424,34 @@ form.delete_display ul li{
     background-color:#ebffd1;
     padding: 9px;
 }
+.box .my-message-box{
+    width: 100%; 
+    margin-left: auto;
+}
+.img-wrap .my-message-box{
+    margin-left: auto; 
+    width:400px;
+}
+
+form.message-form{
+    padding-top: 10px;
+}
+.submit-text{
+    padding-left: 50px;
+    margin-right: -30px;
+}
+.in-line{
+    display: inline-block;
+}
+.form-control.in-line{
+    width: 96%;
+}
+.select-image-btn{
+    position: relative;
+    top:-14px;
+    margin-right: 10px;
+    z-index: 2;
+}
+input[type="file"] {
+    display: none;
+  }

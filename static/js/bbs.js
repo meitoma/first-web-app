@@ -53,6 +53,18 @@ $(function() {
         // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
         socketio.emit("delete_thread")
     });
+    $('input').on('change', function () {
+        //propを使って、file[0]にアクセスする
+        var file = $(this).prop('files')[0];
+        //text()で要素内のテキストを変更する
+        if(file){
+            $('#text_area').text(file.name);
+        }
+        else{
+            $('#text_area').text("");
+        }
+        
+    });
 });
 
 // var socketio = io.connect('http://' + '127.0.0.1:5000');
@@ -109,41 +121,28 @@ var pre_window=0
 function updateContent() {
     const smallScreenContent = document.querySelectorAll('.small-screen-content');
     const largeScreenContent = document.querySelectorAll('.large-screen-content');
-    // const smallScreenContent = document.querySelector('.a');
-    // const largeScreenContent = document.querySelector('.b');
+
     var thresholdWidth = 600;
     if (window.innerWidth <= thresholdWidth) {
-        // if (!$(".small-screen-content").contains("open")) {
-            // smallScreenContent.classList.remove("close");
             smallScreenContent.forEach((element) => 
                 element.classList.replace("close","open")
             );
             largeScreenContent.forEach((element) => 
                 element.classList.replace("open","close")
             );
-            // smallScreenContent.classList.add("open");
-            // smallScreenContent.style.display="block";
-            // largeScreenContent.style.display="none";
-            // largeScreenContent.classList.replace("open","close");
-            // console.log(smallScreenContent)
-            // console.log(largeScreenContent)
-        // }
     } else {
-        // if (!$(".large-screen-content").contains("open")) {
-            // smallScreenContent.classList.replace("open","close");
-            // smallScreenContent.style.display="none";
-            // largeScreenContent.style.display="block";
-            // largeScreenContent.classList.replace("close","open");
             smallScreenContent.forEach((element) => 
                 element.classList.replace("open","close")
             );
             largeScreenContent.forEach((element) => 
                 element.classList.replace("close","open")
             );
-            // console.log(smallScreenContent)
-            // console.log(largeScreenContent)
-        // }
     }
 }
 window.addEventListener('load', updateContent);
 window.addEventListener('resize', updateContent);
+
+// window.onload = function(){
+//     var obj = document.getElementById("scroller__inner");
+//     obj.scrollTop = obj.scrollHeight;
+//     }

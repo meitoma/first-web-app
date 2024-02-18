@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectMultipleField, widgets, RadioField
+from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired,ValidationError
 from models import Users
 import re
@@ -43,6 +44,7 @@ class SignupForm(FlaskForm):
         
 class MessageForm(FlaskForm):
     message = TextAreaField('メッセージ')
+    image = FileField('画像', validators=[FileAllowed(['jpg', 'png'])])
     def validate_message(self, message):
         if len(message.data)==0:
             print("空文字")

@@ -364,3 +364,10 @@ form.delete_display ul li{
     padding-right: 10%;
     font-size:small;
 }
+.submit-text input{
+    position: absolute;
+    top:0;
+}
+input[type="file"] {
+    display: none;
+  }

@@ -46,6 +46,7 @@ class Messages(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     thread_id = db.Column(db.Integer,db.ForeignKey('threads.id'))
+    message_type=db.Column(db.String(10))
     message = db.Column(db.String(256))
     sendtime = db.Column(db.DateTime, default=datetime.datetime.now(ZoneInfo("Asia/Tokyo")))
 
