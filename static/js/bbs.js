@@ -80,7 +80,7 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
     if(send_user==current_user){
          content_html += '<span><a href="#">編集</a>&ensp;<a href="#">削除</a></span>\n'
         }
-    if(type="text"){
+    if(type=="text"){
             content_html += '<div class="small-screen-content close"><!-- スマホ用の画面 -->\n'
             if(messages_count<=27){
                 content_html += '<p class='+ msbox +' style="overflow-wrap: break-word; word-wrap: break-word;"><span class="message-box back-color">'+ message +'</span></p>\n</div>\n'
@@ -129,7 +129,9 @@ $(function() {
         var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
         content.innerHTML = contentHTML + newContent;
         updateContent();
-        scrollbottonm();
+        setTimeout(function(){
+            scrollbottonm();
+        }, 500 );
     });
 });
 

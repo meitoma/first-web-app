@@ -140,7 +140,7 @@ def bbs(thread_id):
             # emit('reload',to=str(thread_id),namespace="/")
             emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=list(in_threads))
             # time.sleep(10)
-        return ('', 204)
+        # return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
     else:
         return render_template('bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,new_thread_form=new_thread_form, delete_form=delete_form)

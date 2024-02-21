@@ -152,7 +152,10 @@
             const scrollerInner = document.getElementById("scroller__inner");
 	        scrollerInner.scrollIntoView({block: "end", inline: "nearest"})
         };
-        window.onload = scrollbottonm();
+        window.onload = function(){
+            const scrollerInner = document.getElementById("scroller__inner");
+	        scrollerInner.scrollIntoView({block: "end", inline: "nearest"})
+        };
         var thread_id = "{{ thread_id }}";
         var current_user = "{{current_user.id}}";
     </script>
