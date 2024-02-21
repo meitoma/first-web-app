@@ -34,14 +34,14 @@
             }
             
             /* スマホ用スタイル */
-            @media only screen and (max-width: 768px) {
+            @media only screen and (max-width: 1000px) {
                 .sp-pad {
                     padding-top: 15vh;
                     transform: scale(1.5, 1.5)
                 }
             }
             /* デスクトップ用スタイル */
-            @media onlyscreen and (min-width: 769px) {
+            @media only screen and (min-width: 1001px) {
                 .sp-pad{
                     transform: scale(1, 1)
                 }
@@ -50,7 +50,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
     </head>
     <body class="sp-pad">
-        <div class="container">
+        <div class="container" s>
             {% block content %}
             {% endblock %}
         </div>
