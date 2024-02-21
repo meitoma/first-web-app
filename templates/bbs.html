@@ -64,33 +64,17 @@
                             <div class="row {{jc}} layer1">
                                 <div class="col-9 {{jc}} fix-btn">
                                     <p class="{{msbox}} inf-message"><span class="p-msg-name">{{m.users.name}}</span> :
-                                        {{m.__dict__['sendtime']}}{% if m.user_id==current_user.id%}<span><a href="#">編集</a>&ensp;<a href="#">削除</a>{% endif %}</span></p>
+                                        {{m.__dict__['sendtime']}}{% if m.user_id==current_user.id%}<span><a href="#">編集</a>&ensp;<a href="#">削除</a></span>{% endif %}</p>
                                     {%if m.message_type=="text"%}
                                         <div class="small-screen-content close"><!-- スマホ用の画面 -->
-                                            <!-- {%if m.message_type=="text"%} -->
                                                 {% if messages_count[loop.index0] <=27 %}<p class="{{msbox}}" style="overflow-wrap: break-word; word-wrap: break-word;"><span class="message-box back-color">{{m.__dict__['message']}}</span></p>
                                                 {% else %}<p class="{{msbox}} multi-rows " style="overflow-wrap: break-word; word-wrap: break-word;">{{m.__dict__['message']}}</p>
                                                 {% endif %}
-                                            <!-- {% else %}
-                                                <div class="box {{msbox}}">
-                                                    <div class="img-wrap">
-                                                        <a href='../static/send_images/{{m.__dict__["message"]}}' target="_blank"><img src='../static/send_images/{{m.__dict__["message"]}}'  width="200" alt="" border="0" ></a>
-                                                    </div>
-                                                </div>
-                                            {% endif %} -->
                                         </div>
                                         <div class="large-screen-content open"><!-- PC用の画面 -->
-                                            <!-- {%if m.message_type=="text"%} -->
                                                 {% if messages_count[loop.index0] <=56 %}<p class="{{msbox}}" style="overflow-wrap: break-word; word-wrap: break-word;"><span class="message-box back-color">{{m.__dict__['message']}}</span></p>
                                                 {% else %}<p class="{{msbox}} multi-rows " style="overflow-wrap: break-word; word-wrap: break-word;">{{m.__dict__['message']}}</p>
                                                 {% endif %}
-                                                <!-- {% else %}
-                                                    <div class="box {{msbox}}">
-                                                        <div class="img-wrap">
-                                                            <a href='../static/send_images/{{m.__dict__["message"]}}' target="_blank"><img src='../static/send_images/{{m.__dict__["message"]}}'  id ='{{loop.index0}}' width="400" alt="" border="0" ></a>
-                                                        </div>
-                                                    </div>
-                                                {% endif %} -->
                                         </div>
                                     {% else %}
                                         <div class="box {{msbox}}">
@@ -164,11 +148,13 @@
             <button class="btn btn-primary btn-sm one-clk-btn delete-thread" type="submit">スレッドを削除</button>
     </form>
     <script>
-        window.onload = function(){
+        function scrollbottonm(){
             const scrollerInner = document.getElementById("scroller__inner");
 	        scrollerInner.scrollIntoView({block: "end", inline: "nearest"})
         };
+        window.onload = scrollbottonm();
         var thread_id = "{{ thread_id }}";
+        var current_user = "{{current_user.id}}";
     </script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
     <script src="../static/js/bbs.js"></script>

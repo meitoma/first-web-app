@@ -19,6 +19,7 @@ from urllib.parse import urlparse
 from __init__ import login_manager
 import wcwidth
 import time
+import sys
 
 in_threads=set()
 @login_required
@@ -114,6 +115,7 @@ def bbs(thread_id):
     messages_count = [count_characters(message.message)for message in messages] #半角1,全角2でカウント
     form = MessageForm()
     users = Users.query.all()
+    id_members= {user.id:user.name for user in users}
     members=[user.name for user in users]
     new_thread_form = NewThreadForm(members=members)
     delete_form = DeleteForm()
@@ -121,15 +123,24 @@ def bbs(thread_id):
     if request.method == "POST":
         if form.validate_on_submit():
             current_time = datetime.datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M:%S")
+            send_user = current_user.id
+            send_time = current_time
             if form.image.data:
                 picture_file = save_picture(form.image.data)
-                user_message = Messages(user_id=current_user.id,message_type="image",message=picture_file,sendtime=current_time,thread_id=thread_id)
+                message_type = "image"
+                my_message = picture_file
+                user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)
             else:
-                user_message = Messages(user_id=current_user.id,message_type="text",message=form.message.data,sendtime=current_time,thread_id=thread_id)
+                message_type="text"
+                my_message = form.message.data
+                user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
-            emit('message',to=str(thread_id),namespace="/")
+            # emit('reload',to=str(thread_id),namespace="/")
+            emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=list(in_threads))
+            # time.sleep(10)
+        return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
     else:
         return render_template('bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,new_thread_form=new_thread_form, delete_form=delete_form)
@@ -147,7 +158,7 @@ def add_member():
         db.session.add_all(user_access)
         db.session.commit()
         db.session.close()
-        emit('message', namespace="/",to=list(in_threads))
+        emit('reload', namespace="/",to=list(in_threads))
     return redirect(url_for('bbs',thread_id=thread_id))
 
 
@@ -166,7 +177,7 @@ def new_thread():
         db.session.add_all(user_access)
         db.session.commit()
         db.session.close()
-        emit('message', namespace="/",to=list(in_threads))
+        emit('reload', namespace="/",to=list(in_threads))
         return redirect(url_for('bbs',thread_id=new_thread_id))
     return redirect(url_for('bbs',thread_id=request.args.get('previous_thread')))
 
@@ -184,7 +195,7 @@ def delete_thread():
             for user_access in user_access_records:
                 db.session.delete(user_access)
             db.session.commit()
-            emit('message',namespace="/",to=list(in_threads))
+            emit('reload',namespace="/",to=list(in_threads))
         return redirect(url_for('home',title=f'"{thread.thread_name}"を削除しました'))
     else:
         return redirect(url_for('home',title=f'削除に失敗しました'))

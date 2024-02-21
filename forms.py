@@ -44,7 +44,7 @@ class SignupForm(FlaskForm):
         
 class MessageForm(FlaskForm):
     message = TextAreaField('メッセージ')
-    image = FileField('画像', validators=[FileAllowed(['jpg', 'png'])])
+    image = FileField('画像', validators=[FileAllowed(['jpg', 'png','jpeg'])])
     def validate_message(self, message):
         if len(message.data)==0:
             print("空文字")
