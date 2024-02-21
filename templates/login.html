@@ -5,7 +5,7 @@
         <form action="{{ url_for('login', next=next_page) }}" method="post">
             {{ form.hidden_tag() }}
             <div class="row justify-content-center">
-                <div class="col-lg-6 col-sm-6">
+                <div class="col-lg-6 col-sm-12">
                     {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
                             <ul class=flashes>
@@ -19,7 +19,7 @@
             </div>
     
             <div class="row justify-content-center">
-                <div class="col-lg-6 col-sm-6">
+                <div class="col-lg-6 col-sm-12">
                     {{ form.name.label(class="col-form-label")}}<br>
                     {{ form.name(placeholder="ユーザーネーム", class="form-control")}}
                     <br>
@@ -29,7 +29,7 @@
                     <div class="text-center">
                         <button class="btn btn-primary w-100" type="submit" id="loginButton">ログイン</button>
                         <div style="margin-top:20px;"><a href="/signup">パスワードをお忘れの方</a></div>
-                        <p style="margin-top:10vh;">アカウントをお持ちでない場合 <a href="/signup">登録はこちら</a><p></p>
+                        <p style="margin-top:10vh;">アカウントをお持ちでない場合 <br><a href="/signup">登録はこちら</a><p></p>
                     </div>
                 </div>
             </div>
