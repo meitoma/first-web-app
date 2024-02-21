@@ -121,6 +121,8 @@ var pre_window=0
 function updateContent() {
     const smallScreenContent = document.querySelectorAll('.small-screen-content');
     const largeScreenContent = document.querySelectorAll('.large-screen-content');
+    const image_message = document.querySelectorAll('.img-msg');
+    console.log(image_message);
 
     var thresholdWidth = 600;
     if (window.innerWidth <= thresholdWidth) {
@@ -130,12 +132,20 @@ function updateContent() {
             largeScreenContent.forEach((element) => 
                 element.classList.replace("open","close")
             );
+            image_message.forEach((element) => 
+                element.setAttribute('width', 200)
+            );
+
+
     } else {
             smallScreenContent.forEach((element) => 
                 element.classList.replace("open","close")
             );
             largeScreenContent.forEach((element) => 
                 element.classList.replace("close","open")
+            );
+            image_message.forEach((element) => 
+                element.setAttribute('width', 400)
             );
     }
 }

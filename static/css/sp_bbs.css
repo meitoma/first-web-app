@@ -337,6 +337,10 @@ form.delete_display ul li{
     border-style: solid;
     font-size:small;
 }
+.img-wrap .othre-message-box{
+    margin-right: auto; 
+    width:200px;
+}
 
 .my-message-box{
     text-align:end;
@@ -359,6 +363,10 @@ form.delete_display ul li{
     background-color:#ebffd1;
     padding: 9px;
 }
+.img-wrap .my-message-box{
+    margin-left: auto; 
+    width:200px;
+}
 
 .submit-text{
     padding-right: 10%;
@@ -368,6 +376,19 @@ form.delete_display ul li{
     position: absolute;
     top:0;
 }
+.in-line{
+    display: inline-block;
+}
+.form-control.in-line{
+    width: 85%;
+}
+.select-image-btn{
+    position: relative;
+    top:-14px;
+    margin-right: 10px;
+    z-index: 2;
+}
+
 input[type="file"] {
     display: none;
   }
