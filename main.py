@@ -237,6 +237,7 @@ def login():
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs',thread_id=1)
+        time.sleep(10)
         return redirect(next_page)
     return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))
     

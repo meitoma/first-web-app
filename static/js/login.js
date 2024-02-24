@@ -1,5 +1,6 @@
 document.getElementById('loginButton').addEventListener('click', function() {
     document.getElementById('loaderContainer').style.display = 'flex';
+    document.getElementById('mask').style.display = 'block';
     setTimeout(function() {
         document.getElementById('loaderContainer').style.display = 'none';
     }, 15000); // 2秒後に非表示にする例
