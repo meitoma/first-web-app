@@ -105,7 +105,7 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
                 </div>\n\
             </div>';
     }
-    console.log(content_html)
+    // console.log(content_html)
     return content_html;
 }
 
@@ -124,14 +124,14 @@ $(function() {
     });
     socketio.on('add_meddage', function (message) {
         console.log('Received message: '+message["type"]+message["message"]);
-        var content = document.getElementById("scroller__inner");
-        var contentHTML = content.innerHTML;
-        var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
-        content.innerHTML = contentHTML + newContent;
-        updateContent();
-        setTimeout(function(){
-            scrollbottonm();
-        }, 500 );
+            var content = document.getElementById("scroller__inner");
+            var contentHTML = content.innerHTML;
+            var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
+            content.innerHTML = contentHTML + newContent;
+            updateContent();
+            setTimeout(function(){
+                scrollbottonm();
+            }, 700 );
     });
 });
 

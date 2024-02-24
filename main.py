@@ -138,7 +138,7 @@ def bbs(thread_id):
             db.session.commit()
             db.session.close()
             # emit('reload',to=str(thread_id),namespace="/")
-            emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=list(in_threads))
+            emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
             # time.sleep(10)
         # return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
@@ -210,10 +210,6 @@ def home():
     new_thread_form = NewThreadForm(members=members)
     return render_template('home.html',title=title, user_access=user_access,new_thread_form=new_thread_form)
 
-@app.route('/bbs/not_found_bbs')
-def not_found_bbs():
-    return render_template('not_found_bbs.html')
-
 @app.route('/confirm')
 @login_required
 def confirm():
@@ -230,6 +226,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('bbs',thread_id=1))
     form = LoginForm()
+    signup_form = SignupForm()
     if form.validate_on_submit():
         # name:test, pass:test
         user = Users.query.filter_by(name=form.name.data).first()
@@ -241,25 +238,25 @@ def login():
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs',thread_id=1)
         return redirect(next_page)
-    return render_template('login.html', title='ログイン', form=form, develop=app.config['DEBUG'],next_page=request.args.get('next'))
+    return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))
     
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['POST'])
 def signup():
     if current_user.is_authenticated:
         return redirect(url_for('bbs',thread_id=1))
-    form = SignupForm()
-    if request.method == "POST":
-        if form.validate_on_submit():
-            print(f"in:{form.name.data}")
-            user = Users(name=form.name.data ,password=form.password.data)
-            user.add_user()
-            return redirect(url_for('login'))
-    return render_template('signup.html', title='新規登録', form=form)
+    login_form = LoginForm()
+    signup_form = SignupForm()
+    if signup_form.validate_on_submit():
+        print(f"in:{signup_form.name.data}")
+        user = Users(name=signup_form.name.data ,password=signup_form.password.data)
+        user.add_user()
+        return redirect(url_for('login'))
+    return render_template('login.html', form=login_form,signup_form=signup_form,default_login="none",default_signup="block",next_page=request.args.get('next'))
 
 @socketio.on('join')
 def handle_join(data):

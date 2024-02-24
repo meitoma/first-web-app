@@ -1,11 +1,13 @@
 {% extends "layout_login.html" %}
 {% block content %}
-        <h1 class="text-center h1-login-title">{{title}}</h1>
+        <h1 class="text-center h1-login-title" id="h1_title">ログイン</h1>
         {{next}}
-        <form action="{{ url_for('login', next=next_page) }}" method="post">
+        <form action="{{ url_for('login', next=next_page) }}" method="post" id="login-form" style="display: {{ default_login }};">
             {{ form.hidden_tag() }}
+    
             <div class="row justify-content-center">
                 <div class="col-lg-6 col-sm-12">
+                    <!-- フラッシュメッセージ -->
                     {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
                             <ul class=flashes>
@@ -15,11 +17,8 @@
                             </ul>
                         {% endif %}
                     {% endwith %}
-                </div>
-            </div>
-    
-            <div class="row justify-content-center">
-                <div class="col-lg-6 col-sm-12">
+
+                    <!-- ログイン -->
                     {{ form.name.label(class="col-form-label")}}<br>
                     {{ form.name(placeholder="ユーザーネーム", class="form-control")}}
                     <br>
@@ -28,8 +27,40 @@
                     <br><br>
                     <div class="text-center">
                         <button class="btn btn-primary w-100" type="submit" id="loginButton">ログイン</button>
-                        <div style="margin-top:20px;"><a href="/signup">パスワードをお忘れの方</a></div>
-                        <p style="margin-top:10vh;">アカウントをお持ちでない場合 <br><a href="/signup">登録はこちら</a><p></p>
+                        <div style="margin-top:20px;"><a href="#" id="signup1">パスワードをお忘れの方</a></div>
+                        <!-- <p style="margin-top:10vh;">アカウントをお持ちでない場合 <br><a href="/signup">登録はこちら</a><p></p> -->
+                        <p style="margin-top:10vh;">アカウントをお持ちでない場合 <br><a href="#" id="signup2">登録はこちら</a><p></p>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <form action="/signup" method="post" style="display: {{ default_signup }};" id="signup-form">
+            {{ signup_form.hidden_tag() }}
+    
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-sm-12">
+                    {{ signup_form.name.label(class="col-form-label")}}<br>
+                    {{ signup_form.name(placeholder="ユーザーネーム", class="form-control") }}
+                    {% for error in signup_form.name.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                    <br>
+                    {{ signup_form.password.label(class="col-form-label")}}<br>
+                    {{ signup_form.password(placeholder="パスワード", class="form-control")}}
+                    {% for error in signup_form.password.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                    <br>
+                    {{ signup_form.password_confirm.label(class="col-form-label")}}<br>
+                    {{ signup_form.password_confirm(placeholder="パスワード", class="form-control")}}
+                    {% for error in signup_form.password_confirm.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                    <br><br>
+                    <div class="text-center">
+                        <input class="btn btn-primary one-clk-btn w-100" type="submit" value="登録"><br><br>
+                        <a class="btn btn-primary w-100 cancel"href="/" id="signup_cancel">キャンセル</a>
                     </div>
                 </div>
             </div>
