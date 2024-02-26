@@ -121,7 +121,7 @@ $(function() {
         }, 500 );
     });
     socketio.on('add_meddage', function (message) {
-        console.log('Received message: '+message["type"]+message["message"]);
+        console.log('Received message: '+message["type"]+':'+message["message"]);
             var content = document.getElementById("scroller__inner");
             var contentHTML = content.innerHTML;
             var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
@@ -132,62 +132,31 @@ $(function() {
             }, 700 );
     });
 });
-document.getElementById('message-form').addEventListener('submit', function (event) {
-    event.preventDefault();
 
+$('.message-form button').on('click', function() {
+    $(this).prop('disabled', true);
+    const formData = new FormData(document.getElementById('message-form'));
+    const xhr = new XMLHttpRequest();
+    const input = document.getElementById('form-image');
+    const file = input.files[0];
+    xhr.open('POST', '/bbs/'+thread_id, true);
+
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            console.log('Success:', xhr.responseText);
+        } else {
+            console.error('Error:', xhr.statusText);
+        }
+    };
+    xhr.onerror = function () {
+        console.error('Network Error');
+    };
+    xhr.send(formData);
+    textarea.value="";
+   $(this).prop('disabled', false);
 });
 
-$(function() {
-    // $('.message-form button').on('click', function() {
-    //     $(this).prop('disabled', true);
-    //     const input = document.getElementById('form-image');
-    //     const file = input.files[0];
-    //     textarea = document.getElementById('text_area');
-    //     if (file || textarea.value) {
-    //         if (file) {
-    //             console.log("send image");
-    //             const reader = new FileReader();
-    //             reader.onload = (e) => {
-    //                 const imageData = e.target.result;
-    //                 console.log(imageData)
-    //                 socketio.emit('submit_message', { current_user:current_user,type:"image",message: imageData ,name: file.name,thread_id:thread_id});
-    //             };
-    //             reader.readAsDataURL(file);
-    //             // socketio.emit('submit_message', { type:"image",message: file });
-    //         }else{
-    //             socketio.emit('submit_message', { current_user:current_user, type:"text",message: textarea.value ,thread_id:thread_id});
-    //         }
-    //     } else {
-    //         console.log('Please select an image.');
-    //     }
-    //     textarea.value="";
-    //  });
-    $('.message-form button').on('click', function() {
-        const formData = new FormData(document.getElementById('message-form'));
-        const xhr = new XMLHttpRequest();
-        const input = document.getElementById('form-image');
-        const file = input.files[0];
-        xhr.open('POST', '/bbs/'+thread_id, true);
-
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                console.log('Success:', xhr.responseText);
-            } else {
-                console.error('Error:', xhr.statusText);
-            }
-        };
-        xhr.onerror = function () {
-            console.error('Network Error');
-        };
-        xhr.send(formData);
-    });
-    $('.message-form button').on('click', function() {
-    //    socketio.emit('my_chat', {data:"message",to:String(thread_id)});
-    //    $('.message-form').submit();
-       textarea.value="";
-       $(this).prop('disabled', false);
-    });
-    
+$(function() {    
     var scrollable_box = document.getElementById('scrollable_box');
     textarea.rows=1;
     let clientHeight = textarea.clientHeight;
@@ -210,7 +179,7 @@ $(function() {
             if (event.ctrlKey || event.metaKey){
                 console.log("submit")
                 $('.message-form button').click();
-                event.preventDefault(); // デフォルトのEnterキーのd挙動を防ぐ
+                event.preventDefault(); // デフォルトのEnterキーの挙動を防ぐ
             }
         }
     });
@@ -249,8 +218,3 @@ function updateContent() {
 }
 window.addEventListener('load', updateContent);
 window.addEventListener('resize', updateContent);
-
-// window.onload = function(){
-//     var obj = document.getElementById("scroller__inner");
-//     obj.scrollTop = obj.scrollHeight;
-//     }
