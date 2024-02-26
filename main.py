@@ -93,13 +93,15 @@ def count_characters(text):
     return sum(wcwidth.wcwidth(char) if wcwidth.wcwidth(char) > 0 else 1 for char in text)
 
 # 画像アップロードの関数
-def save_picture(form_picture):
+def save_picture(form_picture,image_orientation):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'static/send_images', picture_fn)
     i = Image.open(form_picture)
+    if image_orientation=="vertical":
+        i = i.rotate(-90, expand=True)
     i.thumbnail((800, 800))
     i.save(picture_path)
     return picture_fn
@@ -128,7 +130,7 @@ def bbs(thread_id):
             send_user = current_user.id
             send_time = current_time
             if form.image.data:
-                picture_file = save_picture(form.image.data)
+                picture_file = save_picture(form.image.data,request.form["image_orientation"])
                 message_type = "image"
                 my_message = picture_file
                 user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)

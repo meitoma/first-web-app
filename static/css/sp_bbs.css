@@ -321,7 +321,9 @@ form.delete_display ul li{
 /* .othre-message-box{
     margin-bottom: 20px;
 } */
-
+img[alt] {
+    font-size: 0.8em;
+}
 .othre-message-box .back-color{
     background-color:#ffe0d1;
     padding: 9px;

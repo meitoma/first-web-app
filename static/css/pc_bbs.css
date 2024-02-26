@@ -377,6 +377,10 @@ form.delete_display ul li{
     background-color:#ffe0d1;
     margin-right: 65%;
 } */
+
+img[alt] {
+    font-size: 0.8em;
+}
 .othre-message-box .back-color{
     background-color:#ffe0d1;
     padding: 9px;

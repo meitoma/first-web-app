@@ -98,7 +98,7 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
     else{
         content_html +='<div class="box '+ msbox +'">\n\
                         <div class="img-wrap">\n\
-                            <a href="../static/send_images/'+ message +'" target="_blank"><img src="../static/send_images/'+ message +'" class ="img-msg"  width="400" alt="" border="0" ></a>\n\
+                            <a href="../static/send_images/'+ message +'" target="_blank"><img src="../static/send_images/'+ message +'" class ="img-msg"  width="400" alt="画像が見つかりませんでした" border="0" ></a>\n\
                         </div>\n\
                     </div>\n\
                 </div>\n\
@@ -135,25 +135,53 @@ $(function() {
 
 $('.message-form button').on('click', function() {
     $(this).prop('disabled', true);
-    const formData = new FormData(document.getElementById('message-form'));
+    var formData = new FormData(document.getElementById('message-form'));
     const xhr = new XMLHttpRequest();
     const input = document.getElementById('form-image');
     const file = input.files[0];
-    xhr.open('POST', '/bbs/'+thread_id, true);
+    function post_message() {
+        xhr.open('POST', '/bbs/'+thread_id, true);
 
-    xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-            console.log('Success:', xhr.responseText);
-        } else {
-            console.error('Error:', xhr.statusText);
-        }
-    };
-    xhr.onerror = function () {
-        console.error('Network Error');
-    };
-    xhr.send(formData);
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                console.log('Success:', xhr.responseText);
+            } else {
+                console.error('Error:', xhr.statusText);
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Network Error');
+        };
+        xhr.send(formData);
+    }
+
+    if (file) {
+        var image_orientation;
+        const reader = new FileReader();
+        const loadImage = (src) => {
+            return new Promise((resolve) => {
+                const image = new Image();
+                image.onload = () => resolve(image);
+                image.src = src;
+            });
+        };
+        reader.onload = async function (e) {
+            const image = await loadImage(e.target.result);
+            console.log(image.width, image.height);
+            image_orientation = image.width < image.height ? "vertical" : "horizontal";
+            formData.append('image_orientation', image_orientation);
+            post_message()
+        };
+    
+        reader.readAsDataURL(file);
+
+    }else{
+        formData.append('image_orientation', 'none');
+        post_message()
+    }
     textarea.value="";
-   $(this).prop('disabled', false);
+    document.getElementById('form-image').value = '';
+    $(this).prop('disabled', false);
 });
 
 $(function() {    
@@ -180,8 +208,7 @@ $(function() {
                 console.log("submit")
                 $('.message-form button').click();
                 event.preventDefault(); // デフォルトのEnterキーの挙動を防ぐ
-            }
-        }
+        }}
     });
   });
 
@@ -202,8 +229,6 @@ function updateContent() {
             image_message.forEach((element) => 
                 element.setAttribute('width', 200)
             );
-
-
     } else {
             smallScreenContent.forEach((element) => 
                 element.classList.replace("open","close")
