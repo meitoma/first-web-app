@@ -14,6 +14,8 @@ import datetime
 import secrets
 import os
 from PIL import Image
+import base64
+from io import BytesIO
 from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
 from __init__ import login_manager
@@ -137,10 +139,9 @@ def bbs(thread_id):
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
-            # emit('reload',to=str(thread_id),namespace="/")
             emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
             # time.sleep(10)
-        # return ('', 204)
+        return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
     else:
         return render_template('bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,new_thread_form=new_thread_form, delete_form=delete_form)
@@ -160,6 +161,38 @@ def add_member():
         db.session.close()
         emit('reload', namespace="/",to=list(in_threads))
     return redirect(url_for('bbs',thread_id=thread_id))
+
+@socketio.on('submit_message')
+def handle_submit_message(data):
+    def _base64_to_pil(img_str):
+        if "base64," in img_str:
+            # DARA URI の場合、data:[<mediatype>][;base64], を除く
+            img_str = img_str.split(",")[1]
+        img_raw = base64.b64decode(img_str)
+        img = Image.open(BytesIO(img_raw))
+        return img
+    users = Users.query.all()
+    id_members= {user.id:user.name for user in users}
+    current_time = datetime.datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M:%S")
+    send_user = int(current_user.id)
+    thread_id = data["thread_id"]
+    send_time = current_time
+    if data["type"]=="image":
+        message_type = "image"
+        PIL_image = _base64_to_pil(data["message"])
+        picture_file = save_picture(PIL_image,data["name"])
+        my_message = picture_file
+        print(my_message)
+        user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)
+    else:
+        message_type="text"
+        my_message = data["message"]
+        user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)
+    db.session.add(user_message)
+    db.session.commit()
+    db.session.close()
+    time.sleep(0.1)
+    emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
 
 
 @app.route('/bbs/new', methods=['POST'])
@@ -237,10 +270,9 @@ def login():
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs',thread_id=1)
-        time.sleep(10)
         return redirect(next_page)
     return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))
-    
+ 
 @app.route('/logout')
 def logout():
     logout_user()

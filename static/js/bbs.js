@@ -54,14 +54,13 @@ $(function() {
         socketio.emit("delete_thread")
     });
     $('input').on('change', function () {
-        //propを使って、file[0]にアクセスする
         var file = $(this).prop('files')[0];
         //text()で要素内のテキストを変更する
         if(file){
-            $('#text_area').text(file.name);
+            textarea.value = file.name;
         }
         else{
-            $('#text_area').text("");
+            textarea.value = "";
         }
         
     });
@@ -109,7 +108,6 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
     return content_html;
 }
 
-// var socketio = io.connect('http://' + '127.0.0.1:5000');
 var socketio = io();
 $(function() {
     socketio.on('connect', function() {
@@ -134,15 +132,60 @@ $(function() {
             }, 700 );
     });
 });
+document.getElementById('message-form').addEventListener('submit', function (event) {
+    event.preventDefault();
 
+});
 
 $(function() {
-    var textarea = document.getElementById('text_area');
+    // $('.message-form button').on('click', function() {
+    //     $(this).prop('disabled', true);
+    //     const input = document.getElementById('form-image');
+    //     const file = input.files[0];
+    //     textarea = document.getElementById('text_area');
+    //     if (file || textarea.value) {
+    //         if (file) {
+    //             console.log("send image");
+    //             const reader = new FileReader();
+    //             reader.onload = (e) => {
+    //                 const imageData = e.target.result;
+    //                 console.log(imageData)
+    //                 socketio.emit('submit_message', { current_user:current_user,type:"image",message: imageData ,name: file.name,thread_id:thread_id});
+    //             };
+    //             reader.readAsDataURL(file);
+    //             // socketio.emit('submit_message', { type:"image",message: file });
+    //         }else{
+    //             socketio.emit('submit_message', { current_user:current_user, type:"text",message: textarea.value ,thread_id:thread_id});
+    //         }
+    //     } else {
+    //         console.log('Please select an image.');
+    //     }
+    //     textarea.value="";
+    //  });
     $('.message-form button').on('click', function() {
-       $(this).prop('disabled', true);
+        const formData = new FormData(document.getElementById('message-form'));
+        const xhr = new XMLHttpRequest();
+        const input = document.getElementById('form-image');
+        const file = input.files[0];
+        xhr.open('POST', '/bbs/'+thread_id, true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                console.log('Success:', xhr.responseText);
+            } else {
+                console.error('Error:', xhr.statusText);
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Network Error');
+        };
+        xhr.send(formData);
+    });
+    $('.message-form button').on('click', function() {
     //    socketio.emit('my_chat', {data:"message",to:String(thread_id)});
-       $('.message-form').submit();
+    //    $('.message-form').submit();
        textarea.value="";
+       $(this).prop('disabled', false);
     });
     
     var scrollable_box = document.getElementById('scrollable_box');
