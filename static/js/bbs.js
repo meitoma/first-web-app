@@ -108,6 +108,20 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
     return content_html;
 }
 
+function push(){
+    console.log("push")
+    Push.create("更新情報", 
+     {
+      body: "ブログの更新をお知らせします!",
+    //   icon: 'casley_logo.png',
+      timeout: 8000,
+      onClick: function () {
+      window.focus(); 
+      this.close();
+      }
+    })
+  }
+
 var socketio = io();
 $(function() {
     socketio.on('connect', function() {

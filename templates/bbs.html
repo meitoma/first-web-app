@@ -54,6 +54,7 @@
             <div class="col-12 custom-col">
                 <div class="scrollable-container" id="scrollable_box">
                     <div id="scroller__inner">
+                        <input type="button" id="push" onclick="return push()" value="クリックするとプッシュ通知が送られます">
                         {%for m in messages %}
                             {% set jc="justify-content-start" %}
                             {% set msbox="othre-message-box" %}
