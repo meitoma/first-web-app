@@ -10,11 +10,11 @@ const urlsToCache = [
   './templates/confirm.html',
   './templates/comp_load.html ',
   './templates/login.html',
-  './static/css/login.css',
-  './static/css/sp_bbs.css',
-  './static/css/pc_bbs.css',
-  './static/js/bbs.js',
-  './static/js/login.js',
+  '/bbs/static/css/login.css',
+  '/bbs/static/css/sp_bbs.css',
+  '/bbs/static/css/pc_bbs.css',
+  '/bbs/static/js/bbs.js',
+  '/bbs/static/js/login.js',
 ];
 
 self.addEventListener('install', (event) => {
