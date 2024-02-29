@@ -3,5 +3,5 @@
 Pipfile
 Pipfile.lock
 __pycache__/
-/static/send_images/
-/static/images/
+# /bbs/static/send_images/
+/bbs/static/images/

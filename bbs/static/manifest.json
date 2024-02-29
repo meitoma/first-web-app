@@ -4,7 +4,7 @@
     "theme_color": "#b2ccd9",
     "background_color": "#b2ccd9",
     "display": "standalone",
-    "start_url": "../templates/login.html",
+    "start_url": "https://aws-web-app.com/bbs/1",
     "icons": [
       {
         "src": "./images/chat.png",
