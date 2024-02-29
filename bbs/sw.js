@@ -15,6 +15,7 @@ const urlsToCache = [
   '/bbs/static/css/pc_bbs.css',
   '/bbs/static/js/bbs.js',
   '/bbs/static/js/login.js',
+  '/bbs/static/images/chat.png'
 ];
 
 self.addEventListener('install', (event) => {
