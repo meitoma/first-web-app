@@ -1,0 +1,17 @@
+{
+    "name": "BBS-APP",
+    "short_name": "BBS",
+    "theme_color": "#2196f3",
+    "background_color": "#2196f3",
+    "display": "standalone",
+    "start_url": "../templates/bbs.html",
+    "icons": [
+      {
+        "src": "./images/chat.png",
+        "sizes": "150x150",
+        "type": "image/png"
+      }
+    ]
+  }
+  
+  

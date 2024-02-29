@@ -1,0 +1,6 @@
+userID,threadID,message_type,message,sendtime
+2,1,text,hello python,2024-01-01 10:10:10
+3,1,text,hogehoge,2024-01-01 10:10:10
+3,1,image,11d86d7a476d9131.jpg,2024-02-01 10:10:10
+1,2,text,hello bbs,2024-01-01 10:10:10
+2,2,text,fugafuga,2024-01-01 10:10:10

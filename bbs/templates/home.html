@@ -1,0 +1,70 @@
+{% extends "layout_bbs.html" %}
+{% block content %}
+    <nav class="nav">
+        <div class="inner">
+        <ul>
+            <li><a href="/profile/{{current_user.id}}"><i class="fa-solid fa-user"></i>{{current_user.name}}</a></li>
+            <li><a href="/add_member/"><i class="fa-solid fa-user-group"></i>{{title}}</a></li>
+            <li><a href="/setting/{{current_user.id}}"><i class="fa-solid fa-gear"></i>設定</a></li>
+            {% if current_user.is_admin %}
+                <li><a href="/confirm"><i class="fa-solid fa-book"></i>ユーザ確認</a></li>
+                <li><a href="/admin"><i class="fa-solid fa-hammer"></i>管理者</a></li>
+                <li><a href="/load_data"><i class="fa-solid fa-download"></i>データのロード</a></li>
+            {% endif %}
+            <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>ログアウト</a></li>
+        </ul>
+        </div>
+        <nav class="sp-nav2">
+            <div class="inner">
+                <p style="margin: 0px;">スレッド</p>
+                <ul>
+                    {% for ua in user_access %}
+                        {% set active_thread="" %}
+                        {% if ua.thread_id==thread_id%}
+                            {% set active_thread="active" %}
+                        {% endif %}
+                        <li><a href="/bbs/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+                    {% endfor %}
+                    <li class="new"><a class="new_thread"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
+                    <li class="delete"><a class="delete_thread"><i class="fa-solid fa-trash"></i>スレッドを削除</a></li>
+                </ul>
+            </div>
+        </nav>
+    </nav>
+    <nav class="nav2">
+        <div class="inner">
+        <ul>
+            {% for ua in user_access %}
+                <li><a href="/bbs/{{ua.thread_id}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+            {% endfor %}
+            <li class="new"><a class="new_thread"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
+        </ul>
+        </div>
+    </nav>
+    <div class="mask"></div>
+    <div class="title-band"></div>
+    <div class="openbtn1" style="margin-top:3vh;"><span></span><span></span><span></span></div>
+    <h1 class="h1-title">{{ title }}</h1>
+    <form action="{{ url_for('new_thread', previous_thread = thread_id) }}" method="post" class="make_thread">
+        {{ new_thread_form.hidden_tag() }}
+        <h3>新しいスレッドを作成する</h3>
+        {{ new_thread_form.thread_name.label(class="col-form-label")}}
+        {{ new_thread_form.thread_name(placeholder="スレッド名", class="form-control",rows=1)}}
+        <br>
+        {{ new_thread_form.member.label(class="col-form-label")}}
+        <ul>
+            {% for member_form in new_thread_form.member %}
+                <li>{{ member_form }} {{ member_form.label }}</li>
+            {% endfor %}
+        </ul>
+        <div style="text-align: right;margin-top:10px;">
+            <a class="btn btn-primary btn-sm cancel">キャンセル</a>
+            <button class="btn btn-primary btn-sm one-clk-btn" type="submit">スレッドを作成する</button>
+    </form>
+
+    <script>
+        const scrollerInner = document.getElementById("scroller__inner");
+        scrollerInner.scrollIntoView(false);
+    </script>
+    <script src="/bbs/static/js/bbs.js"></script>
+{% endblock %}

@@ -98,7 +98,7 @@ def save_picture(form_picture,image_orientation):
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(os.path.dirname(
-        os.path.abspath(__file__)), 'static/send_images', picture_fn)
+        os.path.abspath(__file__)), 'bbs/static/send_images', picture_fn)
     i = Image.open(form_picture)
     if image_orientation=="vertical":
         i = i.rotate(-90, expand=True)
