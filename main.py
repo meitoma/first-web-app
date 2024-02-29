@@ -138,10 +138,10 @@ def bbs(thread_id):
                 message_type="text"
                 my_message = form.message.data
                 user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)
+            emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
-            emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
             # time.sleep(10)
         return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))

@@ -54,7 +54,7 @@
             <div class="col-12 custom-col">
                 <div class="scrollable-container" id="scrollable_box">
                     <div id="scroller__inner">
-                        <input type="button" id="push" onclick="return push()" value="クリックするとプッシュ通知が送られます">
+                        <!-- <input type="button" id="push" onclick="return push()" value="クリックするとプッシュ通知が送られます"> -->
                         {%for m in messages %}
                             {% set jc="justify-content-start" %}
                             {% set msbox="othre-message-box" %}
@@ -68,7 +68,7 @@
                                         {{m.__dict__['sendtime']}}{% if m.user_id==current_user.id%}<span><a href="#">編集</a>&ensp;<a href="#">削除</a></span>{% endif %}</p>
                                     {%if m.message_type=="text"%}
                                         <div class="small-screen-content close"><!-- スマホ用の画面 -->
-                                                {% if messages_count[loop.index0] <=27 %}<p class="{{msbox}}" style="overflow-wrap: break-word; word-wrap: break-word;"><span class="message-box back-color">{{m.__dict__['message']}}</span></p>
+                                                {% if messages_count[loop.index0] <=33 %}<p class="{{msbox}}" style="overflow-wrap: break-word; word-wrap: break-word;"><span class="message-box back-color">{{m.__dict__['message']}}</span></p>
                                                 {% else %}<p class="{{msbox}} multi-rows " style="overflow-wrap: break-word; word-wrap: break-word;">{{m.__dict__['message']}}</p>
                                                 {% endif %}
                                         </div>

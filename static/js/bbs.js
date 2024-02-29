@@ -31,14 +31,18 @@ $(function() {
     $(".new_thread, .cancel").on("click", function(){
         $(".new_thread").toggleClass("active");
         $(".make_thread").toggleClass("open");
-        $(".mask").toggleClass("open");
+        if (!$(".mask").hasClass("open")) {
+            $(".mask").toggleClass("open");
+          }
         $(".mask").toggleClass("mask2");
     });
 
     $(".delete_thread, .delete_cancel").on("click", function(){
         $(".delete_thread").toggleClass("active");
         $(".delete_display").toggleClass("open");
-        $(".mask").toggleClass("open");
+        if (!$(".mask").hasClass("open")) {
+            $(".mask").toggleClass("open");
+          }
         $(".mask").toggleClass("mask3");
     });
     $(".select_thread").on("click", function(){
@@ -81,7 +85,7 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
         }
     if(type=="text"){
             content_html += '<div class="small-screen-content close"><!-- スマホ用の画面 -->\n'
-            if(messages_count<=27){
+            if(messages_count<=33){
                 content_html += '<p class='+ msbox +' style="overflow-wrap: break-word; word-wrap: break-word;"><span class="message-box back-color">'+ message +'</span></p>\n</div>\n'
             }
             else{
@@ -147,6 +151,29 @@ $(function() {
     });
 });
 
+var scrollable_box = document.getElementById('scrollable_box');
+textarea.rows=1;
+let clientHeight = textarea.clientHeight;
+let scroll_box_Height = scrollable_box.clientHeight;
+let init_scrollHeight = textarea.scrollHeight;
+function adjustTextareaHeight() {
+    let scrollHeight = textarea.scrollHeight;
+    console.log(scrollHeight);
+    
+        if(scrollHeight < 160){
+            textarea.style.height = clientHeight + 'px';
+            let scrollHeight = textarea.scrollHeight;
+            textarea.style.height = scrollHeight + 'px';
+            scrollable_box.style.height = scroll_box_Height - scrollHeight + init_scrollHeight + 'px';
+        }
+        // else{
+        //     textarea.style.height = clientHeight + 'px';
+        //     let scrollHeight = 120;
+        //     textarea.style.height = scrollHeight + 'px';
+        //     scrollable_box.style.height = scroll_box_Height - scrollHeight + init_scrollHeight + 'px';
+        // }
+}
+
 $('.message-form button').on('click', function() {
     $(this).prop('disabled', true);
     var formData = new FormData(document.getElementById('message-form'));
@@ -196,26 +223,12 @@ $('.message-form button').on('click', function() {
     textarea.value="";
     document.getElementById('form-image').value = '';
     $(this).prop('disabled', false);
+    adjustTextareaHeight();
 });
 
-$(function() {    
-    var scrollable_box = document.getElementById('scrollable_box');
-    textarea.rows=1;
-    let clientHeight = textarea.clientHeight;
-    let scroll_box_Height = scrollable_box.clientHeight;
-    let init_scrollHeight = textarea.scrollHeight;
+$(function () {    
     textarea.focus();
-    textarea.addEventListener('input', ()=>{
-        let scrollHeight = textarea.scrollHeight;
-        console.log(scrollHeight)
-        
-        if(scrollHeight < 160){
-            textarea.style.height = clientHeight + 'px';
-            let scrollHeight = textarea.scrollHeight;
-            textarea.style.height = scrollHeight + 'px';
-            scrollable_box.style.height = scroll_box_Height - scrollHeight + init_scrollHeight + 'px';
-        }
-    });
+    textarea.addEventListener('input', adjustTextareaHeight);
     textarea.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             if (event.ctrlKey || event.metaKey){

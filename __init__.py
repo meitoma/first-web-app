@@ -13,7 +13,7 @@ from flask_wtf.csrf import CSRFProtect
 from config import Config
 import sys
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='bbs', template_folder='bbs/templates')
 app.config.from_object(Config)
 csrf = CSRFProtect(app)
 db = SQLAlchemy(app)
