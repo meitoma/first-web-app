@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import flash, redirect, url_for,render_template,request
+from flask import flash, redirect, url_for,render_template,request,jsonify
 from flask_login import (
         current_user, login_user, logout_user, login_required
     )
@@ -7,9 +7,9 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, \
       close_room, rooms, disconnect      
 from sqlalchemy import text
 import csv
-from __init__ import app,db,metadata,socketio
+from __init__ import app,db,metadata,socketio,send_notification
 from forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteForm, AddMmemberForm
-from models import Users,Messages,Threads,UserAccess
+from models import Users,Messages,Threads,UserAccess,FCMToken
 import datetime
 import secrets
 import os
@@ -23,6 +23,7 @@ import wcwidth
 import time
 import sys
 
+
 in_threads=set()
 @login_required
 @app.route('/load_data')
@@ -32,7 +33,7 @@ def users_load():
     db.create_all()
 
     #? csvからUsersへの書き込み
-    with open("csv/users.csv","r",encoding="utf-8") as csvfile:
+    with open("bbs/csv/users.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
         add_users=[]
         next(reader) #csvファイルの1行目(列名)を除く
@@ -45,7 +46,7 @@ def users_load():
 
 def threads_load():
     #? csvからUsersへの書き込み
-    with open("csv/threads.csv","r",encoding="utf-8") as csvfile:
+    with open("bbs/csv/threads.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
         add_threads=[]
         next(reader) #csvファイルの1行目(列名)を除く
@@ -58,7 +59,7 @@ def threads_load():
 
 def user_access_load():
     #? csvからUsersへの書き込み
-    with open("csv/user_access.csv","r",encoding="utf-8") as csvfile:
+    with open("bbs/csv/user_access.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
         add_useraccess=[]
         next(reader) #csvファイルの1行目(列名)を除く
@@ -72,7 +73,7 @@ def user_access_load():
 def messages_load():
     message = "Data loading completed"
     #? csvからMessageへの書き込み
-    with open("csv/message.csv","r",encoding="utf-8") as csvfile:
+    with open("bbs/csv/message.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
         add_message=[]
         next(reader) #csvファイルの1行目(列名)を除く
@@ -236,12 +237,22 @@ def login():
             flash('ユーザーネームもしくはパスワードが正しくありません','failed')
             return redirect(url_for('login'))
         login_user(user)
+        # add_fcm_token({"token":request.form["FCMToken"],"user_id":user.id})
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs',thread_id=1)
-        return redirect(next_page)
+        # time.sleep(10)
+        return jsonify({'redirect_url': next_page})
+    send_notification({"token":"","title":"test","body":"test"})
     return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))
  
+def add_fcm_token(data):
+    if not FCMToken.query.filter_by(token=data["token"]).one_or_none():
+        fcm_token=FCMToken(token=data["token"],user_id=data["user_id"])
+        db.session.add(fcm_token)
+        db.session.commit()
+        db.session.close()
+
 @app.route('/logout')
 def logout():
     logout_user()

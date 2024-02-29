@@ -112,20 +112,6 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
     return content_html;
 }
 
-function push(){
-    console.log("push")
-    Push.create("更新情報", 
-     {
-      body: "ブログの更新をお知らせします!",
-    //   icon: 'casley_logo.png',
-      timeout: 8000,
-      onClick: function () {
-      window.focus(); 
-      this.close();
-      }
-    })
-  }
-
 var socketio = io();
 $(function() {
     socketio.on('connect', function() {
@@ -151,6 +137,8 @@ $(function() {
     });
 });
 
+
+// 文字入力数に応じてテキストエリアの大きさ変更
 var scrollable_box = document.getElementById('scrollable_box');
 textarea.rows=1;
 let clientHeight = textarea.clientHeight;
@@ -166,12 +154,6 @@ function adjustTextareaHeight() {
             textarea.style.height = scrollHeight + 'px';
             scrollable_box.style.height = scroll_box_Height - scrollHeight + init_scrollHeight + 'px';
         }
-        // else{
-        //     textarea.style.height = clientHeight + 'px';
-        //     let scrollHeight = 120;
-        //     textarea.style.height = scrollHeight + 'px';
-        //     scrollable_box.style.height = scroll_box_Height - scrollHeight + init_scrollHeight + 'px';
-        // }
 }
 
 $('.message-form button').on('click', function() {

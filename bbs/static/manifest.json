@@ -5,9 +5,10 @@
     "background_color": "#b2ccd9",
     "display": "standalone",
     "start_url": "https://aws-web-app.com/bbs/1",
+    "gcm_sender_id": "78893226549",
     "icons": [
       {
-        "src": "./images/chat.png",
+        "src": "/bbs/static/images/chat.png",
         "sizes": "150x150",
         "type": "image/png"
       }

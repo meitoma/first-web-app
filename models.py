@@ -12,7 +12,7 @@ class Users(UserMixin,db.Model):
     password = db.Column(db.String(256))
     messages = db.relationship('Messages', backref=db.backref('users', lazy=True))
     user_access = db.relationship('UserAccess', backref=db.backref('users', lazy=True))
-
+    fcm_token = db.relationship('FCMToken', backref=db.backref('users', lazy=True))
 
     def __repr__(self):
         return f'<Users {self.name}>'
@@ -80,6 +80,12 @@ class UserAccess(UserMixin,db.Model):
     def add_user_access(self):
         db.session.add(self)
         db.session.commit()
+
+class FCMToken(UserMixin,db.Model):
+    __tablename__ = 'fcm_token'
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(256))
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     
 @login_manager.user_loader
 def load_user(id):
