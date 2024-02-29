@@ -7,6 +7,9 @@ if ('serviceWorker' in navigator) {
         console.log('ServiceWorker registration failed.');
     });
     }
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getMessaging,onMessage,getToken} from "/bbs/static/js/firebase-messaging.js";
+  
     const firebaseConfig = {
     apiKey: "AIzaSyD0X-VUevT6W94SZXJm6Dz3a3PlSG4u8Ow",
     authDomain: "bbs-app-da21d.firebaseapp.com",
@@ -16,15 +19,16 @@ if ('serviceWorker' in navigator) {
     appId: "1:78893226549:web:063932b1409e9800a7af7c",
     measurementId: "G-8W68P9L4DF"
     };
-    firebase.initializeApp(firebaseConfig);
-    
-    const messaging = firebase.messaging();
+    const firebaseApp = initializeApp(firebaseConfig);
+    // firebase.initializeApp(firebaseConfig);
+    const messaging = getMessaging(firebaseApp);
+    // const messaging = firebase.messaging();
     Notification.requestPermission().then((permission) => {
     if (permission === 'granted') {
         // 通知を許可した場合
         console.log('Notification permission granted.');
 
-        messaging.getToken().then((currentToken) => {
+        getToken(messaging, { vapidKey: 'BLHLS0TscLaIH35iBgdaXUugwesIzIEGfud6jjxYYXFNomWQROLwiQBwrwYcgoC5KGcXiUZJbEHALiGmg0dDeOU' }).then((currentToken) => {
         if (currentToken) {
             post_currentToken = currentToken;
             console.log("currentToken:");

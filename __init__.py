@@ -83,6 +83,7 @@ firebase_admin.initialize_app(cred)
 
 def send_notification(data):
     registration_token=data['token']
+    registration_token = 'e1kDniAELNpSkxS2DZUTFp:APA91bH4iQIqhVM_cBuzrAhc7potdWQWkt2hIrtX8AglRpZVDTgSuUfNouVN-5Dc_Dy-_kjWRcgV7SvboUQx1Vd1BlclC88BnY1pbJgCB_hUp4MXuKDMiUM84Ft-7_IhV5FpW-VWd6Oh'
     message = messaging.Message(
         notification=messaging.Notification(
             title=data['title'],
