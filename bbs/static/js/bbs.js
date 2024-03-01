@@ -1,3 +1,46 @@
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/bbs/firebase-messaging-sw.js').then(registration => {
+        console.log('ServiceWorker registration successful.');
+    })
+        .catch(err => {
+        console.log('ServiceWorker registration failed.');
+    });
+    }
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getMessaging,onMessage,getToken} from "/bbs/static/js/firebase-messaging.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyD0X-VUevT6W94SZXJm6Dz3a3PlSG4u8Ow",
+authDomain: "bbs-app-da21d.firebaseapp.com",
+projectId: "bbs-app-da21d",
+storageBucket: "bbs-app-da21d.appspot.com",
+messagingSenderId: "78893226549",
+appId: "1:78893226549:web:063932b1409e9800a7af7c",
+measurementId: "G-8W68P9L4DF"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const messaging = getMessaging(firebaseApp);
+$('#notification').on('click', function() {
+    console.log('Notification');
+    Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+            // 通知を許可した場合
+            console.log('Notification permission granted.');
+            location.reload();
+            getToken(messaging, { vapidKey: 'BLHLS0TscLaIH35iBgdaXUugwesIzIEGfud6jjxYYXFNomWQROLwiQBwrwYcgoC5KGcXiUZJbEHALiGmg0dDeOU' }).then((currentToken) => {
+                if (currentToken) {
+                    console.log("currentToken:");
+                    console.log(currentToken);
+                    socketio.emit("set_notification", {token:currentToken,user_id:current_user})
+                }
+                });
+        } else {
+            // 通知を拒否した場合
+            console.log('Unable to get permission to notify.');
+        }
+        });
+    });
+
 $(function() {
     $(".openbtn1").on("click", function(){
         $(".openbtn1").toggleClass("active");
@@ -69,6 +112,7 @@ $(function() {
         
     });
 });
+
 function create_msg_html(send_user,send_time,send_user_name,type,message,messages_count) {
     var jc = "justify-content-start"
     var msbox = "othre-message-box"

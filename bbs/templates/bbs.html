@@ -5,7 +5,7 @@
         <ul>
             <li><a href="/profile/{{current_user.id}}"><i class="fa-solid fa-user"></i>{{current_user.name}}</a></li>
             <li><a class="add_member_btn"><i class="fa-solid fa-user-group"></i>メンバの追加</a></li>
-            <li><a href="/setting/{{current_user.id}}"><i class="fa-solid fa-gear"></i>設定</a></li>
+            <li><a id="notification"><i class="fa-solid fa-gear"></i>通知設定</a></li>
             {% if current_user.is_admin %}
                 <li><a href="/confirm"><i class="fa-solid fa-book"></i>ユーザ確認</a></li>
                 <li><a href="/admin"><i class="fa-solid fa-hammer"></i>管理者</a></li>
@@ -162,5 +162,5 @@
         var textarea = document.getElementById('text_area');
     </script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
-    <script src="/bbs/static/js/bbs.js"></script>
+    <script type="module" src="/bbs/static/js/bbs.js"></script>
 {% endblock %}

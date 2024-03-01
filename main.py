@@ -238,16 +238,18 @@ def login():
             flash('ユーザーネームもしくはパスワードが正しくありません','failed')
             return redirect(url_for('login'))
         login_user(user)
-        print(request.form["FCMToken"])
-        if request.form["FCMToken"]!="undefined":add_fcm_token({"token":request.form["FCMToken"],"user_id":user.id})
+        # if request.form["FCMToken"]!="undefined":add_fcm_token({"token":request.form["FCMToken"],"user_id":user.id})
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs',thread_id=1)
-        time.sleep(10)
-        return jsonify({'redirect_url': next_page})
-    return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))
- 
-def add_fcm_token(data):
+        # time.sleep(30)
+        # return jsonify({'redirect_url': next_page})
+        return redirect(next_page)
+    return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))    
+
+@socketio.on('set_notification')
+def handle_set_notification(data):
+    print(data["token"],data["user_id"])
     if not FCMToken.query.filter_by(token=data["token"]).one_or_none():
         fcm_token=FCMToken(token=data["token"],user_id=data["user_id"])
         db.session.add(fcm_token)
