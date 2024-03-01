@@ -247,7 +247,7 @@ def login():
     return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))
  
 def add_fcm_token(data):
-    # if not FCMToken.query.filter_by(token=data["token"]).one_or_none():
+    if not FCMToken.query.filter_by(token=data["token"]).one_or_none():
         fcm_token=FCMToken(token=data["token"],user_id=data["user_id"])
         db.session.add(fcm_token)
         db.session.commit()

@@ -23,24 +23,26 @@ if ('serviceWorker' in navigator) {
     // firebase.initializeApp(firebaseConfig);
     const messaging = getMessaging(firebaseApp);
     // const messaging = firebase.messaging();
-    Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-        // 通知を許可した場合
-        console.log('Notification permission granted.');
+    document.getElementById('loginButton').addEventListener('click', function() {
+        Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+            // 通知を許可した場合
+            console.log('Notification permission granted.');
 
-        getToken(messaging, { vapidKey: 'BLHLS0TscLaIH35iBgdaXUugwesIzIEGfud6jjxYYXFNomWQROLwiQBwrwYcgoC5KGcXiUZJbEHALiGmg0dDeOU' }).then((currentToken) => {
-        if (currentToken) {
-            post_currentToken = currentToken;
-            console.log("currentToken:");
-            console.log(currentToken);
+            getToken(messaging, { vapidKey: 'BLHLS0TscLaIH35iBgdaXUugwesIzIEGfud6jjxYYXFNomWQROLwiQBwrwYcgoC5KGcXiUZJbEHALiGmg0dDeOU' }).then((currentToken) => {
+            if (currentToken) {
+                post_currentToken = currentToken;
+                console.log("currentToken:");
+                console.log(currentToken);
+            } else {
+                // トークン取得失敗
+            }
+            });
         } else {
-            // トークン取得失敗
+            // 通知を拒否した場合
+            console.log('Unable to get permission to notify.');
         }
         });
-    } else {
-        // 通知を拒否した場合
-        console.log('Unable to get permission to notify.');
-    }
     });
 
 document.getElementById('loginButton').addEventListener('click', function() {
