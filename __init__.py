@@ -82,7 +82,7 @@ firebase_admin.initialize_app(cred)
 from models import UserAccess,FCMToken
 def send_notification(data):
     push_users = UserAccess.query.filter(UserAccess.thread_id == data['thread_id'])
-    users_id = [push_user.user_id for push_user in push_users]
+    users_id = [push_user.user_id for push_user in push_users if push_user.user_id !=data['send_user']]
     fcm_users=FCMToken.query.filter(FCMToken.user_id.in_(users_id)).all()
     fcm_tokens=[fcm_user.token for fcm_user in fcm_users]
     message = messaging.MulticastMessage(

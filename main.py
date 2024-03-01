@@ -143,7 +143,7 @@ def bbs(thread_id):
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
-            send_notification({"thread_id":thread_id,"body":"test"})
+            send_notification({"thread_id":thread_id,"body":"test","send_user":send_user})
             # time.sleep(10)
         return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))

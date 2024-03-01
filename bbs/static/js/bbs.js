@@ -20,25 +20,66 @@ measurementId: "G-8W68P9L4DF"
 };
 const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
-$('#notification').on('click', function() {
+function asyncFunction1() {
+    return new Promise((resolve, reject) => {
+        Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+                // 通知を許可した場合
+                console.log('Notification permission granted.');
+                getToken(messaging, { vapidKey: 'BLHLS0TscLaIH35iBgdaXUugwesIzIEGfud6jjxYYXFNomWQROLwiQBwrwYcgoC5KGcXiUZJbEHALiGmg0dDeOU' }).then((currentToken) => {
+                    if (currentToken) {
+                        console.log("currentToken:");
+                        console.log(currentToken);
+                        socketio.emit("set_notification", {token:currentToken,user_id:current_user});
+                        resolve();
+                    }
+                    });
+            } else {
+                // 通知を拒否した場合
+                console.log('Unable to get permission to notify.');
+                resolve();
+            }
+            });
+        setTimeout(function(){
+            reject();
+            }, 5000 );
+    });
+  }
+  function asyncFunction2() {
+    return new Promise((resolve, reject) => {
+        location.reload();
+        resolve();
+    });
+  }
+
+$('#notification').on('click', async function() {
     console.log('Notification');
-    Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-            // 通知を許可した場合
-            console.log('Notification permission granted.');
-            location.reload();
-            getToken(messaging, { vapidKey: 'BLHLS0TscLaIH35iBgdaXUugwesIzIEGfud6jjxYYXFNomWQROLwiQBwrwYcgoC5KGcXiUZJbEHALiGmg0dDeOU' }).then((currentToken) => {
-                if (currentToken) {
-                    console.log("currentToken:");
-                    console.log(currentToken);
-                    socketio.emit("set_notification", {token:currentToken,user_id:current_user})
-                }
-                });
-        } else {
-            // 通知を拒否した場合
-            console.log('Unable to get permission to notify.');
-        }
-        });
+    try {
+        await asyncFunction1();
+        console.log("Both functions completed");
+      } catch (error) {
+        console.error("An error occurred:", error);
+        await asyncFunction2();
+      }
+    // Notification.requestPermission().then((permission) => {
+    //     if (permission === 'granted') {
+    //         // 通知を許可した場合
+    //         console.log('Notification permission granted.');
+    //         getToken(messaging, { vapidKey: 'BLHLS0TscLaIH35iBgdaXUugwesIzIEGfud6jjxYYXFNomWQROLwiQBwrwYcgoC5KGcXiUZJbEHALiGmg0dDeOU' }).then((currentToken) => {
+    //             if (currentToken) {
+    //                 console.log("currentToken:");
+    //                 console.log(currentToken);
+    //                 socketio.emit("set_notification", {token:currentToken,user_id:current_user})
+    //             }
+    //             });
+    //     } else {
+    //         // 通知を拒否した場合
+    //         console.log('Unable to get permission to notify.');
+    //     }
+    //     });
+        // setTimeout(function(){
+        //     location.reload();
+        // }, 500 );
     });
 
 $(function() {
