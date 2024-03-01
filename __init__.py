@@ -91,7 +91,7 @@ def send_notification(data):
             'time': '2:45',
         },
         notification = messaging.Notification(
-            title="thread.thread_name",
+            title=data['title'],
             body=data['body'],
         ),
         tokens=fcm_tokens,

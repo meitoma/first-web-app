@@ -134,16 +134,18 @@ def bbs(thread_id):
                 picture_file = save_picture(form.image.data,request.form["image_orientation"])
                 message_type = "image"
                 my_message = picture_file
+                notification_txt="画像が送信されました"
                 user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)
             else:
                 message_type="text"
                 my_message = form.message.data
+                notification_txt=my_message
                 user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)
             emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
-            send_notification({"thread_id":thread_id,"body":"test","send_user":send_user})
+            send_notification({"thread_id":thread_id,"title":title,"body":notification_txt,"send_user":send_user})
             # time.sleep(10)
         return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
