@@ -32,32 +32,89 @@ function signup() {
     document.getElementById("login-form").style.display = "none";
 }
 
-var post_currentToken;
-$(function() {
-    $('#loginButton').on('click', function() {
-       $(this).prop('disabled', true);
-       var formData = new FormData(document.getElementById('login-form'));
-       console.log(post_currentToken);
-       formData.append('FCMToken', post_currentToken);
-       const xhr = new XMLHttpRequest();
-       xhr.open('POST', '/login', true);
-       xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                console.log(xhr.responseText);
-                var response = JSON.parse(xhr.responseText);
-                window.location.href = response.redirect_url;
-            }
-        };
-       xhr.send(formData);
-    });
-});
-
 $(function() {
     $('.one-clk-btn').on('click', function() {
        $(this).prop('disabled', true);
        $('#signup-form').submit();
     });
 });
+$(function () {  
+    var password_area = document.getElementById('password_area');  
+    password_area.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+                console.log("submit")
+                $('#loginButton').click();
+                event.preventDefault(); // デフォルトのEnterキーの挙動を防ぐ
+        }
+    });
+  });
+
+var post_currentToken;
+function asyncFunction1() {
+    return new Promise((resolve, reject) => {
+        Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+                // 通知を許可した場合
+                console.log('Notification permission granted.');
+    
+                getToken(messaging, { vapidKey: 'BLHLS0TscLaIH35iBgdaXUugwesIzIEGfud6jjxYYXFNomWQROLwiQBwrwYcgoC5KGcXiUZJbEHALiGmg0dDeOU' }).then((currentToken) => {
+                if (currentToken) {
+                    post_currentToken = currentToken;
+                    console.log("currentToken:");
+                    console.log(currentToken);
+                } else {
+                    // トークン取得失敗
+                }
+                });
+            } else {
+                // 通知を拒否した場合
+                console.log('Unable to get permission to notify.');
+            }
+            });
+        setTimeout(() => {
+            console.log("Async Function 1 completed");
+            resolve();
+        }, 1500);
+        });
+  }
+
+  function asyncFunction2() {
+    return new Promise((resolve, reject) => {
+        $(this).prop('disabled', true);
+        var formData = new FormData(document.getElementById('login-form'));
+        console.log("post currentToken");
+        console.log(post_currentToken);
+        formData.append('FCMToken', post_currentToken);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/login', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log(xhr.responseText);
+                var response = JSON.parse(xhr.responseText);
+                window.location.href = response.redirect_url;
+            }
+        };
+        xhr.send(formData);
+        setTimeout(() => {
+            console.log("Async Function 2 completed");
+            resolve();
+        }, 1500);
+        });
+  }
+
+
+$(function() {
+    $('#loginButton').on('click', async function() {
+        try {
+            await asyncFunction1();
+            await asyncFunction2();
+            console.log("Both functions completed");
+          } catch (error) {
+            console.error("An error occurred:", error);
+          }
+    });
+});
+
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/bbs/firebase-messaging-sw.js').then(registration => {
@@ -83,29 +140,3 @@ if ('serviceWorker' in navigator) {
     // firebase.initializeApp(firebaseConfig);
     const messaging = getMessaging(firebaseApp);
     // const messaging = firebase.messaging();
-    document.getElementById('loginButton').addEventListener('click', function() {
-        Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-            // 通知を許可した場合
-            console.log('Notification permission granted.');
-
-            getToken(messaging, { vapidKey: 'BLHLS0TscLaIH35iBgdaXUugwesIzIEGfud6jjxYYXFNomWQROLwiQBwrwYcgoC5KGcXiUZJbEHALiGmg0dDeOU' }).then((currentToken) => {
-            if (currentToken) {
-                post_currentToken = currentToken;
-                console.log("currentToken:");
-                console.log(currentToken);
-            } else {
-                // トークン取得失敗
-            }
-            });
-        } else {
-            // 通知を拒否した場合
-            console.log('Unable to get permission to notify.');
-        }
-        });
-    });
-
-
-
-
-  

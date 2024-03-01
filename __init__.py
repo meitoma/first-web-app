@@ -77,19 +77,24 @@ admin.add_view(ThreadsAdminView)
 admin.add_view(UserAccessAdminView)
 admin.add_view(FCMTokenAdminView)
 
-# cred_json = os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON')
-cred = credentials.Certificate("./bbs/bbs-app-da21d-firebase-adminsdk-r05g1-9ba685c39b.json")
+cred = credentials.Certificate("../firebasekey/bbs-app-da21d-firebase-adminsdk-r05g1-9ba685c39b.json")
 firebase_admin.initialize_app(cred)
-
+from models import UserAccess,FCMToken
 def send_notification(data):
-    registration_token=data['token']
-    registration_token = 'e1kDniAELNpSkxS2DZUTFp:APA91bH4iQIqhVM_cBuzrAhc7potdWQWkt2hIrtX8AglRpZVDTgSuUfNouVN-5Dc_Dy-_kjWRcgV7SvboUQx1Vd1BlclC88BnY1pbJgCB_hUp4MXuKDMiUM84Ft-7_IhV5FpW-VWd6Oh'
-    message = messaging.Message(
-        notification=messaging.Notification(
-            title=data['title'],
+    push_users = UserAccess.query.filter(UserAccess.thread_id == data['thread_id'])
+    users_id = [push_user.user_id for push_user in push_users]
+    fcm_users=FCMToken.query.filter(FCMToken.user_id.in_(users_id)).all()
+    fcm_tokens=[fcm_user.token for fcm_user in fcm_users]
+    message = messaging.MulticastMessage(
+        data={
+            'score': '850', 
+            'time': '2:45',
+        },
+        notification = messaging.Notification(
+            title="thread.thread_name",
             body=data['body'],
         ),
-        token=registration_token,
+        tokens=fcm_tokens,
     )
-    response = messaging.send(message)
-    return jsonify({'success': True, 'response': response})
+    response = messaging.send_multicast(message)
+    return jsonify({'success': True, 'response': response.success_count})

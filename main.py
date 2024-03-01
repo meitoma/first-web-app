@@ -143,6 +143,7 @@ def bbs(thread_id):
             db.session.add(user_message)
             db.session.commit()
             db.session.close()
+            send_notification({"thread_id":thread_id,"body":"test"})
             # time.sleep(10)
         return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
@@ -237,13 +238,13 @@ def login():
             flash('ユーザーネームもしくはパスワードが正しくありません','failed')
             return redirect(url_for('login'))
         login_user(user)
-        add_fcm_token({"token":request.form["FCMToken"],"user_id":user.id})
+        print(request.form["FCMToken"])
+        if request.form["FCMToken"]!="undefined":add_fcm_token({"token":request.form["FCMToken"],"user_id":user.id})
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs',thread_id=1)
-        # time.sleep(10)
+        time.sleep(10)
         return jsonify({'redirect_url': next_page})
-    # send_notification({"token":"","title":"test","body":"test"})
     return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))
  
 def add_fcm_token(data):
