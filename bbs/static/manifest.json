@@ -4,7 +4,7 @@
     "theme_color": "#b2ccd9",
     "background_color": "#b2ccd9",
     "display": "standalone",
-    "start_url": "https://aws-web-app.com/bbs/1",
+    "start_url": "https://aws-web-app.com/bbs/home",
     "gcm_sender_id": "78893226549",
     "icons": [
       {

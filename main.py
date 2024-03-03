@@ -101,7 +101,8 @@ def save_picture(form_picture,image_orientation):
     picture_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'bbs/static/send_images', picture_fn)
     i = Image.open(form_picture)
-    if image_orientation=="vertical":
+    i_orientation = "vertical" if i.shape[0]>i.shape[1] else "horizontal"
+    if image_orientation != i_orientation:
         i = i.rotate(-90, expand=True)
     i.thumbnail((800, 800))
     i.save(picture_path)

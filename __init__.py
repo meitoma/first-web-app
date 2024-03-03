@@ -77,7 +77,7 @@ admin.add_view(ThreadsAdminView)
 admin.add_view(UserAccessAdminView)
 admin.add_view(FCMTokenAdminView)
 
-cred = credentials.Certificate("../firebasekey/bbs-app-da21d-firebase-adminsdk-r05g1-9ba685c39b.json")
+cred = credentials.Certificate("../key_firebase/bbs-app-da21d-firebase-adminsdk-r05g1-9ba685c39b.json")
 firebase_admin.initialize_app(cred)
 from models import UserAccess,FCMToken
 def send_notification(data):
