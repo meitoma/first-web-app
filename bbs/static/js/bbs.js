@@ -1,3 +1,30 @@
+var socketio =  io.connect('http://127.0.0.1:3000');
+socketio.emit("join", {room:String(thread_id)})
+$(function() {
+    socketio.on('connect', function() {
+    console.log('connect');
+        // socketio.emit("join", {room:String(thread_id)})
+    });
+
+    socketio.on('reload', function () {
+        console.log('Received message: reload');
+        setTimeout(function(){
+            location.reload()
+        }, 500 );
+    });
+    socketio.on('add_meddage', function (message) {
+        console.log('Received message: '+message["type"]+':'+message["message"]);
+            var content = document.getElementById("scroller__inner");
+            var contentHTML = content.innerHTML;
+            var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
+            content.innerHTML = contentHTML + newContent;
+            updateContent();
+            setTimeout(function(){
+                scrollbottonm();
+            }, 700 );
+    });
+});
+
 $(function() {
     $(".openbtn1").on("click", function(){
         $(".openbtn1").toggleClass("active");
@@ -5,46 +32,60 @@ $(function() {
         $(".nav").toggleClass("open");
     });
     $(".mask").on("click", function(){
-        $(".mask").toggleClass("open");
-        if ($(".mask").hasClass("mask2")) {
-            $(".make_thread").toggleClass("open");
-            $(".mask").toggleClass("mask2");
-          }
-        else if ($(".mask").hasClass("mask3")) {
-            $(".delete_display").toggleClass("open");
-            $(".mask").toggleClass("mask3");
-          }
-        else if ($(".mask").hasClass("mask4")) {
-            $(".add_member").toggleClass("open");
-            $(".mask").toggleClass("mask4");
-          }
-        else{
-            $(".openbtn1").toggleClass("active");
-            $(".nav").toggleClass("open");
-        }   
+        $(".new_thread").removeClass("active");
+        $(".make_thread").removeClass("open");
+        $(".delete_thread").removeClass("open");
+        $(".delete_display").removeClass("open");
+        $(".add_member").removeClass("open");
+        $(".add_member_btn").removeClass("active");
+        $(".nav").removeClass("open");
+        $(".openbtn1").removeClass("active");
+        $(".mask").removeClass("open");
     });
-    $(".add_member_btn, .add_cancel").on("click", function(){
-        $(".add_member_btn").toggleClass("active");
-        $(".add_member").toggleClass("open");
-        $(".mask").toggleClass("mask4");
+    $(".add_member_btn").on("click", function(){
+        $(".add_member_btn").addClass("active");
+        $(".add_member").addClass("open");
+        $(".mask").addClass("open");
     });
-    $(".new_thread, .cancel").on("click", function(){
-        $(".new_thread").toggleClass("active");
-        $(".make_thread").toggleClass("open");
-        if (!$(".mask").hasClass("open")) {
-            $(".mask").toggleClass("open");
-          }
-        $(".mask").toggleClass("mask2");
+    $(".add_cancel").on("click", function(){
+        $(".add_member_btn").removeClass("active");
+        $(".add_member").removeClass("open");
+        if(!$(".openbtn1").hasClass("active")){
+            $(".mask").removeClass("open");
+        }
     });
 
-    $(".delete_thread, .delete_cancel").on("click", function(){
-        $(".delete_thread").toggleClass("active");
-        $(".delete_display").toggleClass("open");
+    $(".new_thread").on("click", function(){
+        $(".new_thread").addClass("active");
+        $(".make_thread").addClass("open");
         if (!$(".mask").hasClass("open")) {
-            $(".mask").toggleClass("open");
+            $(".mask").addClass("open");
           }
-        $(".mask").toggleClass("mask3");
     });
+    $(".cancel").on("click", function(){
+        $(".new_thread").removeClass("active");
+        $(".make_thread").removeClass("open");
+        if(!$(".openbtn1").hasClass("active")){
+           $(".mask").removeClass("open");
+        }
+    });
+
+    $(".delete_thread").on("click", function(){
+        $(".delete_thread").addClass("active");
+        $(".delete_display").addClass("open");
+        if (!$(".mask").hasClass("open")) {
+            $(".mask").addClass("open");
+          }
+    });
+
+    $(".delete_cancel").on("click", function(){
+        $(".delete_thread").removeClass("active");
+        $(".delete_display").removeClass("open");
+        if(!$(".openbtn1").hasClass("active")){
+            $(".mask").removeClass("open");
+        }
+    });
+
     $(".select_thread").on("click", function(){
         // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
         socketio.emit("leave", {room:String(thread_id)})
@@ -57,7 +98,7 @@ $(function() {
         // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
         socketio.emit("delete_thread")
     });
-    $('input').on('change', function () {
+    $('#text_area').on('change', function () {
         var file = $(this).prop('files')[0];
         //text()で要素内のテキストを変更する
         if(file){
@@ -112,31 +153,6 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
     // console.log(content_html)
     return content_html;
 }
-
-var socketio = io();
-$(function() {
-    socketio.on('connect', function() {
-        socketio.emit("join", {room:String(thread_id)})
-    });
-
-    socketio.on('reload', function () {
-        console.log('Received message: reload');
-        setTimeout(function(){
-            location.reload()
-        }, 500 );
-    });
-    socketio.on('add_meddage', function (message) {
-        console.log('Received message: '+message["type"]+':'+message["message"]);
-            var content = document.getElementById("scroller__inner");
-            var contentHTML = content.innerHTML;
-            var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
-            content.innerHTML = contentHTML + newContent;
-            updateContent();
-            setTimeout(function(){
-                scrollbottonm();
-            }, 700 );
-    });
-});
 
 
 // 文字入力数に応じてテキストエリアの大きさ変更
