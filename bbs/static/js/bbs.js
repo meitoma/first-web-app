@@ -1,4 +1,5 @@
-var socketio =  io.connect('http://127.0.0.1:3000');
+// var socketio =  io.connect('http://127.0.0.1:3000');
+var socketio =  io();
 socketio.emit("join", {room:String(thread_id)})
 $(function() {
     socketio.on('connect', function() {
@@ -15,9 +16,8 @@ $(function() {
     socketio.on('add_meddage', function (message) {
         console.log('Received message: '+message["type"]+':'+message["message"]);
             var content = document.getElementById("scroller__inner");
-            var contentHTML = content.innerHTML;
             var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
-            content.innerHTML = contentHTML + newContent;
+            content.insertAdjacentHTML('beforeend', newContent);
             updateContent();
             setTimeout(function(){
                 scrollbottonm();
@@ -98,7 +98,7 @@ $(function() {
         // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
         socketio.emit("delete_thread")
     });
-    $('#text_area').on('change', function () {
+    $('.form_message').on('change', function () {
         var file = $(this).prop('files')[0];
         //text()で要素内のテキストを変更する
         if(file){
@@ -181,17 +181,16 @@ $('.message-form button').on('click', function() {
     const file = input.files[0];
     function post_message() {
         xhr.open('POST', '/bbs/'+thread_id, true);
-
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                console.log('Success:', xhr.responseText);
-            } else {
-                console.error('Error:', xhr.statusText);
-            }
-        };
-        xhr.onerror = function () {
-            console.error('Network Error');
-        };
+        // xhr.onload = function () {
+        //     if (xhr.status >= 200 && xhr.status < 300) {
+        //         console.log('Success:', xhr.responseText);
+        //     } else {
+        //         console.error('Error:', xhr.statusText);
+        //     }
+        // };
+        // xhr.onerror = function () {
+        //     console.error('Network Error');
+        // };
         xhr.send(formData);
     }
 
@@ -207,17 +206,16 @@ $('.message-form button').on('click', function() {
         };
         reader.onload = async function (e) {
             const image = await loadImage(e.target.result);
-            console.log(image.width, image.height);
             image_orientation = image.width < image.height ? "vertical" : "horizontal";
+            console.log(image.width, image.height,image_orientation);
             formData.append('image_orientation', image_orientation);
-            post_message()
+            post_message();
         };
-    
         reader.readAsDataURL(file);
 
     }else{
         formData.append('image_orientation', 'none');
-        post_message()
+        post_message();
     }
     textarea.value="";
     document.getElementById('form-image').value = '';

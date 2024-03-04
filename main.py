@@ -101,7 +101,8 @@ def save_picture(form_picture,image_orientation):
     picture_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'bbs/static/send_images', picture_fn)
     i = Image.open(form_picture)
-    i_orientation = "vertical" if i.size[0]>i.size[1] else "horizontal"
+    i_orientation = "vertical" if i.size[0]<i.size[1] else "horizontal"
+    # print("receive:",image_orientation,"calc:",i_orientation)
     if image_orientation != i_orientation:
         i = i.rotate(-90, expand=True)
     i.thumbnail((800, 800))
@@ -282,7 +283,6 @@ def signup():
 def handle_join(data):
     room = data["room"]
     in_threads.add(room)
-    print(in_threads)
     join_room(room)
 
 @socketio.on('leave')
