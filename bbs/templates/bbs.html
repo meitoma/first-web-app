@@ -49,11 +49,11 @@
     <div class="mask"></div>
     <div class="title-band"></div>
     <div class="openbtn1" style="margin-top:3vh;"><span></span><span></span><span></span></div>
-    <h1 class="h1-title">{{ title }}</h1>
+    <div class="title-box"><h1 class="h1-title">{{ title }}</h1></div>
         <div class="row justify-content-center">
-            <div class="col-12 custom-col">
-                <div class="scrollable-container" id="scrollable_box">
-                    <div id="scroller__inner">
+            <div class="col-12 custom-col message-view" id="scroller__inner">
+                <!-- <div class="scrollable-container" id="scrollable_box">
+                    <div id="scroller__inner"> -->
                         <!-- <input type="button" id="push" onclick="return push()" value="クリックするとプッシュ通知が送られます"> -->
                         {%for m in messages %}
                             {% set jc="justify-content-start" %}
@@ -87,27 +87,26 @@
                                 </div> 
                             </div>
                         {% endfor %}
+                    <!-- </div>
+                </div> -->
+            </div>
+            <form action="/bbs/{{thread_id}}" method="post" class="message-form col-12" enctype="multipart/form-data" id="message-form">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="col-11 submit-text">
+                        <label for="form-image" class="in-line"><i class="fa-regular fa-image select-image-btn fa-lg"></i></label>
+                        {{ form.image(class="form-control",id='form-image',accept="image/jpeg, image/png")}}
+                        {{ form.message(placeholder="メッセージを入力", class="form-control in-line",id='text_area')}}
+                    </div>
+                    <div class="col-1">
+                        <div class="float-right">
+                            <button class="btn btn-primary one-clk-btn" type="button">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-    
-                <form action="/bbs/{{thread_id}}" method="post" class="message-form" enctype="multipart/form-data" id="message-form">
-                    {{ form.hidden_tag() }}
-                    <div class="row">
-                        <div class="col-11 submit-text">
-                            <label for="form-image" class="in-line"><i class="fa-regular fa-image select-image-btn fa-lg"></i></label>
-                            {{ form.image(class="form-control form_message",id='form-image',accept="image/jpeg, image/png")}}
-                            {{ form.message(placeholder="メッセージを入力", class="form-control in-line form_message",id='text_area')}}
-                        </div>
-                        <div class="col-1">
-                            <div class="float-right">
-                                <button class="btn btn-primary one-clk-btn" type="button">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            </form>
         </div>
     <form action="{{ url_for('add_member', previous_thread = thread_id) }}" method="post" class="add_member">
         {{ new_thread_form.hidden_tag() }}

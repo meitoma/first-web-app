@@ -1,30 +1,3 @@
-// var socketio =  io.connect('http://127.0.0.1:3000');
-var socketio =  io();
-socketio.emit("join", {room:String(thread_id)})
-$(function() {
-    socketio.on('connect', function() {
-    console.log('connect');
-        // socketio.emit("join", {room:String(thread_id)})
-    });
-
-    socketio.on('reload', function () {
-        console.log('Received message: reload');
-        setTimeout(function(){
-            location.reload()
-        }, 500 );
-    });
-    socketio.on('add_meddage', function (message) {
-        console.log('Received message: '+message["type"]+':'+message["message"]);
-            var content = document.getElementById("scroller__inner");
-            var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
-            content.insertAdjacentHTML('beforeend', newContent);
-            updateContent();
-            setTimeout(function(){
-                scrollbottonm();
-            }, 700 );
-    });
-});
-
 $(function() {
     $(".openbtn1").on("click", function(){
         $(".openbtn1").toggleClass("active");
@@ -98,7 +71,7 @@ $(function() {
         // socketio.emit('server_echo', {data: 'client leave from' + String(thread_id)});
         socketio.emit("delete_thread")
     });
-    $('.form_message').on('change', function () {
+    $('#form-image').on('change', function () {
         var file = $(this).prop('files')[0];
         //text()で要素内のテキストを変更する
         if(file){
@@ -156,10 +129,10 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
 
 
 // 文字入力数に応じてテキストエリアの大きさ変更
-var scrollable_box = document.getElementById('scrollable_box');
+// var scrollable_box = document.getElementById('scrollable_box');
 textarea.rows=1;
 let clientHeight = textarea.clientHeight;
-let scroll_box_Height = scrollable_box.clientHeight;
+// let scroll_box_Height = scrollable_box.clientHeight;
 let init_scrollHeight = textarea.scrollHeight;
 function adjustTextareaHeight() {
     let scrollHeight = textarea.scrollHeight;
@@ -169,7 +142,7 @@ function adjustTextareaHeight() {
             textarea.style.height = clientHeight + 'px';
             let scrollHeight = textarea.scrollHeight;
             textarea.style.height = scrollHeight + 'px';
-            scrollable_box.style.height = scroll_box_Height - scrollHeight + init_scrollHeight + 'px';
+            // scrollable_box.style.height = scroll_box_Height - scrollHeight + init_scrollHeight + 'px';
         }
 }
 
@@ -268,3 +241,29 @@ function updateContent() {
 window.addEventListener('load', updateContent);
 window.addEventListener('resize', updateContent);
 
+// var socketio =  io.connect('http://127.0.0.1:3000');
+var socketio =  io();
+socketio.emit("join", {room:String(thread_id)})
+$(function() {
+    socketio.on('connect', function() {
+    console.log('connect');
+        // socketio.emit("join", {room:String(thread_id)})
+    });
+
+    socketio.on('reload', function () {
+        console.log('Received message: reload');
+        setTimeout(function(){
+            location.reload()
+        }, 500 );
+    });
+    socketio.on('add_meddage', function (message) {
+        console.log('Received message: '+message["type"]+':'+message["message"]);
+            var content = document.getElementById("scroller__inner");
+            var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
+            content.insertAdjacentHTML('beforeend', newContent);
+            updateContent();
+            setTimeout(function(){
+                scrollbottonm();
+            }, 700 );
+    });
+});

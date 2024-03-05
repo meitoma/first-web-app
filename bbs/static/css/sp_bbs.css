@@ -2,17 +2,24 @@
     margin-right: 5px;
 } */
 
-.scrollable-container {
+/* .scrollable-container {
     position: relative;
     padding-top: 4vh;
     margin-top: -2%;
-    /* min-height: 75vh; */
     height: 75vh;
     margin-bottom: 5px;
-    overflow-y: scroll; /* 縦方向のスクロールバーを表示 */
+    overflow-y: scroll;
     overflow-x: hidden;
     z-index: 1;
+} */
+.row.justify-content-center{
+    margin-left: -5%;
 }
+.message-view{
+    padding-bottom: 7%;
+    padding-top: 7%;
+}
+
 .logout-button{
     align-self: center;
 }
@@ -96,14 +103,14 @@ nav.nav2{
 }
 
 .openbtn1{
-    position: relative;/*ボタン内側の基点となるためrelativeを指定*/
+    position: fixed;
     background:#57a2c7;
     cursor: pointer;
         width: 25px;
         height:25px;
     border-radius: 5px;
-    left: 92%;
-    top: 4px;
+    left: 85%;
+    /* top: 4px; */
     z-index: 3;
 }
 .openbtn1.active{
@@ -256,21 +263,23 @@ form.make_thread li{
 form.delete_display ul li{
     list-style: none;
 }
-
-.h1-title{
-    top: 30px;
-    color:rgb(13, 13, 13);
-    display: block;
+.title-box{
     position: fixed;
+    display: block;
     background-color: #b2ccd9;
+    top:0;
+    left:0;
+    height: 40px;
     width: 100%;
-    margin-top:-50px;
-    padding-top:50px;
-    padding-bottom: 5px;
-    padding-left: 7%;
-    font-size:large;
+    padding-top:20px;
+    padding-bottom:30px;
     z-index: 2;
     opacity: 0.9;
+}
+.h1-title{
+    color:rgb(13, 13, 13);
+    padding-left: 7%;
+    font-size:large;
 }
 .p-msg-name{
     color:red;
@@ -370,6 +379,17 @@ img[alt] {
     width:200px;
 }
 
+form.message-form{
+    position: fixed;
+    display: block;
+    border-bottom: 1px solid #b2ccd9;
+    background-color: #b2ccd9;
+    width: 100%;
+    bottom: 0;
+    padding-top: 10px;
+    padding-bottom: 1%;
+}
+
 .submit-text{
     padding-right: 10%;
     font-size:small;
@@ -383,6 +403,10 @@ img[alt] {
 }
 .form-control.in-line{
     width: 85%;
+    font-size: 0.8rem;
+}
+.btn{
+    padding: 0.3rem 0.6rem;
 }
 .select-image-btn{
     position: relative;
