@@ -420,3 +420,8 @@ nav.open_nav{
     background-color: #b2ccd9;
     margin-top: 10%;
 }
+
+.msg-error{
+    color: crimson;
+    padding:10px;
+}

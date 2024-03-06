@@ -476,3 +476,7 @@ nav.open_nav{
     left: 0;
     z-index: 6;
 }
+.msg-error{
+    color: crimson;
+    padding:10px;
+}

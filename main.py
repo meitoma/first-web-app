@@ -119,7 +119,6 @@ def bbs(thread_id):
     form = MessageForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            start_time=time.time()
             current_time = datetime.datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M:%S")
             send_user = current_user.id
             send_time = current_time
@@ -140,6 +139,7 @@ def bbs(thread_id):
             # db.session.close()
             send_notification({"thread_id":thread_id,"title":title,"body":notification_txt,"send_user":send_user})
             # time.sleep(10)
+        return ('', 400)
         return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
     else:

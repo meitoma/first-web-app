@@ -83,7 +83,34 @@ $(function() {
         
     });
 });
-
+function create_error_html(send_user){
+    var jc = "justify-content-start"
+    var msbox = "othre-message-box"
+    if(send_user==current_user){
+        jc="justify-content-end"
+        msbox="my-message-box"
+    }
+    var content_html='<div class="row '+ jc +' layer1">\n\
+        <div class="col-9 '+ jc +' fix-btn">\n\
+            <p class="'+ msbox +' inf-message"><span class="p-msg-name">'+ send_user_name +' </span> :\n\
+            '+ send_time;
+    content_html += '<div class="small-screen-content close"><!-- スマホ用の画面 -->\n'
+    if(messages_count<=33){
+        content_html += '<p class='+ msbox +' style="overflow-wrap: break-word; word-wrap: break-word;"><span class="message-box back-color">'+ message +'</span></p>\n</div>\n'
+    }
+    else{
+        content_html += '<p class="'+ msbox +'  multi-rows " style="overflow-wrap: break-word; word-wrap: break-word;">通信に失敗しました。リロードしてください。</p>\n</div>\n'
+    }
+    content_html += '<div class="large-screen-content open"><!-- PC用の画面 -->\n'
+    if(messages_count<=56){
+        content_html += '<p class="'+ msbox +'" style="overflow-wrap: break-word; word-wrap: break-word;"><span class="message-box back-color">通信に失敗しました。リロードしてください。</span></p>\n</div>\n'
+    }
+    else{
+        content_html += '<p class="'+ msbox +' multi-rows " style="overflow-wrap: break-word; word-wrap: break-word;">通信に失敗しました。リロードしてください。</p>\n</div>\n'
+    }
+    console.log(content_html)
+    return content_html;
+}
 function create_msg_html(send_user,send_time,send_user_name,type,message,messages_count) {
     var jc = "justify-content-start"
     var msbox = "othre-message-box"
@@ -129,10 +156,8 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
 
 
 // 文字入力数に応じてテキストエリアの大きさ変更
-// var scrollable_box = document.getElementById('scrollable_box');
 textarea.rows=1;
 let clientHeight = textarea.clientHeight;
-// let scroll_box_Height = scrollable_box.clientHeight;
 let init_scrollHeight = textarea.scrollHeight;
 function adjustTextareaHeight() {
     let scrollHeight = textarea.scrollHeight;
@@ -142,7 +167,6 @@ function adjustTextareaHeight() {
             textarea.style.height = clientHeight + 'px';
             let scrollHeight = textarea.scrollHeight;
             textarea.style.height = scrollHeight + 'px';
-            // scrollable_box.style.height = scroll_box_Height - scrollHeight + init_scrollHeight + 'px';
         }
 }
 
@@ -154,6 +178,21 @@ $('.message-form button').on('click', function() {
     const file = input.files[0];
     function post_message() {
         xhr.open('POST', '/bbs/'+thread_id, true);
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                console.log('Success:', xhr.responseText);
+            } else {
+                var newContent = '<p class="msg-error">通信に失敗しました。リロードします。</p>'
+                content.insertAdjacentHTML('beforeend', newContent);
+                console.error('Error:', xhr.statusText);
+                setTimeout(function(){
+                    location.reload()
+                }, 3000 );
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Network Error');
+        };
         xhr.send(formData);
     }
 
@@ -249,7 +288,6 @@ $(function() {
     });
     socketio.on('add_meddage', function (message) {
         console.log('Received message: '+message["type"]+':'+message["message"]);
-            var content = document.getElementById("scroller__inner");
             var newContent=create_msg_html(message["send_user"],message["send_time"],message["send_user_name"],message["type"],message["message"],message["messages_count"])
             content.insertAdjacentHTML('beforeend', newContent);
             updateContent();
