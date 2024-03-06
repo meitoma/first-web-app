@@ -112,23 +112,14 @@ def save_picture(form_picture,image_orientation):
 @app.route('/bbs/<int:thread_id>', methods=['GET', 'POST'])
 @login_required
 def bbs(thread_id):
-    user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
-    accessible_threads=set([ua.thread_id for ua in user_access])
     thread = Threads.query.get(thread_id)
-    if thread_id not in accessible_threads or thread is None : return redirect(url_for('home',title="アクセス権がありません"))
-
     title = thread.thread_name or request.args.get('title')
-    messages = Messages.query.filter(Messages.thread_id == thread_id)
-    messages_count = [count_characters(message.message)for message in messages] #半角1,全角2でカウント
-    form = MessageForm()
     users = Users.query.all()
     id_members= {user.id:user.name for user in users}
-    members=[user.name for user in users]
-    new_thread_form = NewThreadForm(members=members)
-    delete_form = DeleteForm()
-    new_thread_form.process([])
+    form = MessageForm()
     if request.method == "POST":
         if form.validate_on_submit():
+            start_time=time.time()
             current_time = datetime.datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M:%S")
             send_user = current_user.id
             send_time = current_time
@@ -138,20 +129,29 @@ def bbs(thread_id):
                 my_message = picture_file
                 notification_txt="画像が送信されました"
                 user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)
+                emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
             else:
                 message_type="text"
                 my_message = form.message.data
                 notification_txt=my_message
                 user_message = Messages(user_id=send_user,message_type=message_type,message=my_message,sendtime=current_time,thread_id=thread_id)
-            emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
             db.session.add(user_message)
             db.session.commit()
-            db.session.close()
+            # db.session.close()
             send_notification({"thread_id":thread_id,"title":title,"body":notification_txt,"send_user":send_user})
             # time.sleep(10)
         return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
     else:
+        user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
+        accessible_threads=set([ua.thread_id for ua in user_access])
+        if thread_id not in accessible_threads or thread is None : return redirect(url_for('home',title="アクセス権がありません"))
+        messages = Messages.query.filter(Messages.thread_id == thread_id)
+        messages_count = [count_characters(message.message)for message in messages] #半角1,全角2でカウント
+        members=[user.name for user in users]
+        new_thread_form = NewThreadForm(members=members)
+        delete_form = DeleteForm()
+        new_thread_form.process([])
         return render_template('bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,new_thread_form=new_thread_form, delete_form=delete_form)
 
 @app.route('/bbs/add_member', methods=['POST'])
@@ -243,14 +243,23 @@ def login():
             flash('ユーザーネームもしくはパスワードが正しくありません','failed')
             return redirect(url_for('login'))
         login_user(user)
-        # if request.form["FCMToken"]!="undefined":add_fcm_token({"token":request.form["FCMToken"],"user_id":user.id})
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs',thread_id=1)
-        # time.sleep(30)
-        # return jsonify({'redirect_url': next_page})
         return redirect(next_page)
     return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))    
+
+@socketio.on('submit_message')
+def handle_submit_message(data):
+    users = Users.query.all()
+    id_members= {user.id:user.name for user in users}
+    current_time = datetime.datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M:%S")
+    send_user = int(current_user.id)
+    thread_id = data["thread_id"]
+    send_time = current_time
+    message_type="text"
+    my_message = data["message"]
+    emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
 
 @socketio.on('set_notification')
 def handle_set_notification(data):

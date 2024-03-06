@@ -16,8 +16,8 @@
     margin-left: -5%;
 }
 .message-view{
-    padding-bottom: 7%;
-    padding-top: 7%;
+    padding-bottom: 21%;
+    padding-top: 9%;
 }
 
 .logout-button{
@@ -109,8 +109,8 @@ nav.nav2{
         width: 25px;
         height:25px;
     border-radius: 5px;
+    top: -1%;
     left: 85%;
-    /* top: 4px; */
     z-index: 3;
 }
 .openbtn1.active{
@@ -387,7 +387,7 @@ form.message-form{
     width: 100%;
     bottom: 0;
     padding-top: 10px;
-    padding-bottom: 1%;
+    padding-bottom: 7%;
 }
 
 .submit-text{
@@ -403,10 +403,6 @@ form.message-form{
 }
 .form-control.in-line{
     width: 85%;
-    font-size: 0.8rem;
-}
-.btn{
-    padding: 0.3rem 0.6rem;
 }
 .select-image-btn{
     position: relative;

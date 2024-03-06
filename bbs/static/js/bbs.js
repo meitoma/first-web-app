@@ -154,16 +154,6 @@ $('.message-form button').on('click', function() {
     const file = input.files[0];
     function post_message() {
         xhr.open('POST', '/bbs/'+thread_id, true);
-        // xhr.onload = function () {
-        //     if (xhr.status >= 200 && xhr.status < 300) {
-        //         console.log('Success:', xhr.responseText);
-        //     } else {
-        //         console.error('Error:', xhr.statusText);
-        //     }
-        // };
-        // xhr.onerror = function () {
-        //     console.error('Network Error');
-        // };
         xhr.send(formData);
     }
 
@@ -189,6 +179,7 @@ $('.message-form button').on('click', function() {
     }else{
         formData.append('image_orientation', 'none');
         post_message();
+        socketio.emit('submit_message', { current_user:current_user, type:"text",message: textarea.value ,thread_id:thread_id});
     }
     textarea.value="";
     document.getElementById('form-image').value = '';
