@@ -312,6 +312,7 @@ form.delete_display ul li{
     opacity: 0.9;
 }
 .h1-title{
+    position: fixed;
     top: 20px;
     color:rgb(13, 13, 13);
     padding-top: 20px;

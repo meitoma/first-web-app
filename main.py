@@ -38,6 +38,7 @@ def users_load():
         add_users=[]
         next(reader) #csvファイルの1行目(列名)を除く
         for row in reader:
+            print(row)
             user=Users(name=row[0],password=row[1],admin=bool(int(row[2])))
             add_users.append(user)
         db.session.add_all(add_users)
@@ -139,7 +140,6 @@ def bbs(thread_id):
             # db.session.close()
             send_notification({"thread_id":thread_id,"title":title,"body":notification_txt,"send_user":send_user})
             # time.sleep(10)
-        return ('', 400)
         return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
     else:
@@ -168,7 +168,7 @@ def add_member():
         db.session.commit()
         db.session.close()
         print("in_threads",in_threads,request.args.get('previous_thread'))
-        emit('reload', namespace="/",to=list(in_threads))
+        if in_threads:emit('reload', namespace="/",to=list(in_threads))
     return redirect(url_for('bbs',thread_id=thread_id))
 
 @app.route('/bbs/new', methods=['POST'])
@@ -186,7 +186,7 @@ def new_thread():
         db.session.add_all(user_access)
         db.session.commit()
         db.session.close()
-        emit('reload', namespace="/",to=list(in_threads))
+        if in_threads:emit('reload', namespace="/",to=list(in_threads))
         return redirect(url_for('bbs',thread_id=new_thread_id))
     return redirect(url_for('bbs',thread_id=request.args.get('previous_thread')))
 
