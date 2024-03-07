@@ -7,6 +7,7 @@ $(function() {
     $(".mask").on("click", function(){
         $(".new_thread").removeClass("active");
         $(".make_thread").removeClass("open");
+        $("#nav1").removeClass("mk_thread_open");
         $(".delete_thread").removeClass("open");
         $(".delete_display").removeClass("open");
         $(".add_member").removeClass("open");
@@ -31,6 +32,7 @@ $(function() {
     $(".new_thread").on("click", function(){
         $(".new_thread").addClass("active");
         $(".make_thread").addClass("open");
+        $("#nav1").addClass("mk_thread_open");
         if (!$(".mask").hasClass("open")) {
             $(".mask").addClass("open");
           }
@@ -38,6 +40,7 @@ $(function() {
     $(".cancel").on("click", function(){
         $(".new_thread").removeClass("active");
         $(".make_thread").removeClass("open");
+        $("#nav1").removeClass("mk_thread_open");
         if(!$(".openbtn1").hasClass("active")){
            $(".mask").removeClass("open");
         }

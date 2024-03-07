@@ -1,7 +1,7 @@
 {% extends "layout_bbs.html" %}
 {% block content %}
     <nav class="open_nav">
-        <div class="inner">
+        <div class="inner" id="nav1">
         <ul>
             <li><a href="/profile/{{current_user.id}}"><i class="fa-solid fa-user"></i>{{current_user.name}}</a></li>
             <!-- <li><a href="/add_member/"><i class="fa-solid fa-user-group"></i>{{title}}</a></li> -->
@@ -32,6 +32,7 @@
     </nav>
     <nav class="nav2">
         <div class="inner">
+        <p>スレッド</p>
         <ul>
             {% for ua in user_access %}
                 <li><a href="/bbs/{{ua.thread_id}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>

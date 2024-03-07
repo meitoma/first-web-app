@@ -7,19 +7,21 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, \
       close_room, rooms, disconnect      
 from sqlalchemy import text
 import csv
-from __init__ import app,db,metadata,socketio,send_notification
-from forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteForm, AddMmemberForm
-from models import Users,Messages,Threads,UserAccess,FCMToken
+from web_app_BBS.__init__ import app,db,metadata,socketio,login_manager
+from web_app_BBS.forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteForm, AddMmemberForm
+from web_app_BBS.models import Users,Messages,Threads,UserAccess,FCMToken
+from web_app_BBS.notification import send_notification
 import datetime
 import secrets
 import os
 from PIL import Image
-import base64
 from io import BytesIO
 from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
-from __init__ import login_manager
 import wcwidth
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib import sqla
 import time
 import sys
 
@@ -249,6 +251,76 @@ def login():
         return redirect(next_page)
     return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))    
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('bbs',thread_id=1))
+    login_form = LoginForm()
+    signup_form = SignupForm()
+    if signup_form.validate_on_submit():
+        print(f"in:{signup_form.name.data}")
+        user = Users(name=signup_form.name.data ,password=signup_form.password.data)
+        user.add_user()
+        return redirect(url_for('login'))
+    return render_template('login.html', form=login_form,signup_form=signup_form,default_login="none",default_signup="block",next_page=request.args.get('next'))
+
+# adminページ
+admin = Admin(
+    app,
+    name='Flask-admin laboratory',
+    template_mode='bootstrap4',
+)
+
+class MyModelView1(sqla.ModelView):
+    can_view_details = True
+    def is_accessible(self):
+        return not login.current_user.is_anonymous and login.current_user.is_admin
+
+class MyModelView2(sqla.ModelView):
+    can_view_details = True
+    column_list = ["message","sendtime","user_id","thread_id"]
+    column_sortable_list = column_list
+    def is_accessible(self):
+        return not login.current_user.is_anonymous and login.current_user.is_admin
+    
+class MyModelView3(sqla.ModelView):
+    can_view_details = True
+    def is_accessible(self):
+        return not login.current_user.is_anonymous and login.current_user.is_admin
+
+class MyModelView4(sqla.ModelView):
+    can_view_details = True
+    column_list = ["user_id","thread_id"]
+    column_sortable_list = column_list
+    def is_accessible(self):
+        return not login.current_user.is_anonymous and login.current_user.is_admin
+    
+class MyModelView5(sqla.ModelView):
+    can_view_details = True
+    column_list = ["user_id","token"]
+    column_sortable_list = column_list
+    def is_accessible(self):
+        return not login.current_user.is_anonymous and login.current_user.is_admin
+    
+UsersAdminView = MyModelView1(Users, db.session)
+MessagesAdminView = MyModelView2(Messages, db.session)
+ThreadsAdminView = MyModelView3(Threads, db.session)
+UserAccessAdminView = MyModelView4(UserAccess, db.session)
+FCMTokenAdminView = MyModelView5(FCMToken, db.session)
+
+admin.add_view(UsersAdminView)
+admin.add_view(MessagesAdminView)
+admin.add_view(ThreadsAdminView)
+admin.add_view(UserAccessAdminView)
+admin.add_view(FCMTokenAdminView)
+
+
+# socket通信
 @socketio.on('submit_message')
 def handle_submit_message(data):
     users = Users.query.all()
@@ -270,24 +342,6 @@ def handle_set_notification(data):
         db.session.commit()
         db.session.close()
 
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-@app.route('/signup', methods=['POST'])
-def signup():
-    if current_user.is_authenticated:
-        return redirect(url_for('bbs',thread_id=1))
-    login_form = LoginForm()
-    signup_form = SignupForm()
-    if signup_form.validate_on_submit():
-        print(f"in:{signup_form.name.data}")
-        user = Users(name=signup_form.name.data ,password=signup_form.password.data)
-        user.add_user()
-        return redirect(url_for('login'))
-    return render_template('login.html', form=login_form,signup_form=signup_form,default_login="none",default_signup="block",next_page=request.args.get('next'))
-
 @socketio.on('join')
 def handle_join(data):
     room = data["room"]
@@ -298,5 +352,4 @@ def handle_join(data):
 def on_leave(data):
     room = data['room']
     leave_room(room)
-
 

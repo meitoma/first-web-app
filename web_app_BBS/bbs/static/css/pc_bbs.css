@@ -87,6 +87,7 @@ nav.nav2{
     transition: all 0.5s;
     z-index: 3;
 }
+
 .nav2 .inner {
     padding: 25px;
 }
@@ -476,6 +477,9 @@ nav.open_nav{
     margin-top: 20%;
     left: 0;
     z-index: 6;
+}
+nav.open_nav:has(.mk_thread_open){
+    z-index: 4;
 }
 .msg-error{
     color: crimson;
