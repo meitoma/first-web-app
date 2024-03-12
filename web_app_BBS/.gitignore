@@ -1,7 +1,0 @@
-/.env
-.DS_Stor
-Pipfile
-Pipfile.lock
-__pycache__/
-/bbs/static/send_images/
-/bbs/static/images/
