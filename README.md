@@ -1,5 +1,5 @@
 # Render.comでの実行
-* 更新停止
+※ 更新停止<br>
 APP URL : https://first-app-k3ce.onrender.com
 <br><br>
 # AWSでの実行
