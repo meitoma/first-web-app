@@ -108,7 +108,7 @@
         <h3>"{{title}}"にメンバを追加する</h3>
         <p>メンバー</p>
         <ul>
-            {% for member_form in new_thread_form.member %}
+            {% for member_form in add_member.member %}
                 <li>{{ member_form}} {{ member_form.label }}</li>
             {% endfor %}
         </ul>
@@ -125,7 +125,7 @@
         <br>
         <p>メンバー</p>
         <ul>
-            {% for member_form in new_thread_form.member %}
+            {% for member_form in new_thread_form.new_member %}
                 <li>{{ member_form}} {{ member_form.label }}</li>
             {% endfor %}
         </ul>

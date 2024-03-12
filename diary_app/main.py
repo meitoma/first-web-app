@@ -9,5 +9,5 @@ diary_app = Blueprint('diary_app', __name__, static_folder='diary', template_fol
 @diary_app.route('/', methods=['GET', 'POST'])
 @diary_app.route('/diary')
 def diary():
-    return render_template('diary_app/home_diary.html')    
+    return render_template('diary_app/home.html')    
 

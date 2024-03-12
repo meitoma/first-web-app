@@ -6,7 +6,7 @@ from flask_login import (
 from flask_socketio import SocketIO, emit, join_room, leave_room,close_room, rooms, disconnect      
 from sqlalchemy import text
 import csv
-from bbs_app.__init__ import db,metadata,socketio,login_manager
+from __init__ import db,metadata,socketio,login_manager
 
 from bbs_app.forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteForm, AddMmemberForm
 from bbs_app.models import Users,Messages,Threads,UserAccess,FCMToken
@@ -152,10 +152,11 @@ def bbs(thread_id):
         messages = Messages.query.filter(Messages.thread_id == thread_id)
         messages_count = [count_characters(message.message)for message in messages] #半角1,全角2でカウント
         members=[user.name for user in users]
+        add_member = AddMmemberForm(members=members)
         new_thread_form = NewThreadForm(members=members)
         delete_form = DeleteForm()
         new_thread_form.process([])
-        return render_template('bbs_app/bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,new_thread_form=new_thread_form, delete_form=delete_form)
+        return render_template('bbs_app/bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,add_member=add_member,new_thread_form=new_thread_form, delete_form=delete_form)
 
 @bbs_app.route('/bbs/add_member', methods=['POST'])
 @login_required
@@ -185,7 +186,7 @@ def new_thread():
         db.session.add(new_thread)
         db.session.flush()
         new_thread_id = new_thread.id
-        user_access=[UserAccess(user_id=int(m),thread_id=new_thread_id) for m in new_thread_form.member.data]
+        user_access=[UserAccess(user_id=int(m),thread_id=new_thread_id) for m in new_thread_form.new_member.data]
         db.session.add_all(user_access)
         db.session.commit()
         db.session.close()
@@ -250,15 +251,11 @@ def login():
             flash('ユーザーネームもしくはパスワードが正しくありません','failed')
             return redirect(url_for('bbs_app.login'))
         login_user(user)
-        next_page = 'bbs_app' + request.args.get('next') if request.args.get('next') else None
+        next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs_app.bbs',thread_id=1)
         return redirect(next_page)
     return render_template('bbs_app/login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))    
-
-@bbs_app.route('/diary')
-def diary():
-    return render_template('bbs_app/home_diary.html')    
 
 @bbs_app.route('/logout')
 def logout():

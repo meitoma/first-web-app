@@ -58,9 +58,9 @@ class NewThreadForm(FlaskForm):
     def __init__(self,members,*args, **kwargs):
         super(NewThreadForm, self).__init__(*args, **kwargs)
         self.members=members
-        self.member.choices = [(str(i+1), name) for i, name in enumerate(self.members)]
+        self.new_member.choices = [(str(i+1), name) for i, name in enumerate(self.members)]
     thread_name = TextAreaField(label='スレッド名')
-    member = MultiCheckboxField(label='メンバー')
+    new_member = MultiCheckboxField(label='メンバー')
 
     def validate_thread_name(self, thread_name):
         if len(thread_name.data)==0:
