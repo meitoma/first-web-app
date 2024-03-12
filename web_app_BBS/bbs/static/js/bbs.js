@@ -157,7 +157,6 @@ function create_msg_html(send_user,send_time,send_user_name,type,message,message
     return content_html;
 }
 
-
 // 文字入力数に応じてテキストエリアの大きさ変更
 textarea.rows=1;
 let clientHeight = textarea.clientHeight;
@@ -179,6 +178,25 @@ $('.message-form button').on('click', function() {
     const xhr = new XMLHttpRequest();
     const input = document.getElementById('form-image');
     const file = input.files[0];
+    // 位置情報の取得に成功した場合のコールバック関数
+    function get_current_position(){
+        function successCallback(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            console.log('位置情報の送信に成功しました:', latitude, longitude);
+            socketio.emit('get_reverse_geo', {latitude:latitude,longitude:longitude});
+        }
+        function errorCallback(error) {
+            console.error("Error getting location:", error);
+        }
+        var options = {
+            enableHighAccuracy: true, // より高精度な位置情報を取得する場合はtrue
+            timeout: 5000, // タイムアウトまでの時間（ミリ秒）
+            maximumAge: 0 // キャッシュされた位置情報を使用しない場合は0
+        };
+        navigator.geolocation.getCurrentPosition(successCallback,errorCallback,options);
+    }
+
     function post_message() {
         xhr.open('POST', '/bbs/'+thread_id, true);
         xhr.onload = function () {
@@ -198,7 +216,7 @@ $('.message-form button').on('click', function() {
         };
         xhr.send(formData);
     }
-
+    get_current_position();
     if (file) {
         var image_orientation;
         const reader = new FileReader();

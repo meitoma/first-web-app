@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,Blueprint
 from flask import flash, redirect, url_for,render_template,request,jsonify
 from flask_login import (
         current_user, login_user, logout_user, login_required
@@ -7,13 +7,15 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, \
       close_room, rooms, disconnect      
 from sqlalchemy import text
 import csv
-from web_app_BBS.__init__ import app,db,metadata,socketio,login_manager
+import os
+import sys
+from web_app_BBS.__init__ import db,metadata,socketio,login_manager
+
 from web_app_BBS.forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteForm, AddMmemberForm
 from web_app_BBS.models import Users,Messages,Threads,UserAccess,FCMToken
-from web_app_BBS.notification import send_notification
+from web_app_BBS.external_api import send_notification,get_external_api_data
 import datetime
 import secrets
-import os
 from PIL import Image
 from io import BytesIO
 from zoneinfo import ZoneInfo
@@ -23,9 +25,9 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib import sqla
 import time
-import sys
 
-
+app = Blueprint('web_app_bbs', __name__, static_folder='bbs', template_folder='bbs/templates')
+# print("main:",__name__)
 in_threads=set()
 @login_required
 @app.route('/load_data')
@@ -238,6 +240,10 @@ def login():
         return redirect(url_for('bbs',thread_id=1))
     form = LoginForm()
     signup_form = SignupForm()
+    if request.headers.getlist("X-Forwarded-For"):
+        ip = request.headers.getlist("X-Forwarded-For")[0]
+    else:
+        ip = request.remote_addr
     if form.validate_on_submit():
         # name:test, pass:test
         user = Users.query.filter_by(name=form.name.data).first()
@@ -249,7 +255,11 @@ def login():
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs',thread_id=1)
         return redirect(next_page)
-    return render_template('login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))    
+    return render_template('web_app_bbs/login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))    
+
+@app.route('/diary')
+def diary():
+    return render_template('home_diary.html')    
 
 @app.route('/logout')
 def logout():
@@ -352,4 +362,11 @@ def handle_join(data):
 def on_leave(data):
     room = data['room']
     leave_room(room)
+
+@socketio.on('get_reverse_geo')
+def handle_get_reverse_geo(data):
+    lat,lon=data['latitude'],data['longitude']
+    external_api_url = f"https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?lat={lat}&lon={lon}&output=json&appid="
+    result = get_external_api_data(external_api_url)
+    print(result)
 

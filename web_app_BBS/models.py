@@ -1,4 +1,9 @@
 from web_app_BBS.__init__ import db,login_manager
+import os
+import sys
+# parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# sys.path.append(parent_dir)
+# from server import app,db,metadata,socketio,login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 import datetime

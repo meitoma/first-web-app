@@ -9,7 +9,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
     DEBUG = True
-    
     dotenv_path = join(dirname(__file__), '.env')
     load_dotenv(dotenv_path) #.envファイルの読み込み
 

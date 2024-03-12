@@ -33,3 +33,4 @@ wsproto==1.2.0
 WTForms==3.1.1
 zipp==3.17.0
 flask_admin
+ipwhois=1.2.0
