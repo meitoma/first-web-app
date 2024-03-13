@@ -1,7 +1,7 @@
 {% extends "bbs_app/layout.html" %}
 {% block content %}
     <h1>{{ message }}</h1>
-    <a href="bbs_app/login">戻る</a>
+    <a href="/bbs_app/{{ws_name}}/login">戻る</a>
     {% for datan in data %}
         {%for d in datan%}
             <div class="card" style="background-color: #b2ccd9;padding:20px;">

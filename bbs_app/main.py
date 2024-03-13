@@ -1,16 +1,15 @@
-from flask import Flask,Blueprint
+from flask import Flask,Blueprint,session
 from flask import flash, redirect, url_for,render_template,request,jsonify
-from flask_login import (
-        current_user, login_user, logout_user, login_required
-    )
+from flask_login import current_user, login_user, logout_user, login_required
 from flask_socketio import SocketIO, emit, join_room, leave_room,close_room, rooms, disconnect      
 from sqlalchemy import text
 import csv
-from __init__ import db,metadata,socketio,login_manager
+from __init__ import db,metadata,socketio,login_manager,app
 
 from bbs_app.forms import LoginForm, SignupForm, MessageForm, NewThreadForm, DeleteForm, AddMmemberForm
-from bbs_app.models import Users,Messages,Threads,UserAccess,FCMToken
+from bbs_app.models import Users,Messages,Threads,UserAccess,FCMToken,WorkSpaces,WSAccessUser
 from bbs_app.external_api import send_notification,get_external_api_data
+import bbs_app.my_admin
 import datetime
 import secrets
 from PIL import Image
@@ -18,52 +17,79 @@ from io import BytesIO
 from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
 import wcwidth
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask_admin.contrib import sqla
 import time
 import os
 import sys
 
+token=secrets.token_hex(16)
+print("token",token)
 bbs_app = Blueprint('bbs_app', __name__, static_folder='bbs', template_folder='bbs/templates')
+
 # print("main:",__name__)
 in_threads=set()
 @login_required
-@bbs_app.route('/load_data')
-def users_load():
+@bbs_app.route('/<string:ws_name>/load_data')
+def users_load(ws_name):
     #? Users tableの内容削除
     db.drop_all()
     db.create_all()
 
     #? csvからUsersへの書き込み
-    with open("bbs/csv/users.csv","r",encoding="utf-8") as csvfile:
+    with open("bbs_app/bbs/csv/users.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
         add_users=[]
         next(reader) #csvファイルの1行目(列名)を除く
         for row in reader:
-            print(row)
             user=Users(name=row[0],password=row[1],admin=bool(int(row[2])))
             add_users.append(user)
         db.session.add_all(add_users)
         db.session.commit()
-    return threads_load()
+    return workspaces_load(ws_name)
 
-def threads_load():
+def workspaces_load(ws_name):
+    #? csvからWorkSpacesへの書き込み
+    with open("bbs_app/bbs/csv/workspaces.csv","r",encoding="utf-8") as csvfile:
+        reader=csv.reader(csvfile)
+        add_workspaces=[]
+        next(reader) #csvファイルの1行目(列名)を除く
+        for row in reader:
+            print(row)
+            tdatetime = datetime.datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S')
+            workspaces=WorkSpaces(ws_name=row[0],ws_token=row[1],update_time=tdatetime)
+            add_workspaces.append(workspaces)
+        db.session.add_all(add_workspaces)
+        db.session.commit()
+    return workspace_access_load(ws_name)
+
+def workspace_access_load(ws_name):
+    #? csvからWSAccessUserへの書き込み
+    with open("bbs_app/bbs/csv/ws_access.csv","r",encoding="utf-8") as csvfile:
+        reader=csv.reader(csvfile)
+        add_wsaccess=[]
+        next(reader) #csvファイルの1行目(列名)を除く
+        for row in reader:
+            ws_access=WSAccessUser(user_id=row[0],ws_id=row[1])
+            add_wsaccess.append(ws_access)
+        db.session.add_all(add_wsaccess)
+        db.session.commit()
+    return threads_load(ws_name)
+
+def threads_load(ws_name):
     #? csvからUsersへの書き込み
-    with open("bbs/csv/threads.csv","r",encoding="utf-8") as csvfile:
+    with open("bbs_app/bbs/csv/threads.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
         add_threads=[]
         next(reader) #csvファイルの1行目(列名)を除く
         for row in reader:
-            thread=Threads(thread_name=row[0])
+            thread=Threads(thread_name=row[0],ws_id=row[1])
             add_threads.append(thread)
         db.session.add_all(add_threads)
         db.session.commit()
-    return user_access_load()
+    return user_access_load(ws_name)
 
-def user_access_load():
+def user_access_load(ws_name):
     #? csvからUsersへの書き込み
-    with open("bbs/csv/user_access.csv","r",encoding="utf-8") as csvfile:
+    with open("bbs_app/bbs/csv/user_access.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
         add_useraccess=[]
         next(reader) #csvファイルの1行目(列名)を除く
@@ -72,12 +98,12 @@ def user_access_load():
             add_useraccess.append(useraccess)
         db.session.add_all(add_useraccess)
         db.session.commit()
-    return messages_load()
+    return messages_load(ws_name)
 
-def messages_load():
+def messages_load(ws_name):
     message = "Data loading completed"
     #? csvからMessageへの書き込み
-    with open("bbs/csv/message.csv","r",encoding="utf-8") as csvfile:
+    with open("bbs_app/bbs/csv/message.csv","r",encoding="utf-8") as csvfile:
         reader=csv.reader(csvfile)
         add_message=[]
         next(reader) #csvファイルの1行目(列名)を除く
@@ -92,7 +118,7 @@ def messages_load():
           db.session.query(Messages).all(),
           db.session.query(Threads).all(),
           db.session.query(UserAccess).all()]
-    return render_template('bbs_app/comp_load.html', message = message,data=data)
+    return render_template('bbs_app/comp_load.html',ws_name=ws_name, message = message,data=data)
 
 def count_characters(text):
     return sum(wcwidth.wcwidth(char) if wcwidth.wcwidth(char) > 0 else 1 for char in text)
@@ -113,9 +139,9 @@ def save_picture(form_picture,image_orientation):
     i.save(picture_path)
     return picture_fn
 
-@bbs_app.route('/bbs/<int:thread_id>', methods=['GET', 'POST'])
+@bbs_app.route('/bbs/<string:ws_name>/<int:thread_id>', methods=['GET', 'POST'])
 @login_required
-def bbs(thread_id):
+def bbs(ws_name,thread_id):
     thread = Threads.query.get(thread_id)
     title = thread.thread_name or request.args.get('title')
     users = Users.query.all()
@@ -146,9 +172,15 @@ def bbs(thread_id):
         return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
     else:
+        work_space = WorkSpaces.query.filter(WorkSpaces.ws_name == ws_name).first()
+        ws_access = WSAccessUser.query.filter(WSAccessUser.user_id == current_user.id)
+        accessible_ws = set([wa.ws_id for wa in ws_access])
+        if work_space is None or work_space.id not in accessible_ws or thread is None or thread.ws_id != work_space.id:return redirect(url_for('bbs_app.home',ws_name=ws_name,title="アクセス権がありません"))
+        
         user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
         accessible_threads=set([ua.thread_id for ua in user_access])
-        if thread_id not in accessible_threads or thread is None : return redirect(url_for('bbs_app.home',title="アクセス権がありません"))
+
+        if thread_id not in accessible_threads: return redirect(url_for('bbs_app.home',ws_name=ws_name,title="アクセス権がありません"))
         messages = Messages.query.filter(Messages.thread_id == thread_id)
         messages_count = [count_characters(message.message)for message in messages] #半角1,全角2でカウント
         members=[user.name for user in users]
@@ -156,11 +188,11 @@ def bbs(thread_id):
         new_thread_form = NewThreadForm(members=members)
         delete_form = DeleteForm()
         new_thread_form.process([])
-        return render_template('bbs_app/bbs.html', title = title, thread_id=thread_id, user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,add_member=add_member,new_thread_form=new_thread_form, delete_form=delete_form)
+        return render_template('bbs_app/bbs.html', title = title, thread_id=thread_id, work_space=work_space,user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,add_member=add_member,new_thread_form=new_thread_form, delete_form=delete_form)
 
-@bbs_app.route('/bbs/add_member', methods=['POST'])
+@bbs_app.route('/bbs/<string:ws_name>/add_member', methods=['POST'])
 @login_required
-def add_member():
+def add_member(ws_name):
     users = Users.query.all()
     members=[user.name for user in users]
     add_member_form = AddMmemberForm(members=members)
@@ -173,11 +205,11 @@ def add_member():
         db.session.close()
         print("in_threads",in_threads,request.args.get('previous_thread'))
         if in_threads:emit('reload', namespace="/",to=list(in_threads))
-    return redirect(url_for('bbs_app.bbs',thread_id=thread_id))
+    return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=thread_id))
 
-@bbs_app.route('/bbs/new', methods=['POST'])
+@bbs_app.route('/bbs/<string:ws_name>/new', methods=['POST'])
 @login_required
-def new_thread():
+def new_thread(ws_name):
     users = Users.query.all()
     members=[user.name for user in users]
     new_thread_form = NewThreadForm(members=members)
@@ -194,9 +226,9 @@ def new_thread():
         return redirect(url_for('bbs_app.bbs',thread_id=new_thread_id))
     return redirect(url_for('bbs_app.bbs',thread_id=request.args.get('previous_thread')))
 
-@bbs_app.route('/bbs/delete', methods=['POST'])
+@bbs_app.route('/bbs/<string:ws_name>/delete', methods=['POST'])
 @login_required
-def delete_thread():
+def delete_thread(ws_name):
     delete_thread=request.args.get('delete_thread')
     delete_form = DeleteForm()
     current_thread=request.referrer.split('/')[-1]
@@ -209,35 +241,48 @@ def delete_thread():
                 db.session.delete(user_access)
             db.session.commit()
             emit('reload',namespace="/",to=list(in_threads))
-        return redirect(url_for('bbs_app.home',title=f'"{thread.thread_name}"を削除しました'))
+        return redirect(url_for('bbs_app.home',ws_name=ws_name,title=f'"{thread.thread_name}"を削除しました'))
     else:
-        return redirect(url_for('bbs_app.home',title=f'削除に失敗しました'))
+        return redirect(url_for('bbs_app.home',ws_name=ws_name,title=f'削除に失敗しました'))
 
-@bbs_app.route('/bbs/home', methods=['GET','POST'])
+@bbs_app.route('/bbs/<string:ws_name>/home', methods=['GET','POST'])
 @login_required
-def home():
+def home(ws_name):
     title = request.args.get('title') or ""
     user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
     users = Users.query.all()
     members=[user.name for user in users]
     new_thread_form = NewThreadForm(members=members)
-    return render_template('bbs_app/home.html',title=title, user_access=user_access,new_thread_form=new_thread_form)
+    work_space = WorkSpaces.query.filter(WorkSpaces.ws_name == ws_name).first()
+    ws_access = WSAccessUser.query.filter(WSAccessUser.user_id == current_user.id)
+    accessible_ws = set([wa.ws_id for wa in ws_access])
+    if work_space is None or work_space.id not in accessible_ws:return "アクセス権がありません"
+    print()
+    return render_template('bbs_app/home.html',title=title, user_access=user_access, work_space=work_space,new_thread_form=new_thread_form)
 
-@bbs_app.route('/confirm')
+@bbs_app.route('/<string:ws_name>/confirm')
 @login_required
-def confirm():
+def confirm(ws_name):
     if current_user.is_admin:
         title = "ログインユーザ一覧"
         users = Users.query.all()
         return render_template('bbs_app/confirm.html', title = title, current_user=current_user,users=users)
     else:
-        return redirect(url_for('bbs_app.bbs',thread_id=1))
+        return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=1))  
 
-@bbs_app.route('/', methods=['GET', 'POST'])
-@bbs_app.route('/login', methods=['GET', 'POST'])
-def login():
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    ws_name=request.path.split("/")[-2]
+    session['next_url'] = request.path
+    return redirect(url_for('bbs_app.login',ws_name=ws_name))
+
+@bbs_app.route('/<string:ws_name>/', methods=['GET', 'POST'])
+@bbs_app.route('/<string:ws_name>/login', methods=['GET', 'POST'])
+def login(ws_name):
     if current_user.is_authenticated:
-        return redirect(url_for('bbs_app.bbs',thread_id=1))
+        return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=0))
+
     form = LoginForm()
     signup_form = SignupForm()
     if request.headers.getlist("X-Forwarded-For"):
@@ -249,82 +294,31 @@ def login():
         user = Users.query.filter_by(name=form.name.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('ユーザーネームもしくはパスワードが正しくありません','failed')
-            return redirect(url_for('bbs_app.login'))
+            return redirect(url_for('bbs_app.login',ws_name=ws_name))
         login_user(user)
-        next_page = request.args.get('next')
+        next_page = session.pop('next_url')
         if not next_page or urlparse(next_page).netloc != '':
-            next_page = url_for('bbs_app.bbs',thread_id=1)
+            next_page = url_for('bbs_app.bbs',ws_name=ws_name,thread_id=0)
         return redirect(next_page)
-    return render_template('bbs_app/login.html',form=form,signup_form=signup_form,default_login="block",default_signup="none",next_page=request.args.get('next'))    
+    return render_template('bbs_app/login.html',form=form,signup_form=signup_form,default_login="block",ws_name=ws_name,default_signup="none",next_page=request.args.get('next'))    
 
-@bbs_app.route('/logout')
-def logout():
+@bbs_app.route('/<string:ws_name>/logout')
+def logout(ws_name):
     logout_user()
-    return redirect(url_for('bbs_app.login'))
+    return redirect(url_for('bbs_app.login',ws_name=ws_name))
 
-@bbs_app.route('/signup', methods=['POST'])
-def signup():
+@bbs_app.route('/<string:ws_name>/signup', methods=['POST'])
+def signup(ws_name):
     if current_user.is_authenticated:
-        return redirect(url_for('bbs_app.bbs',thread_id=1))
+        return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=1))
     login_form = LoginForm()
     signup_form = SignupForm()
     if signup_form.validate_on_submit():
         print(f"in:{signup_form.name.data}")
         user = Users(name=signup_form.name.data ,password=signup_form.password.data)
         user.add_user()
-        return redirect(url_for('bbs_app.login'))
+        return redirect(url_for('bbs_app.login',ws_name=ws_name))
     return render_template('bbs_app/login.html', form=login_form,signup_form=signup_form,default_login="none",default_signup="block",next_page=request.args.get('next'))
-
-# adminページ
-admin = Admin(
-    bbs_app,
-    name='Flask-admin laboratory',
-    template_mode='bootstrap4',
-)
-
-class MyModelView1(sqla.ModelView):
-    can_view_details = True
-    def is_accessible(self):
-        return not login.current_user.is_anonymous and login.current_user.is_admin
-
-class MyModelView2(sqla.ModelView):
-    can_view_details = True
-    column_list = ["message","sendtime","user_id","thread_id"]
-    column_sortable_list = column_list
-    def is_accessible(self):
-        return not login.current_user.is_anonymous and login.current_user.is_admin
-    
-class MyModelView3(sqla.ModelView):
-    can_view_details = True
-    def is_accessible(self):
-        return not login.current_user.is_anonymous and login.current_user.is_admin
-
-class MyModelView4(sqla.ModelView):
-    can_view_details = True
-    column_list = ["user_id","thread_id"]
-    column_sortable_list = column_list
-    def is_accessible(self):
-        return not login.current_user.is_anonymous and login.current_user.is_admin
-    
-class MyModelView5(sqla.ModelView):
-    can_view_details = True
-    column_list = ["user_id","token"]
-    column_sortable_list = column_list
-    def is_accessible(self):
-        return not login.current_user.is_anonymous and login.current_user.is_admin
-    
-UsersAdminView = MyModelView1(Users, db.session)
-MessagesAdminView = MyModelView2(Messages, db.session)
-ThreadsAdminView = MyModelView3(Threads, db.session)
-UserAccessAdminView = MyModelView4(UserAccess, db.session)
-FCMTokenAdminView = MyModelView5(FCMToken, db.session)
-
-admin.add_view(UsersAdminView)
-admin.add_view(MessagesAdminView)
-admin.add_view(ThreadsAdminView)
-admin.add_view(UserAccessAdminView)
-admin.add_view(FCMTokenAdminView)
-
 
 # socket通信
 @socketio.on('submit_message')
@@ -365,4 +359,3 @@ def handle_get_reverse_geo(data):
     external_api_url = f"https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?lat={lat}&lon={lon}&output=json&appid="
     result = get_external_api_data(external_api_url)
     print(result)
-

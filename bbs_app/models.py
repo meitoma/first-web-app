@@ -13,6 +13,7 @@ class Users(UserMixin,db.Model):
     messages = db.relationship('Messages', backref=db.backref('users', lazy=True))
     user_access = db.relationship('UserAccess', backref=db.backref('users', lazy=True))
     fcm_token = db.relationship('FCMToken', backref=db.backref('users', lazy=True))
+    ws_access = db.relationship('WSAccessUser', backref=db.backref('users', lazy=True))
 
     def __repr__(self):
         return f'<Users {self.name}>'
@@ -61,6 +62,7 @@ class Threads(UserMixin,db.Model):
     __tablename__ = 'threads'
     id = db.Column(db.Integer, primary_key=True)
     thread_name = db.Column(db.String(256))
+    ws_id = db.Column(db.Integer,db.ForeignKey('work_spaces.id'))
     messages = db.relationship('Messages', backref=db.backref('threads', lazy=True))
     user_access = db.relationship('UserAccess', backref=db.backref('threads', lazy=True))
 
@@ -76,6 +78,29 @@ class UserAccess(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     thread_id = db.Column(db.Integer,db.ForeignKey('threads.id'))
+
+    def add_user_access(self):
+        db.session.add(self)
+        db.session.commit()
+
+class WorkSpaces(UserMixin,db.Model):
+    __tablename__ = 'work_spaces'
+    id = db.Column(db.Integer, primary_key=True)
+    ws_name = db.Column(db.String(256))
+    ws_token = db.Column(db.String(256))
+    update_time = db.Column(db.DateTime, default=datetime.datetime.now(ZoneInfo("Asia/Tokyo")))
+    ws_access_user = db.relationship('WSAccessUser', backref=db.backref('work_spaces', lazy=True))
+    threads = db.relationship('Threads', backref=db.backref('work_spaces', lazy=True))
+
+    def add_threads(self):
+        db.session.add(self)
+        db.session.commit()
+
+class WSAccessUser(UserMixin,db.Model):
+    __tablename__ = 'ws_access_user'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    ws_id = db.Column(db.Integer,db.ForeignKey('work_spaces.id'))
 
     def add_user_access(self):
         db.session.add(self)

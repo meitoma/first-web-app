@@ -6,6 +6,7 @@ import os
 import sys
 
 diary_app = Blueprint('diary_app', __name__, static_folder='diary', template_folder='diary/templates')
+
 @diary_app.route('/', methods=['GET', 'POST'])
 @diary_app.route('/diary')
 def diary():

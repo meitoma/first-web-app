@@ -9,7 +9,6 @@ from sqlalchemy import create_engine,MetaData
 from sqlalchemy.orm import sessionmaker
 import flask_login
 from flask_wtf.csrf import CSRFProtect
-from bbs_app.config import Config
 
 app.register_blueprint(bbs_app, url_prefix='/bbs_app')
 app.register_blueprint(diary_app, url_prefix='/diary_app')

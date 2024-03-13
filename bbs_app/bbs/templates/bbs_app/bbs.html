@@ -7,11 +7,11 @@
             <li><a class="add_member_btn"><i class="fa-solid fa-user-group"></i>メンバの追加</a></li>
             <li><a id="notification"><i class="fa-solid fa-gear"></i>通知設定</a></li>
             {% if current_user.is_admin %}
-                <li><a href="/bbs_app/confirm"><i class="fa-solid fa-book"></i>ユーザ確認</a></li>
-                <li><a href="/bbs_app/admin"><i class="fa-solid fa-hammer"></i>管理者</a></li>
-                <li><a href="/bbs_app/load_data"><i class="fa-solid fa-download"></i>データのロード</a></li>
+                <li><a href="/bbs_app/{{work_space.ws_name}}/confirm"><i class="fa-solid fa-book"></i>ユーザ確認</a></li>
+                <li><a href="/admin"><i class="fa-solid fa-hammer"></i>管理者</a></li>
+                <li><a href="/bbs_app/{{work_space.ws_name}}/load_data"><i class="fa-solid fa-download"></i>データのロード</a></li>
             {% endif %}
-            <li><a href="/bbs_app/logout"><i class="fa-solid fa-right-from-bracket"></i>ログアウト</a></li>
+            <li><a href="/bbs_app/{{work_space.ws_name}}/logout"><i class="fa-solid fa-right-from-bracket"></i>ログアウト</a></li>
         </ul>
         </div>
         <nav class="sp-nav2">
@@ -23,7 +23,7 @@
                         {% if ua.thread_id==thread_id%}
                             {% set active_thread="active" %}
                         {% endif %}
-                        <li><a href="/bbs_app/bbs/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+                        <li><a href="/bbs_app/bbs/{{work_space.ws_name}}/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
                     {% endfor %}
                     <li class="new"><a class="new_thread"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
                     <li class="delete"><a class="delete_thread"><i class="fa-solid fa-trash"></i>スレッドを削除</a></li>
@@ -39,7 +39,7 @@
                 {% if ua.thread_id==thread_id%}
                     {% set active_thread="active" %}
                 {% endif %}
-                <li><a href="/bbs_app/bbs/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+                <li><a href="/bbs_app/bbs/{{work_space.ws_name}}/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
             {% endfor %}
             <li class="new"><a class="new_thread"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
             <li class="delete"><a class="delete_thread"><i class="fa-solid fa-trash"></i>スレッドを削除</a></li>
@@ -85,7 +85,7 @@
                     </div>
                 {% endfor %}
             </div>
-            <form action="/bbs/{{thread_id}}" method="post" class="message-form col-12" enctype="multipart/form-data" id="message-form">
+            <form action="/bbs/{{work_space.ws_name}}/{{thread_id}}" method="post" class="message-form col-12" enctype="multipart/form-data" id="message-form">
                 {{ form.hidden_tag() }}
                 <div class="row">
                     <div class="col-11 submit-text">
@@ -103,7 +103,7 @@
                 </div>
             </form>
         </div>
-    <form action="{{ url_for('bbs_app.add_member', previous_thread = thread_id) }}" method="post" class="add_member">
+    <form action="{{ url_for('bbs_app.add_member', ws_name=work_space.ws_name, previous_thread = thread_id) }}" method="post" class="add_member">
         {{ new_thread_form.hidden_tag() }}
         <h3>"{{title}}"にメンバを追加する</h3>
         <p>メンバー</p>
@@ -117,7 +117,7 @@
             <button class="btn btn-primary btn-sm" type="submit">メンバを追加</button>
         </div>
     </form>
-    <form action="{{ url_for('bbs_app.new_thread', previous_thread = thread_id) }}" method="post" class="make_thread">
+    <form action="{{ url_for('bbs_app.new_thread', ws_name=work_space.ws_name, previous_thread = thread_id) }}" method="post" class="make_thread">
         {{ new_thread_form.hidden_tag() }}
         <h3>新しいスレッドを作成する</h3>
         {{ new_thread_form.thread_name.label(class="col-form-label")}}
@@ -134,7 +134,7 @@
             <button class="btn btn-primary btn-sm one-clk-btn create-thread" type="submit">スレッドを作成する</button>
         </div>
     </form>
-    <form action="{{ url_for('bbs_app.delete_thread', delete_thread = thread_id) }}" method="post" class="delete_display">
+    <form action="{{ url_for('bbs_app.delete_thread', ws_name=work_space.ws_name, delete_thread = thread_id) }}" method="post" class="delete_display">
         {{ delete_form.hidden_tag() }}
         <h3>"{{title}}"を削除しますか?</h3>
         {{ delete_form.radio_field()}}

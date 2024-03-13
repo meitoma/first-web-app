@@ -2,7 +2,7 @@
 {% block content %}
         <h1 class="text-center h1-login-title" id="h1_title">ログイン</h1>
         {{next}}
-        <form action="{{ url_for('bbs_app.login', next=next_page) }}" method="post" id="login-form" style="display: {{ default_login }};">
+        <form action="{{ url_for('bbs_app.login', ws_name=ws_name, next=next_page) }}" method="post" id="login-form" style="display: {{ default_login }};">
             {{ form.hidden_tag() }}
     
             <div class="row justify-content-center">
@@ -34,7 +34,7 @@
             </div>
         </form>
         
-        <form action="/signup" method="post" style="display: {{ default_signup }};" id="signup-form">
+        <form action="{{ws_name}}/signup" method="post" style="display: {{ default_signup }};" id="signup-form">
             {{ signup_form.hidden_tag() }}
     
             <div class="row justify-content-center">
