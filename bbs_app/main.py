@@ -139,10 +139,26 @@ def save_picture(form_picture,image_orientation):
     i.save(picture_path)
     return picture_fn
 
+def get_jinja_variable(ws_name):
+    user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
+    work_space = WorkSpaces.query.filter(WorkSpaces.ws_name == ws_name).first()
+    accessible_ws = WSAccessUser.query.filter(WSAccessUser.user_id == current_user.id)
+    accessible_ws = set([wa.ws_id for wa in accessible_ws])
+    ws_has_users = WSAccessUser.query.filter(WSAccessUser.ws_id == work_space.id)
+    ws_has_users = set([ws_has_user.id for ws_has_user in ws_has_users])
+    ws_has_threads = Threads.query.filter(Threads.ws_id == work_space.id)
+    ws_has_threads = set([ws_has_thread.id for ws_has_thread in ws_has_threads])
+    users = Users.query.all()
+    members=[user.name for user in users if user.id in ws_has_users]
+    new_thread_form = NewThreadForm(members=members)
+    jinja_variable={"user_access":user_access,"work_space":work_space,"accessible_ws":accessible_ws,"ws_has_users":ws_has_users,"ws_has_threads":ws_has_threads,"new_thread_form":new_thread_form,"members":members}
+    return jinja_variable
+
 @bbs_app.route('/bbs/<string:ws_name>/<int:thread_id>', methods=['GET', 'POST'])
 @login_required
 def bbs(ws_name,thread_id):
     thread = Threads.query.get(thread_id)
+    if thread is None:return redirect(url_for('bbs_app.home',ws_name=ws_name,title="アクセス権がありません"))
     title = thread.thread_name or request.args.get('title')
     users = Users.query.all()
     id_members= {user.id:user.name for user in users}
@@ -172,10 +188,8 @@ def bbs(ws_name,thread_id):
         return ('', 204)
         return redirect(url_for('bbs',thread_id=thread_id))
     else:
-        work_space = WorkSpaces.query.filter(WorkSpaces.ws_name == ws_name).first()
-        ws_access = WSAccessUser.query.filter(WSAccessUser.user_id == current_user.id)
-        accessible_ws = set([wa.ws_id for wa in ws_access])
-        if work_space is None or work_space.id not in accessible_ws or thread is None or thread.ws_id != work_space.id:return redirect(url_for('bbs_app.home',ws_name=ws_name,title="アクセス権がありません"))
+        jv = get_jinja_variable(ws_name)
+        if jv["work_space"] is None or jv["work_space"].id not in jv["accessible_ws"] or thread is None or thread.ws_id != jv["work_space"].id:return redirect(url_for('bbs_app.home',ws_name=ws_name,title="アクセス権がありません"))
         
         user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
         accessible_threads=set([ua.thread_id for ua in user_access])
@@ -183,93 +197,32 @@ def bbs(ws_name,thread_id):
         if thread_id not in accessible_threads: return redirect(url_for('bbs_app.home',ws_name=ws_name,title="アクセス権がありません"))
         messages = Messages.query.filter(Messages.thread_id == thread_id)
         messages_count = [count_characters(message.message)for message in messages] #半角1,全角2でカウント
-        members=[user.name for user in users]
-        add_member = AddMmemberForm(members=members)
-        new_thread_form = NewThreadForm(members=members)
+        add_member = AddMmemberForm(members=jv["members"])
         delete_form = DeleteForm()
-        new_thread_form.process([])
-        return render_template('bbs_app/bbs.html', title = title, thread_id=thread_id, work_space=work_space,user_access=user_access, current_user=current_user,messages=messages,messages_count=messages_count,form=form,add_member=add_member,new_thread_form=new_thread_form, delete_form=delete_form)
-
-@bbs_app.route('/bbs/<string:ws_name>/add_member', methods=['POST'])
-@login_required
-def add_member(ws_name):
-    users = Users.query.all()
-    members=[user.name for user in users]
-    add_member_form = AddMmemberForm(members=members)
-    if add_member_form.validate_on_submit():
-        thread_id=request.args.get('previous_thread')
-        user_access=[UserAccess(user_id=int(m),thread_id=thread_id) for m in add_member_form.member.data]
-        print(add_member_form.member.data)
-        db.session.add_all(user_access)
-        db.session.commit()
-        db.session.close()
-        print("in_threads",in_threads,request.args.get('previous_thread'))
-        if in_threads:emit('reload', namespace="/",to=list(in_threads))
-    return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=thread_id))
-
-@bbs_app.route('/bbs/<string:ws_name>/new', methods=['POST'])
-@login_required
-def new_thread(ws_name):
-    users = Users.query.all()
-    members=[user.name for user in users]
-    new_thread_form = NewThreadForm(members=members)
-    if new_thread_form.validate_on_submit():
-        new_thread = Threads(thread_name=new_thread_form.thread_name.data)
-        db.session.add(new_thread)
-        db.session.flush()
-        new_thread_id = new_thread.id
-        user_access=[UserAccess(user_id=int(m),thread_id=new_thread_id) for m in new_thread_form.new_member.data]
-        db.session.add_all(user_access)
-        db.session.commit()
-        db.session.close()
-        if in_threads:emit('reload', namespace="/",to=list(in_threads))
-        return redirect(url_for('bbs_app.bbs',thread_id=new_thread_id))
-    return redirect(url_for('bbs_app.bbs',thread_id=request.args.get('previous_thread')))
-
-@bbs_app.route('/bbs/<string:ws_name>/delete', methods=['POST'])
-@login_required
-def delete_thread(ws_name):
-    delete_thread=request.args.get('delete_thread')
-    delete_form = DeleteForm()
-    current_thread=request.referrer.split('/')[-1]
-    if delete_form.radio_field.data=="yes" and delete_thread == current_thread and delete_thread != "1":
-        thread = Threads.query.filter_by(id=delete_thread).first()
-        user_access_records = UserAccess.query.filter_by(thread_id=delete_thread).all()
-        if thread and user_access_records:
-            db.session.delete(thread)
-            for user_access in user_access_records:
-                db.session.delete(user_access)
-            db.session.commit()
-            emit('reload',namespace="/",to=list(in_threads))
-        return redirect(url_for('bbs_app.home',ws_name=ws_name,title=f'"{thread.thread_name}"を削除しました'))
-    else:
-        return redirect(url_for('bbs_app.home',ws_name=ws_name,title=f'削除に失敗しました'))
+        return render_template('bbs_app/bbs.html', title = title, thread_id=thread_id, work_space=jv["work_space"],user_access=user_access, ws_has_threads=jv["ws_has_threads"],current_user=current_user,messages=messages,messages_count=messages_count,form=form,add_member=add_member,new_thread_form=jv["new_thread_form"], delete_form=delete_form)
 
 @bbs_app.route('/bbs/<string:ws_name>/home', methods=['GET','POST'])
 @login_required
 def home(ws_name):
     title = request.args.get('title') or ""
-    user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
-    users = Users.query.all()
-    members=[user.name for user in users]
-    new_thread_form = NewThreadForm(members=members)
+    jv = get_jinja_variable(ws_name)
+    if jv["work_space"] is None or jv["work_space"].id not in jv["accessible_ws"]:return "アクセス権がありません"
+    return render_template('bbs_app/home.html',title=title, user_access=jv["user_access"], ws_has_threads=jv["ws_has_threads"],ws_has_users=jv["ws_has_users"], work_space=jv["work_space"],new_thread_form=jv["new_thread_form"])
+
+@bbs_app.route('/invite/<string:ws_name>/<string:ws_token>', methods=['GET'])
+def invite(ws_name,ws_token):
     work_space = WorkSpaces.query.filter(WorkSpaces.ws_name == ws_name).first()
-    ws_access = WSAccessUser.query.filter(WSAccessUser.user_id == current_user.id)
-    accessible_ws = set([wa.ws_id for wa in ws_access])
-    if work_space is None or work_space.id not in accessible_ws:return "アクセス権がありません"
-    print()
-    return render_template('bbs_app/home.html',title=title, user_access=user_access, work_space=work_space,new_thread_form=new_thread_form)
-
-@bbs_app.route('/<string:ws_name>/confirm')
-@login_required
-def confirm(ws_name):
-    if current_user.is_admin:
-        title = "ログインユーザ一覧"
-        users = Users.query.all()
-        return render_template('bbs_app/confirm.html', title = title, current_user=current_user,users=users)
+    if work_space is None or not secrets.compare_digest(ws_token, work_space.ws_token):return "URLが無効です"
+    ws_access = WSAccessUser.query.filter(WSAccessUser.ws_id == work_space.id)
+    accessible_ws = set([wa.user_id for wa in ws_access])
+    if current_user.id not in accessible_ws:
+        add_ws_access = WSAccessUser(user_id=current_user.id,ws_id=work_space.id)
+        db.session.add(add_ws_access)
+        db.session.commit()
+        db.session.close()
+        return redirect(url_for('bbs_app.home',ws_name=ws_name,title="登録しました"))
     else:
-        return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=1))  
-
+        return redirect(url_for('bbs_app.home',ws_name=ws_name,title="すでに登録されています"))
 
 @login_manager.unauthorized_handler
 def unauthorized_callback():
@@ -319,6 +272,73 @@ def signup(ws_name):
         user.add_user()
         return redirect(url_for('bbs_app.login',ws_name=ws_name))
     return render_template('bbs_app/login.html', form=login_form,signup_form=signup_form,default_login="none",default_signup="block",next_page=request.args.get('next'))
+
+@bbs_app.route('/bbs/<string:ws_name>/add_member', methods=['POST'])
+@login_required
+def add_member(ws_name):
+    users = Users.query.all()
+    members=[user.name for user in users]
+    add_member_form = AddMmemberForm(members=members)
+    if add_member_form.validate_on_submit():
+        thread_id=request.args.get('previous_thread')
+        user_access=[UserAccess(user_id=int(m),thread_id=thread_id) for m in add_member_form.member.data]
+        print(add_member_form.member.data)
+        db.session.add_all(user_access)
+        db.session.commit()
+        db.session.close()
+        print("in_threads",in_threads,request.args.get('previous_thread'))
+        if in_threads:emit('reload', namespace="/",to=list(in_threads))
+    return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=thread_id))
+
+@bbs_app.route('/bbs/<string:ws_name>/new', methods=['POST'])
+@login_required
+def new_thread(ws_name):
+    users = Users.query.all()
+    members=[user.name for user in users]
+    new_thread_form = NewThreadForm(members=members)
+    if new_thread_form.validate_on_submit():
+        work_space = WorkSpaces.query.filter(WorkSpaces.ws_name == ws_name).first()
+        new_thread = Threads(thread_name=new_thread_form.thread_name.data,ws_id=work_space.id)
+        db.session.add(new_thread)
+        db.session.flush()
+        new_thread_id = new_thread.id
+        user_access=[UserAccess(user_id=int(m),thread_id=new_thread_id) for m in new_thread_form.new_member.data]
+        db.session.add_all(user_access)
+        db.session.commit()
+        db.session.close()
+        if in_threads:emit('reload', namespace="/",to=list(in_threads))
+        return redirect(url_for('bbs_app.bbs', ws_name=ws_name,thread_id=new_thread_id))
+    return redirect(url_for('bbs_app.bbs', ws_name=ws_name, thread_id=request.args.get('previous_thread')))
+
+@bbs_app.route('/bbs/<string:ws_name>/delete', methods=['POST'])
+@login_required
+def delete_thread(ws_name):
+    delete_thread=request.args.get('delete_thread')
+    delete_form = DeleteForm()
+    current_thread=request.referrer.split('/')[-1]
+    if delete_form.radio_field.data=="yes" and delete_thread == current_thread and delete_thread != "1":
+        thread = Threads.query.filter_by(id=delete_thread).first()
+        user_access_records = UserAccess.query.filter_by(thread_id=delete_thread).all()
+        if thread and user_access_records:
+            db.session.delete(thread)
+            for user_access in user_access_records:
+                db.session.delete(user_access)
+            db.session.commit()
+            emit('reload',namespace="/",to=list(in_threads))
+        return redirect(url_for('bbs_app.home',ws_name=ws_name,title=f'"{thread.thread_name}"を削除しました'))
+    else:
+        return redirect(url_for('bbs_app.home',ws_name=ws_name,title=f'削除に失敗しました'))
+
+@bbs_app.route('/<string:ws_name>/confirm')
+@login_required
+def confirm(ws_name):
+    if current_user.is_admin:
+        title = "ログインユーザ一覧"
+        users = Users.query.all()
+        return render_template('bbs_app/confirm.html', title = title, current_user=current_user,users=users)
+    else:
+        return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=1))  
+
 
 # socket通信
 @socketio.on('submit_message')

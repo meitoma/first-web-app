@@ -198,7 +198,7 @@ $('.message-form button').on('click', function() {
     }
 
     function post_message() {
-        xhr.open('POST', '/bbs/'+thread_id, true);
+        xhr.open('POST', thread_id, true);
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 console.log('Success:', xhr.responseText);

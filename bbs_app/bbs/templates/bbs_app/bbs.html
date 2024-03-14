@@ -23,7 +23,9 @@
                         {% if ua.thread_id==thread_id%}
                             {% set active_thread="active" %}
                         {% endif %}
-                        <li><a href="/bbs_app/bbs/{{work_space.ws_name}}/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+                        {% if ua.thread_id in ws_has_threads %}
+                            <li><a href="/bbs_app/bbs/{{work_space.ws_name}}/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+                        {% endif %}
                     {% endfor %}
                     <li class="new"><a class="new_thread"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
                     <li class="delete"><a class="delete_thread"><i class="fa-solid fa-trash"></i>スレッドを削除</a></li>
@@ -39,7 +41,9 @@
                 {% if ua.thread_id==thread_id%}
                     {% set active_thread="active" %}
                 {% endif %}
-                <li><a href="/bbs_app/bbs/{{work_space.ws_name}}/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+                {% if ua.thread_id in ws_has_threads %}
+                    <li><a href="/bbs_app/bbs/{{work_space.ws_name}}/{{ua.thread_id}}" class="select_thread {{active_thread}}"><i class="fa-solid fa-sitemap"></i>{{ua.threads.thread_name}}</a></li>
+                {% endif %}
             {% endfor %}
             <li class="new"><a class="new_thread"><i class="fa-solid fa-plus"></i>スレッドを作成</a></li>
             <li class="delete"><a class="delete_thread"><i class="fa-solid fa-trash"></i>スレッドを削除</a></li>
@@ -155,6 +159,7 @@
         var current_user = "{{current_user.id}}";
         var textarea = document.getElementById('text_area');
         var content = document.getElementById("scroller__inner");
+        var ws_name = "{{ ws_name }}";
     </script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
     <script src="/bbs_app/bbs/static/js/bbs.js"></script>
