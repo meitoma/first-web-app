@@ -405,6 +405,7 @@ form.message-form{
 }
 .form-control.in-line{
     width: 85%;
+    z-index: 5;
 }
 .select-image-btn{
     position: relative;

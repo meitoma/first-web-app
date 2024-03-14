@@ -1,5 +1,5 @@
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/bbs/firebase-messaging-sw.js').then(registration => {
+    navigator.serviceWorker.register('/bbs_app/bbs/firebase-messaging-sw.js').then(registration => {
         console.log('ServiceWorker registration successful.');
     })
         .catch(err => {

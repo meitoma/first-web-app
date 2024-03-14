@@ -249,7 +249,7 @@ def login(ws_name):
             flash('ユーザーネームもしくはパスワードが正しくありません','failed')
             return redirect(url_for('bbs_app.login',ws_name=ws_name))
         login_user(user)
-        next_page = session.pop('next_url')
+        next_page = session.pop('next_url') if 'next_url' in session else ""
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('bbs_app.bbs',ws_name=ws_name,thread_id=0)
         return redirect(next_page)
@@ -335,7 +335,7 @@ def confirm(ws_name):
     if current_user.is_admin:
         title = "ログインユーザ一覧"
         users = Users.query.all()
-        return render_template('bbs_app/confirm.html', title = title, current_user=current_user,users=users)
+        return render_template('bbs_app/confirm.html', title = title, ws_name=ws_name,current_user=current_user,users=users)
     else:
         return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=1))  
 
