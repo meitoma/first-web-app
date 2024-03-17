@@ -3,6 +3,13 @@
     <nav class="nav" style="overflow-y: scroll;">
         <div class="inner">
         <ul>
+            <details>
+                <summary>
+                    <li><i class="fa-solid fa-people-group"></i>WorkSpace&emsp;<i class="fa-solid fa-chevron-down"></i></li>
+                </summary>
+                <li><button type="button"><i class="fa-solid fa-people-group"></i>{{work_space.ws_name}}</button></li>
+                <li><button type="button" id="show_invite_screen"><i class="fa-solid fa-user-plus"></i>WorkSpaceに招待</button></li>
+            </details>
             <li><a href="/profile/{{current_user.id}}"><i class="fa-solid fa-user"></i>{{current_user.name}}</a></li>
             <li><a class="add_member_btn"><i class="fa-solid fa-user-group"></i>メンバの追加</a></li>
             <li><a id="notification"><i class="fa-solid fa-gear"></i>通知設定</a></li>
@@ -107,6 +114,15 @@
                 </div>
             </form>
         </div>
+    <div class="ws-invite">
+        <h3>Work Space : {{work_space.ws_name}}に招待</h3>
+        <div class="ws_token">
+            <button type="button" id="cancel_invite_screen"><i class="fa-solid fa-xmark"></i></button>
+            <pre><a href="https://aws-web-app/bbs_app/invite/{{work_space.ws_name}}/{{work_space.ws_token}}" id="invite_link">https://aws-web-app/bbs_app/invite/{{work_space.ws_token}}</a></pre>
+            <!-- <pre><a href="http://127.0.0.1:3000/bbs_app/invite/{{work_space.ws_name}}/{{work_space.ws_token}}"></a></pre> -->
+            <button type="button" id="linkcpBtn"><i class="fa-solid fa-link"></i> 招待リンクをコピー</button>
+        </div>
+    </div>
     <form action="{{ url_for('bbs_app.add_member', ws_name=work_space.ws_name, previous_thread = thread_id) }}" method="post" class="add_member">
         {{ new_thread_form.hidden_tag() }}
         <h3>"{{title}}"にメンバを追加する</h3>

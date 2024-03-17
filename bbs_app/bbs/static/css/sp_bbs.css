@@ -1,17 +1,3 @@
-/* .custom-container{
-    margin-right: 5px;
-} */
-
-/* .scrollable-container {
-    position: relative;
-    padding-top: 4vh;
-    margin-top: -2%;
-    height: 75vh;
-    margin-bottom: 5px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    z-index: 1;
-} */
 .row.justify-content-center{
     margin-left: -5%;
 }
@@ -20,60 +6,6 @@
     padding-top: 9%;
 }
 
-.logout-button{
-    align-self: center;
-}
-
-/* nav */
-nav.nav{
-    display: block;
-    position: fixed;
-    background-color: #b2ccd9;
-    width: 220px;
-    top: 0;
-    left: -300px;
-    bottom: 0;
-    transition: all 0.5s;
-    z-index: 5;
-    opacity: 0;
-}
-.nav.open  {
-    left: 0;
-    opacity: 1;
-}
-
-nav .inner {
-    padding: 25px;
-}
-
-nav .inner ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-nav .inner ul li {
-    margin: 0;
-    border-bottom: 1px solid #333;
-    text-align: left;
-}
-
-nav .inner ul li i{
-    padding-right: 10px
-}
-
-nav .inner ul li a {
-    display: block;
-    color: #333;
-    font-size: 14px;
-    padding: 1rem;
-    text-decoration: none;
-    transition-duration: 0.2s;
-}
-
-nav .inner ul li a:hover {
-    background: #e4e4e4;
-}
 nav .inner ul li a.delete_thread{
     color:rgb(254, 76, 76);
 }
@@ -83,24 +15,6 @@ nav.nav2{
     display: none;
 }
 
-/* mask */
-.mask {
-    display: none;
-    transition: all 0.5s;
-}
-
-.mask.open{
-    display: block;
-    background: #000;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    position: fixed;
-    opacity: 0.8;
-    z-index: 4;
-    cursor: pointer;
-}
 
 .openbtn1{
     position: fixed;
@@ -119,7 +33,7 @@ nav.nav2{
 /*ボタン内側*/
 .openbtn1 span{
     display: inline-block;
-    transition: all .4s;/*アニメーションの設定*/
+    transition: all .4s;
     position: absolute;
     left: 7px;
     height: 3px;
@@ -158,111 +72,6 @@ nav.nav2{
     width: 35%;
 }
 
-/* メンバ追加 */
-.add_member {
-    display: none;
-    padding: 25px;
-    position: fixed;
-    background-color: #d7e7f0;
-    border-radius: 15px;
-    width: 300px;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    transition: all 0.5s;
-    z-index: 0;
-    opacity: 0;
-}
-.add_member  h3{
-    font-size: large;
-}
-
-.add_member.open{ 
-    display:block;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 5;
-    opacity: 1;
-}
-
-/* 新規スレッド */
-.make_thread {
-    display: none;
-    padding: 25px;
-    position: fixed;
-    background-color: #d7e7f0;
-    border-radius: 15px;
-    width: 350px;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    transition: all 0.5s;
-    z-index: 0;
-    opacity: 0;
-}
-.make_thread h3{
-    font-size: large;
-}
-
-.make_thread.open{ 
-    display:block;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 5;
-    opacity: 1;
-}
-
-/* 削除スレッド */
-.delete_display {
-    display: none;
-    padding: 25px;
-    position: fixed;
-    background-color: #d7e7f0;
-    border-radius: 15px;
-    width: 300px;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    transition: all 0.5s;
-    z-index: 0;
-    opacity: 0;
-}
-.delete_display h3{
-    font-size: large;
-}
-
-.delete_display.open{ 
-    display:block;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 5;
-    opacity: 1;
-}
-
-form ul{
-    overflow: hidden;
-}
-
-form.add_member li{
-    list-style: none;
-    float: left;
-    margin: auto;
-    margin-right: 10px;
-}
-
-form.make_thread li{
-    list-style: none;
-    float: left;
-    margin: auto;
-    margin-right: 10px;
-}
-
-form.delete_display ul li{
-    list-style: none;
-}
 .title-box{
     position: fixed;
     display: block;
@@ -283,44 +92,10 @@ form.delete_display ul li{
     padding-left: 7%;
     font-size:large;
 }
-.p-msg-name{
-    color:red;
-}
 .message-box{
-    margin-top: -10px;
-    padding: 9px;
-    border-width: 3px;
-    border-style: solid;
-    border-color: white;
-    border-radius: 5px;
     font-size:small;
-    z-index: 2;
-}
-.small-screen-content.close{
-    display: none;
-}
-.small-screen-content .open{
-    display: block;
-}
-.large-screen-content.close{
-    display: none;
-}
-.large-screen-content .open{
-    display: block;
-}
-.form-control{
-    resize: none;
-}
-.fix-btn span:nth-child(2){
-    display: none;
 }
 
-.justify-content-end .fix-btn:hover span:nth-child(2){
-    position: absolute;
-    display: flex;
-    right:15px;
-    top:15px
-}
 .justify-content-end .fix-btn:hover .inf-message{
     margin-right: 70px;
 }
@@ -329,65 +104,30 @@ form.delete_display ul li{
     margin-top: 15px;
 }
 
-/* .othre-message-box{
-    margin-bottom: 20px;
-} */
-img[alt] {
-    font-size: 0.8em;
-}
-.othre-message-box .back-color{
-    background-color:#ffe0d1;
-    padding: 9px;
-}
+
 .othre-message-box.multi-rows{
-    margin-top: -5px;
-    text-align:start;
-    background-color:#ffe0d1;
-    border-color: white;
-    border-radius: 5px;
-    padding: 9px;
-    border-width: 3px;
-    border-style: solid;
     font-size:small;
 }
+.othre-message-box.multi-rows{
+    font-size:small;
+}
+
 .img-wrap .othre-message-box{
     margin-right: auto; 
     width:200px;
 }
 
-.my-message-box{
-    text-align:end;
-}
 .my-message-box.multi-rows{
-    margin-top: -5px;
-    text-align:start;
-    background-color:#ebffd1;
-    border-color: white;
-    border-radius: 5px;
-    padding: 9px;
-    border-width: 3px;
-    border-style: solid;
     font-size:small;
 }
-.my-message-box.inf-message{
-    text-align:end;
-}
-.my-message-box .back-color{
-    background-color:#ebffd1;
-    padding: 9px;
-}
+
 .img-wrap .my-message-box{
     margin-left: auto; 
     width:200px;
 }
 
 form.message-form{
-    position: fixed;
-    display: block;
-    border-bottom: 1px solid #b2ccd9;
-    background-color: #b2ccd9;
     width: 100%;
-    bottom: 0;
     padding-top: 10px;
     padding-bottom: 7%;
 }
@@ -400,31 +140,13 @@ form.message-form{
     position: absolute;
     top:0;
 }
-.in-line{
-    display: inline-block;
-}
 .form-control.in-line{
     width: 85%;
     z-index: 5;
 }
-.select-image-btn{
-    position: relative;
-    top:-14px;
-    margin-right: 10px;
-    z-index: 2;
-}
-
-input[type="file"] {
-    display: none;
-  }
 
 /* open_nav */
 nav.open_nav{
     background-color: #b2ccd9;
     margin-top: 10%;
-}
-
-.msg-error{
-    color: crimson;
-    padding:10px;
 }

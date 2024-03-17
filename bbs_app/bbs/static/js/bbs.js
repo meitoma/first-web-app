@@ -15,23 +15,37 @@ $(function() {
         $(".nav").removeClass("open");
         $(".openbtn1").removeClass("active");
         $(".mask").removeClass("open");
+        $(".mask").removeClass("open_up");
+        $(".ws-invite").removeClass("open");
     });
     $(".add_member_btn").on("click", function(){
         $(".add_member_btn").addClass("active");
         $(".add_member").addClass("open");
         $(".mask").addClass("open");
+        $(".mask").addClass("open_up");
     });
     $(".add_cancel").on("click", function(){
         $(".add_member_btn").removeClass("active");
         $(".add_member").removeClass("open");
+        $(".mask").removeClass("open_up");
         if(!$(".openbtn1").hasClass("active")){
             $(".mask").removeClass("open");
         }
+    });
+    $("#show_invite_screen").on("click", function(){
+        $(".ws-invite").addClass("open");
+        $(".mask").addClass("open");
+        $(".mask").addClass("open_up");
+    });
+    $("#cancel_invite_screen").on("click", function(){
+        $(".ws-invite").removeClass("open");
+        $(".mask").removeClass("open_up");
     });
 
     $(".new_thread").on("click", function(){
         $(".new_thread").addClass("active");
         $(".make_thread").addClass("open");
+        $(".mask").addClass("open_up");
         $("#nav1").addClass("mk_thread_open");
         if (!$(".mask").hasClass("open")) {
             $(".mask").addClass("open");
@@ -41,6 +55,7 @@ $(function() {
         $(".new_thread").removeClass("active");
         $(".make_thread").removeClass("open");
         $("#nav1").removeClass("mk_thread_open");
+        $(".mask").removeClass("open_up");
         if(!$(".openbtn1").hasClass("active")){
            $(".mask").removeClass("open");
         }
@@ -49,14 +64,15 @@ $(function() {
     $(".delete_thread").on("click", function(){
         $(".delete_thread").addClass("active");
         $(".delete_display").addClass("open");
+        $(".mask").addClass("open_up");
         if (!$(".mask").hasClass("open")) {
             $(".mask").addClass("open");
           }
     });
-
     $(".delete_cancel").on("click", function(){
         $(".delete_thread").removeClass("active");
         $(".delete_display").removeClass("open");
+        $(".mask").removeClass("open_up");
         if(!$(".openbtn1").hasClass("active")){
             $(".mask").removeClass("open");
         }
@@ -84,6 +100,17 @@ $(function() {
             textarea.value = "";
         }
         
+    });
+});
+document.getElementById('linkcpBtn').addEventListener('click', function() {
+    // ボタンがクリックされたときの処理
+    var linkText = document.getElementById('invite_link').innerText; // URLを取得
+    navigator.clipboard.writeText(linkText) // URLをクリップボードに書き込む
+    .then(function() {
+        console.log('Link copied to clipboard!'); // コピーが完了したことをユーザーに通知
+    })
+    .catch(function(err) {
+        console.error('Failed to copy: ', err); // コピーが失敗した場合のエラー処理
     });
 });
 function create_error_html(send_user){

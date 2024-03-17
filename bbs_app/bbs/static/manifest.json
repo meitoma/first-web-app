@@ -4,11 +4,11 @@
     "theme_color": "#b2ccd9",
     "background_color": "#b2ccd9",
     "display": "standalone",
-    "start_url": "https://aws-web-app.com/bbs/home",
+    "start_url": "https://aws-web-app.com/bbs_app/test",
     "gcm_sender_id": "78893226549",
     "icons": [
       {
-        "src": "/bbs-app/bbs/static/images/chat.png",
+        "src": "/bbs_app/bbs/static/images/chat.png",
         "sizes": "150x150",
         "type": "image/png"
       }

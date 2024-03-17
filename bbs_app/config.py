@@ -18,7 +18,7 @@ class Config(object):
     DB_NAME=os.environ.get("DB_NAME")
     SECRET_KEY = os.environ.get('SECRET_KEY')
     DB_PORT=os.environ.get("DB_PORT") or ''
-    PERMANENT_SESSION_LIFETIME = timedelta(minutes=60) #session time（1分）
+    PERMANENT_SESSION_LIFETIME = timedelta(days=1) #session time（1分）
     port=1000
     SQLALCHEMY_DATABASE_URI=f'postgresql://{USER_NAME}:{PASSWORD}@{HOSTNAME}{DB_PORT}/{DB_NAME}'
     print(SQLALCHEMY_DATABASE_URI)
