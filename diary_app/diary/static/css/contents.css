@@ -1,3 +1,7 @@
+  .contents{
+    left: 0;
+    padding-left: 5px;
+  }
   .categorys{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -24,4 +28,31 @@
     font-size: 16px;
     font-weight: bold;
     line-height: 125%;
+  }
+  .daily_display ul{
+    padding-inline-start: 0;
+    margin-top: 0;;
+    padding:0 20px 0 10px;
+  }
+  .daily_display ul li{
+    list-style: none;
+    border-bottom: 0.5px solid;
+    height: 30px;
+    line-height: 30px;
+  }
+  .wrap_input_btn{
+    position: fixed;
+    left: 50%;
+    bottom:80px;
+    transform: translate(-50%);
+  }
+  .input_btn{
+    border:0.3px solid #333;
+    border-radius: 90px/ 50px;
+    width: 300px;
+    height: 35px;
+    background-color:#9DC3E6;
+    font-size: 16px;
+    color: #444;
+    cursor: pointer;
   }

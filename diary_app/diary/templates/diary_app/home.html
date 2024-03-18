@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="diary/static/css/contents.css">
     <link rel="stylesheet" href="../../static/css/contents.css">
     <link rel="stylesheet" href="../../static/css/control.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Document</title>
 </head>
 <body>
@@ -19,7 +19,7 @@
         </div>
     </header>
     <div class="contents">
-        <div>
+        <div class="daily_display">
             <ul>
                 <li>日付</li>
                 <li>メモ</li>
@@ -33,100 +33,78 @@
                 <label for="food" class="category-btn">
                     <div class="card_inner">
                         <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <div class="card__titletext">食費</div>
                     </div>
                 </label>
                 <input type="checkbox" id="food" class="checkbox"checked>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-jug-detergent fa-2x"></i>
+                        <div class="card__titletext">日用品</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-shirt fa-2x"></i>
+                        <div class="card__titletext">衣服</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-wand-magic-sparkles fa-2x"></i>
+                        <div class="card__titletext">美容</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-champagne-glasses fa-2x"></i>
+                        <div class="card__titletext">交際費</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-capsules fa-2x"></i>
+                        <div class="card__titletext">医療費</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-school fa-2x"></i>
+                        <div class="card__titletext">教育費</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-faucet-drip fa-2x"></i>
+                        <div class="card__titletext">光熱費</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-train-subway fa-2x"></i>
+                        <div class="card__titletext">交通費</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-mobile-screen-button fa-2x"></i>
+                        <div class="card__titletext">通信費</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <i class="fa-solid fa-solid fa-house fa-2x"></i>
+                        <div class="card__titletext">住居費</div>
                     </div>
                 </label>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
-                        <i class="fa-solid fa-utensils fa-2x"></i>
-                        <div class="card__titletext">
-                            食費
-                        </div>
+                        <div class="card__titletext">編集・追加</div>
                     </div>
                 </label>
+            </div>
+            <div class="wrap_input_btn">
+                <button class="input_btn" type="button">支出を入力する</button>
             </div>            
         </div>
     </div> 
