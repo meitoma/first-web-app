@@ -23,12 +23,18 @@ import sys
 
 token=secrets.token_hex(16)
 print("token",token)
+
+# 複数アプリ作成のためのblueprintを作成，こではbbs appのブループリント
 bbs_app = Blueprint('bbs_app', __name__, static_folder='bbs', template_folder='bbs/templates')
 
-# print("main:",__name__)
+# ログインされているスレッドのidを保持する変数　通知で使用
 in_threads=set()
+
+# データベースの初期化のルーティング
 @login_required
 @bbs_app.route('/<string:ws_name>/load_data')
+
+# userの読み込み
 def users_load(ws_name):
     #? Users tableの内容削除
     db.drop_all()
@@ -46,6 +52,7 @@ def users_load(ws_name):
         db.session.commit()
     return workspaces_load(ws_name)
 
+# workspaceの読み込み
 def workspaces_load(ws_name):
     #? csvからWorkSpacesへの書き込み
     with open("bbs_app/bbs/csv/workspaces.csv","r",encoding="utf-8") as csvfile:
@@ -61,6 +68,7 @@ def workspaces_load(ws_name):
         db.session.commit()
     return workspace_access_load(ws_name)
 
+# workspaceのアクセス権の読み込み
 def workspace_access_load(ws_name):
     #? csvからWSAccessUserへの書き込み
     with open("bbs_app/bbs/csv/ws_access.csv","r",encoding="utf-8") as csvfile:
@@ -74,6 +82,7 @@ def workspace_access_load(ws_name):
         db.session.commit()
     return threads_load(ws_name)
 
+# threadの読み込み
 def threads_load(ws_name):
     #? csvからUsersへの書き込み
     with open("bbs_app/bbs/csv/threads.csv","r",encoding="utf-8") as csvfile:
@@ -87,6 +96,7 @@ def threads_load(ws_name):
         db.session.commit()
     return user_access_load(ws_name)
 
+# threadのアクセス権の読み込み
 def user_access_load(ws_name):
     #? csvからUsersへの書き込み
     with open("bbs_app/bbs/csv/user_access.csv","r",encoding="utf-8") as csvfile:
@@ -100,6 +110,7 @@ def user_access_load(ws_name):
         db.session.commit()
     return messages_load(ws_name)
 
+# デフォルトのmessageの読み込み
 def messages_load(ws_name):
     message = "Data loading completed"
     #? csvからMessageへの書き込み
@@ -115,15 +126,16 @@ def messages_load(ws_name):
         db.session.commit()
 
     data=[db.session.query(Users).all(),
-          db.session.query(Messages).all(),
-          db.session.query(Threads).all(),
-          db.session.query(UserAccess).all()]
+        db.session.query(Messages).all(),
+        db.session.query(Threads).all(),
+        db.session.query(UserAccess).all()]
     return render_template('bbs_app/comp_load.html',ws_name=ws_name, message = message,data=data)
 
+# 送信messageの文字数カウント
 def count_characters(text):
     return sum(wcwidth.wcwidth(char) if wcwidth.wcwidth(char) > 0 else 1 for char in text)
 
-# 画像アップロードの関数
+# 画像をDBに保存
 def save_picture(form_picture,image_orientation):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
@@ -139,6 +151,7 @@ def save_picture(form_picture,image_orientation):
     i.save(picture_path)
     return picture_fn
 
+# htmlのjijaに渡すための変数を作成
 def get_jinja_variable(ws_name):
     user_access=UserAccess.query.filter(UserAccess.user_id == current_user.id)
     work_space = WorkSpaces.query.filter(WorkSpaces.ws_name == ws_name).first()
@@ -154,6 +167,7 @@ def get_jinja_variable(ws_name):
     jinja_variable={"user_access":user_access,"work_space":work_space,"accessible_ws":accessible_ws,"ws_has_users":ws_has_users,"ws_has_threads":ws_has_threads,"new_thread_form":new_thread_form,"members":members}
     return jinja_variable
 
+# GET：bbsページのルーティング，POST：メッセージの送信
 @bbs_app.route('/bbs/<string:ws_name>/<int:thread_id>', methods=['GET', 'POST'])
 @login_required
 def bbs(ws_name,thread_id):
@@ -201,7 +215,8 @@ def bbs(ws_name,thread_id):
         delete_form = DeleteForm()
         return render_template('bbs_app/bbs.html', title = title, thread_id=thread_id, work_space=jv["work_space"],user_access=user_access, ws_has_threads=jv["ws_has_threads"],current_user=current_user,messages=messages,messages_count=messages_count,form=form,add_member=add_member,new_thread_form=jv["new_thread_form"], delete_form=delete_form)
 
-@bbs_app.route('/bbs/<string:ws_name>/home', methods=['GET','POST'])
+# GET：homeページのルーティング
+@bbs_app.route('/bbs/<string:ws_name>/home', methods=['GET'])
 @login_required
 def home(ws_name):
     title = request.args.get('title') or ""
@@ -209,6 +224,7 @@ def home(ws_name):
     if jv["work_space"] is None or jv["work_space"].id not in jv["accessible_ws"]:return "アクセス権がありません"
     return render_template('bbs_app/home.html',title=title, user_access=jv["user_access"], ws_has_threads=jv["ws_has_threads"],ws_has_users=jv["ws_has_users"], work_space=jv["work_space"],new_thread_form=jv["new_thread_form"])
 
+# workspaceへの招待 ws_nameが持つtokenが一致すると追加される
 @bbs_app.route('/invite/<string:ws_name>/<string:ws_token>', methods=['GET'])
 def invite(ws_name,ws_token):
     work_space = WorkSpaces.query.filter(WorkSpaces.ws_name == ws_name).first()
@@ -224,12 +240,14 @@ def invite(ws_name,ws_token):
     else:
         return redirect(url_for('bbs_app.home',ws_name=ws_name,title="すでに登録されています"))
 
+# 未ログイン時のルーティング loginにリダイレクト
 @login_manager.unauthorized_handler
 def unauthorized_callback():
     ws_name=request.path.split("/")[-2]
     session['next_url'] = request.path
     return redirect(url_for('bbs_app.login',ws_name=ws_name))
 
+# GET：loginページのルーティング　POST：login処理
 @bbs_app.route('/<string:ws_name>/', methods=['GET', 'POST'])
 @bbs_app.route('/<string:ws_name>/login', methods=['GET', 'POST'])
 def login(ws_name):
@@ -255,11 +273,13 @@ def login(ws_name):
         return redirect(next_page)
     return render_template('bbs_app/login.html',form=form,signup_form=signup_form,default_login="block",ws_name=ws_name,default_signup="none",next_page=request.args.get('next'))    
 
+# GET：logout処理
 @bbs_app.route('/<string:ws_name>/logout')
 def logout(ws_name):
     logout_user()
     return redirect(url_for('bbs_app.login',ws_name=ws_name))
 
+# GET：signupページへのルーティング POST：signup処理
 @bbs_app.route('/<string:ws_name>/signup', methods=['POST'])
 def signup(ws_name):
     if current_user.is_authenticated:
@@ -273,6 +293,7 @@ def signup(ws_name):
         return redirect(url_for('bbs_app.login',ws_name=ws_name))
     return render_template('bbs_app/login.html', form=login_form,signup_form=signup_form,default_login="none",default_signup="block",next_page=request.args.get('next'))
 
+# POST：スレッドにメンバを追加
 @bbs_app.route('/bbs/<string:ws_name>/add_member', methods=['POST'])
 @login_required
 def add_member(ws_name):
@@ -290,6 +311,7 @@ def add_member(ws_name):
         if in_threads:emit('reload', namespace="/",to=list(in_threads))
     return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=thread_id))
 
+# POST：新規スレッド作成処理
 @bbs_app.route('/bbs/<string:ws_name>/new', methods=['POST'])
 @login_required
 def new_thread(ws_name):
@@ -310,6 +332,7 @@ def new_thread(ws_name):
         return redirect(url_for('bbs_app.bbs', ws_name=ws_name,thread_id=new_thread_id))
     return redirect(url_for('bbs_app.bbs', ws_name=ws_name, thread_id=request.args.get('previous_thread')))
 
+# POST：スレッド削除処理
 @bbs_app.route('/bbs/<string:ws_name>/delete', methods=['POST'])
 @login_required
 def delete_thread(ws_name):
@@ -329,6 +352,7 @@ def delete_thread(ws_name):
     else:
         return redirect(url_for('bbs_app.home',ws_name=ws_name,title=f'削除に失敗しました'))
 
+# GET：現在の登録されているuserの確認 AdminUserのみ許可
 @bbs_app.route('/<string:ws_name>/confirm')
 @login_required
 def confirm(ws_name):
@@ -340,7 +364,8 @@ def confirm(ws_name):
         return redirect(url_for('bbs_app.bbs',ws_name=ws_name,thread_id=1))  
 
 
-# socket通信
+# 以下socket通信によるリアルタイム通信
+# message送信時に実行されサーバでのDB追加処理を待たずに画面表示を行う
 @socketio.on('submit_message')
 def handle_submit_message(data):
     users = Users.query.all()
@@ -353,6 +378,7 @@ def handle_submit_message(data):
     my_message = data["message"]
     emit('add_meddage',{'type': message_type,"message":my_message,"messages_count":count_characters(my_message),"send_user":send_user,"send_time":send_time,"send_user_name":id_members[send_user]},namespace="/",to=str(thread_id))
 
+# message送信時，通知を送信
 @socketio.on('set_notification')
 def handle_set_notification(data):
     print(data["token"],data["user_id"])
@@ -362,17 +388,20 @@ def handle_set_notification(data):
         db.session.commit()
         db.session.close()
 
+# スレッドに参加時にsocket通信のルームに追加
 @socketio.on('join')
 def handle_join(data):
     room = data["room"]
     in_threads.add(room)
     join_room(room)
 
+# スレッド退出時ににsocket通信のルームから削除
 @socketio.on('leave')
 def on_leave(data):
     room = data['room']
     leave_room(room)
 
+# 位置情報の取得と表示 使い道検討中
 @socketio.on('get_reverse_geo')
 def handle_get_reverse_geo(data):
     lat,lon=data['latitude'],data['longitude']

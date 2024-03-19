@@ -18,8 +18,110 @@
             <label for="switch" class="btn">収入</label>
         </div>
     </header>
-    <div class="contents">
-        <div class="daily_display">
+
+    <div class="contents_income">
+        <div class="amount_screen">
+            <ul>
+                <li>日付</li>
+                <li>メモ</li>
+                <li>支出</li>
+            </ul>
+        </div>
+        <div>
+            <p>カテゴリー</p>
+            <div class="categorys">
+                <input type="checkbox" id="food" class="checkbox"checked>
+                <label for="food" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-utensils fa-2x"></i>
+                        <div class="card__titletext">食費</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="daily-necessities" class="checkbox"checked>
+                <label for="daily-necessities" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-jug-detergent fa-2x"></i>
+                        <div class="card__titletext">日用品</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="clothes" class="checkbox"checked>
+                <label for="clothes" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-shirt fa-2x"></i>
+                        <div class="card__titletext">衣服</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="beauty" class="checkbox"checked>
+                <label for="beauty" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-wand-magic-sparkles fa-2x"></i>
+                        <div class="card__titletext">美容</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="transportation" class="checkbox"checked>
+                <label for="transportation" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-champagne-glasses fa-2x"></i>
+                        <div class="card__titletext">交際費</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="medical" class="checkbox"checked>
+                <label for="medical" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-capsules fa-2x"></i>
+                        <div class="card__titletext">医療費</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="education" class="checkbox"checked>
+                <label for="education" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-school fa-2x"></i>
+                        <div class="card__titletext">教育費</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="clothes" class="checkbox"checked>
+                <label for="food" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-faucet-drip fa-2x"></i>
+                        <div class="card__titletext">光熱費</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="clothes" class="checkbox"checked>
+                <label for="food" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-train-subway fa-2x"></i>
+                        <div class="card__titletext">交通費</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="Utility" class="checkbox"checked>
+                <label for="Utility" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-mobile-screen-button fa-2x"></i>
+                        <div class="card__titletext">通信費</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="housing" class="checkbox"checked>
+                <label for="housing" class="category-btn">
+                    <div class="card_inner">
+                        <i class="fa-solid fa-solid fa-house fa-2x"></i>
+                        <div class="card__titletext">住居費</div>
+                    </div>
+                </label>
+                <input type="checkbox" id="edit" class="checkbox"checked>
+                <label for="edit" class="category-btn">
+                    <div class="card_inner">
+                        <div class="card__titletext">編集・追加</div>
+                    </div>
+                </label>
+            </div>
+            <div class="wrap_input_btn">
+                <button class="input_btn" type="button">支出を入力する</button>
+            </div>            
+        </div>
+    </div> 
+
+    <div class="contents_spending">
+        <div class="amount_screen">
             <ul>
                 <li>日付</li>
                 <li>メモ</li>
@@ -43,71 +145,46 @@
                         <div class="card__titletext">日用品</div>
                     </div>
                 </label>
+                <input type="checkbox" id="clothes" class="checkbox"checked>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
                         <i class="fa-solid fa-shirt fa-2x"></i>
                         <div class="card__titletext">衣服</div>
                     </div>
                 </label>
+                <input type="checkbox" id="clothes" class="checkbox"checked>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
                         <i class="fa-solid fa-wand-magic-sparkles fa-2x"></i>
                         <div class="card__titletext">美容</div>
                     </div>
                 </label>
+                <input type="checkbox" id="clothes" class="checkbox"checked>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
                         <i class="fa-solid fa-champagne-glasses fa-2x"></i>
                         <div class="card__titletext">交際費</div>
                     </div>
                 </label>
+                <input type="checkbox" id="clothes" class="checkbox"checked>
                 <label for="food" class="category-btn">
                     <div class="card_inner">
                         <i class="fa-solid fa-capsules fa-2x"></i>
                         <div class="card__titletext">医療費</div>
                     </div>
                 </label>
-                <label for="food" class="category-btn">
-                    <div class="card_inner">
-                        <i class="fa-solid fa-school fa-2x"></i>
-                        <div class="card__titletext">教育費</div>
-                    </div>
-                </label>
-                <label for="food" class="category-btn">
-                    <div class="card_inner">
-                        <i class="fa-solid fa-faucet-drip fa-2x"></i>
-                        <div class="card__titletext">光熱費</div>
-                    </div>
-                </label>
-                <label for="food" class="category-btn">
-                    <div class="card_inner">
-                        <i class="fa-solid fa-train-subway fa-2x"></i>
-                        <div class="card__titletext">交通費</div>
-                    </div>
-                </label>
-                <label for="food" class="category-btn">
-                    <div class="card_inner">
-                        <i class="fa-solid fa-mobile-screen-button fa-2x"></i>
-                        <div class="card__titletext">通信費</div>
-                    </div>
-                </label>
-                <label for="food" class="category-btn">
-                    <div class="card_inner">
-                        <i class="fa-solid fa-solid fa-house fa-2x"></i>
-                        <div class="card__titletext">住居費</div>
-                    </div>
-                </label>
-                <label for="food" class="category-btn">
+                <input type="checkbox" id="edit" class="checkbox"checked>
+                <label for="edit" class="category-btn">
                     <div class="card_inner">
                         <div class="card__titletext">編集・追加</div>
                     </div>
                 </label>
             </div>
             <div class="wrap_input_btn">
-                <button class="input_btn" type="button">支出を入力する</button>
+                <button class="input_btn" type="button">収入を入力する</button>
             </div>            
         </div>
-    </div> 
+    </div>
     <footer>
         <div class="inner">
             <a><i class="fa-solid fa-pencil fa-lg"></i></a>
@@ -118,12 +195,4 @@
         </div>
     </footer>
 </body>
-<style>
-    .contents{
-        position: fixed;
-        top:10vh;
-        height:80vh;
-        width:100vw;
-    }
-</style>
 </html>
