@@ -44,21 +44,21 @@ function asyncFunction1() {
             reject();
             }, 5000 );
     });
-  }
-  function asyncFunction2() {
-    return new Promise((resolve, reject) => {
-        location.reload();
-        resolve();
-    });
-  }
+}
+function asyncFunction2() {
+return new Promise((resolve, reject) => {
+    location.reload();
+    resolve();
+});
+}
 
 $('#notification').on('click', async function() {
     console.log('Notification');
     try {
         await asyncFunction1();
         console.log("Both functions completed");
-      } catch (error) {
+    } catch (error) {
         console.error("An error occurred:", error);
         await asyncFunction2();
-      }
+    }
     });

@@ -49,7 +49,7 @@ $(function() {
         $("#nav1").addClass("mk_thread_open");
         if (!$(".mask").hasClass("open")) {
             $(".mask").addClass("open");
-          }
+    }
     });
     $(".cancel").on("click", function(){
         $(".new_thread").removeClass("active");
@@ -57,7 +57,7 @@ $(function() {
         $("#nav1").removeClass("mk_thread_open");
         $(".mask").removeClass("open_up");
         if(!$(".openbtn1").hasClass("active")){
-           $(".mask").removeClass("open");
+            $(".mask").removeClass("open");
         }
     });
 
@@ -67,7 +67,7 @@ $(function() {
         $(".mask").addClass("open_up");
         if (!$(".mask").hasClass("open")) {
             $(".mask").addClass("open");
-          }
+    }
     });
     $(".delete_cancel").on("click", function(){
         $(".delete_thread").removeClass("active");

@@ -1,7 +1,7 @@
   .contents_income{
     display: none;
     position: fixed;
-    top:60px;
+    top:65px;
     height:80vh;
     width:100vw;
     left: 0;
@@ -10,7 +10,7 @@
   .contents_spending{
     /* display: none; */
     position: fixed;
-    top:60px;
+    top:65px;
     height:80vh;
     width:100vw;
     left: 0;
@@ -63,7 +63,7 @@
   .input_btn{
     border:0.3px solid #333;
     border-radius: 90px/ 50px;
-    width: 300px;
+    width: 70vw;
     height: 35px;
     background-color:#9DC3E6;
     font-size: 16px;

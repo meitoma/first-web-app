@@ -1,8 +1,8 @@
 // Cache name
-const CACHE_NAME = 'pwa-sample-caches-v1';
+const CACHE_NAME = 'pwa-sample-caches-v2';
 // Cache targets
 const urlsToCache = [
-  // './templates/layout_bbs.html',
+  './templates/bbs_app/layout_bbs.html',
   // './templates/layout_login.html',
   // './templates/layout.html',
   // './templates/bbs.html',
