@@ -6,7 +6,9 @@ const urlsToCache = [
   '/diary_app/diary/templates/diary_app/graph.html',
   '/diary_app/diary/static/css/contents.css',
   '/diary_app/diary/static/css/control.css',
+  '/diary_app/diary/static/css/graph.css',
   '/diary_app/diary/static/js/diary.js',
+  '/diary_app/diary/static/js/graph.js',
   // '/bbs/static/images/chat.png'
 ];
 

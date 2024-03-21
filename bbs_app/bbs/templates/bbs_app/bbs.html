@@ -5,7 +5,7 @@
         <ul>
             <details>
                 <summary>
-                    <li><i class="fa-solid fa-people-group"></i>WorkSpace&emsp;<i class="fa-solid fa-chevron-down"></i></li>
+                    <li><div class="summary"><i class="fa-solid fa-people-group"></i>WorkSpace&emsp;<i class="fa-solid fa-chevron-down"></i></div></li>
                 </summary>
                 <li><button type="button"><i class="fa-solid fa-people-group"></i>{{work_space.ws_name}}</button></li>
                 <li><button type="button" id="show_invite_screen"><i class="fa-solid fa-user-plus"></i>WorkSpaceに招待</button></li>
@@ -165,11 +165,11 @@
     <script>
         function scrollbottonm(){
             const scrollerInner = document.getElementById("scroller__inner");
-	        scrollerInner.scrollIntoView({block: "end", inline: "nearest"})
+            scrollerInner.scrollIntoView({block: "end", inline: "nearest"});
         };
         window.onload = function(){
             const scrollerInner = document.getElementById("scroller__inner");
-	        scrollerInner.scrollIntoView({block: "end", inline: "nearest"})
+            scrollerInner.scrollIntoView({block: "end", inline: "nearest"});
         };
         var thread_id = "{{ thread_id }}";
         var current_user = "{{current_user.id}}";

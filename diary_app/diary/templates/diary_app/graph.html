@@ -3,37 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="diary/static/css/control.css">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script> -->
+    <!-- <link rel="stylesheet" href="diary/static/css/control.css">
     <link rel="stylesheet" href="diary/static/css/contents.css">
+    <link rel="stylesheet" href="diary/static/css/graph.css"> -->
     <link rel="stylesheet" href="../../static/css/contents.css">
     <link rel="stylesheet" href="../../static/css/control.css">
-    <script src="diary/static/js/diary.js"></script>
-    <script src="../../static/js/diary.js"></script>
+    <link rel="stylesheet" href="../../static/css/graph.css">
+    <!-- <script src="../../static/js/diary.js"></script> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="manifest" href="/diary_app/diary/static/manifest.json">
+    <!-- <link rel="manifest" href="/diary_app/diary/static/manifest.json"> -->
     <title>Document</title>
 </head>
 <body>
     <header>
         <div class="inner">
-            <input type="checkbox" id="switch" class="checkbox">
-            <label for="switch" class="btn">支出</label>
-            <label for="switch" class="btn">収入</label>
-            <label for="switch" class="btn">貯金</label>
+            <button id="switch1" class="btn open">支出</button>
+            <button id="switch2" class="btn">収入</button>
+            <button id="switch3" class="btn">貯金</button>
         </div>
     </header>
-
     <div class="contents_income" id="contents_income">
-
+        <div class="date">
+            <p>2024年03月20日</p>
+        </div>
+        <div class="box">
+            <div class="chart-area">
+            <!-- <canvas id="chart01"></canvas> -->
+            <canvas id="myChart"></canvas>
+            </div>
+        </div>
+        
     </div>
     <footer>
         <div class="inner">
-            <a><i class="fa-solid fa-pencil fa-lg"></i></a>
+            <a href="/diary_app/diary/templates/diary_app/home.html"><i class="fa-solid fa-pencil fa-lg"></i></a>
             <a><i class="fa-solid fa-book-open fa-lg"></i></a>
             <a><i class="fa-solid fa-calendar-days fa-lg"></i></a>
-            <a><i class="fa-solid fa-chart-pie fa-lg"></i></a>
+            <a href="/diary_app/diary/templates/diary_app/graph.html"><i class="fa-solid fa-chart-pie fa-lg"></i></a>
             <a><i class="fa-solid fa-ellipsis fa-lg"></i></a>
         </div>
     </footer>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.0/chart.min.js"></script>
+    + <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0 "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/protonet-jquery.inview/1.1.2/jquery.inview.min.js"></script>
+    <script src="../../static/js/graph.js"></script>
 </body>
 </html>

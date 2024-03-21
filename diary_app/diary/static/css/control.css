@@ -44,6 +44,7 @@ user-select: none;
 .checkbox:checked + .btn + .btn {
     background: #aaa;
 }
+
 footer{
     background-color: #9DC3E6;
     position: fixed;
@@ -62,4 +63,5 @@ footer .inner{
 }
 footer .inner a{
     color:#333;
+    padding: 28px 6vw;
 }
