@@ -10,7 +10,6 @@ from bbs_app.config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
-print("create app")
 
 csrf = CSRFProtect(app)
 db = SQLAlchemy(app)

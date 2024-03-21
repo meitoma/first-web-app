@@ -1,0 +1,15 @@
+{% extends "bbs_app/layout.html" %}
+{% block content %}
+    <h1>{{ message }}</h1>
+    {%for user in users %}
+        <p>
+            {% for (key,value) in user.__dict__.items() %}
+                {% if key!='_sa_instance_state' and key!='password'%}
+                    {{key}}:{{value}}
+                {% endif %}
+            {% endfor %}
+        </p>
+    {% endfor %}
+    <a href="/bbs_app/bbs/{{ws_name}}/0">戻る</a><br>
+
+{% endblock %}

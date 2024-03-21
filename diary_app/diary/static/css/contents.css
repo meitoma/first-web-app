@@ -1,0 +1,72 @@
+  .contents_income{
+    /* display: none; */
+    position: fixed;
+    top:75px;
+    height:80vh;
+    width:100vw;
+    left: 0;
+    padding-left: 5px;
+  }
+  .contents_spending{
+    display: none;
+    position: fixed;
+    top:75px;
+    height:80vh;
+    width:100vw;
+    left: 0;
+    padding-left: 5px;
+}
+  .categorys{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    place-items: center;
+  }
+  .category-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28vw;
+    height: 18vw;
+    border-radius: 10%;
+    border:0.2px solid black;
+    font-size: 1.0rem;
+    cursor: pointer;
+    user-select: none;
+    margin:0px 10px 10px 0px;
+  }
+  .card_inner{
+    text-align: center;
+    color: #333;
+  }
+  .card__titletext{
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 125%;
+  }
+  .amount_screen ul{
+    padding-inline-start: 0;
+    margin-top: 0;;
+    padding:0 20px 0 10px;
+  }
+  .amount_screen ul li{
+    list-style: none;
+    border-bottom: 0.5px solid;
+    height: 30px;
+    line-height: 30px;
+  }
+  .wrap_input_btn{
+    position: fixed;
+    left: 50%;
+    bottom:100px;
+    transform: translate(-50%);
+  }
+  .input_btn{
+    border:0.3px solid #333;
+    border-radius: 90px/ 50px;
+    width: 70vw;
+    height: 35px;
+    background-color:#9DC3E6;
+    font-size: 16px;
+    color: #444;
+    cursor: pointer;
+  }

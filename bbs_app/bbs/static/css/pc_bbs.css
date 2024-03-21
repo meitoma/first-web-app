@@ -1,0 +1,250 @@
+/* タブレット用スタイル */
+@media only screen and (min-width: 768px) and (max-width: 1130px) {
+    .custom-container {
+        margin-right: 5vh;
+    }
+  }
+/* デスクトップ用スタイル */
+  @media only screen and (min-width: 1131px) {
+    .custom-container{
+        margin-left: 23vh;
+    }
+  }
+
+.row.justify-content-center{
+    margin-left: 7%;
+}
+.message-view{
+    padding-bottom: 7%;
+    padding-top: 7%;
+}
+
+
+nav.sp-nav2{
+    display: none;
+}
+/* nav2 */
+nav.nav2{
+    position: fixed;
+    background-color: #b2ccd9;
+    width: 220px;
+    top: 0;
+    left: 0px;
+    bottom: 0;
+    transition: all 0.5s;
+    z-index: 3;
+}
+
+.nav2 .inner {
+    padding: 25px;
+}
+
+.nav2 .inner ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav2 .inner ul li {
+    margin: 0;
+    border-bottom: 1px solid #333;
+    text-align: left;
+}
+.nav2 .inner ul li.new{
+    border-bottom: none;
+}
+.nav2 .inner ul li.delete{
+    border-bottom: none;
+    position: fixed;
+    bottom:10px;
+}
+.nav2 .inner ul li a.active{
+    font-weight:bold;
+}
+
+.nav2 .inner ul li i{
+    padding-right: 10px
+}
+
+.nav2 .inner ul li a {
+    display: block;
+    color: #333;
+    font-size: 14px;
+    padding: 1rem;
+    text-decoration: none;
+    transition-duration: 0.2s;
+}
+
+.nav2 .inner ul li a.delete_thread{
+    color:rgb(254, 76, 76);
+}
+
+.nav2 .inner ul li a:hover {
+    background: #e4e4e4;
+}
+
+.openbtn1{
+    position: fixed;/*ボタン内側の基点となるためrelativeを指定*/
+    background:#57a2c7;
+    cursor: pointer;
+        width: 40px;
+        height:40px;
+    border-radius: 5px;
+    left: 85%;
+    top: 0px;
+    z-index: 3;
+}
+.openbtn1.active{
+    z-index: 5;
+}
+
+/*ボタン内側*/
+.openbtn1 span{
+    display: inline-block;
+    transition: all .4s;/*アニメーションの設定*/
+    position: absolute;
+    left: 11px;
+    height: 3px;
+    border-radius: 2px;
+    background: #fff;
+    width: 45%;
+}
+
+.openbtn1 span:nth-of-type(1) {
+    top:11px; 
+}
+
+.openbtn1 span:nth-of-type(2) {
+    top:19px;
+}
+
+.openbtn1 span:nth-of-type(3) {
+    top:27px;
+}
+
+.openbtn1.active span:nth-of-type(1) {
+    top: 13px;
+    left: 14px;
+    transform: translateY(6px) rotate(-45deg);
+    width: 30%;
+}
+
+.openbtn1.active span:nth-of-type(2) {
+    opacity: 0;
+}
+
+.openbtn1.active span:nth-of-type(3){
+    top: 25px;
+    left: 14px;
+    transform: translateY(-6px) rotate(45deg);
+    width: 30%;
+}
+
+/* ワークスペース招待 */
+.ws-invite{
+    width: 450px;
+}
+
+/* メンバ追加 */
+.add_member {
+    width: 450px;
+}
+
+/* 新規スレッド */
+.make_thread {
+    width: 550px;
+}
+
+/* 削除スレッド */
+.delete_display {
+    width: auto;
+}
+.delete_display {
+    width: 350px;
+}
+
+.title-box{
+    position: fixed;
+    display: block;
+    background-color: #b2ccd9;
+    height: 80px;
+    width: 100%;
+    z-index: 2;
+    opacity: 0.9;
+}
+.h1-title{
+    position: fixed;
+    top: 20px;
+    color:rgb(13, 13, 13);
+    padding-top: 20px;
+    padding-left: 7%;
+}
+.message-box{
+    margin-bottom: 30px;
+}
+.p-msg-name{
+    color:red;
+}
+
+.justify-content-end .fix-btn:hover .inf-message{
+    margin-right: 80px;
+}
+.inf-message{
+    margin-top: 15px;
+}
+
+
+.othre-message-box .back-color{
+    font-size: medium;
+}
+.othre-message-box.multi-rows{
+    font-size:medium;
+}
+.box .othre-message-box{
+    width: 100%; 
+    margin-right: auto;
+}
+.img-wrap .othre-message-box{
+    margin-right: auto; 
+    width:400px;
+}
+
+.my-message-box{
+    text-align:end;
+    font-size: medium;
+}
+.my-message-box.multi-rows{
+    font-size:medium;
+}
+.box .my-message-box{
+    width: 100%; 
+    margin-left: auto;
+}
+.img-wrap .my-message-box{
+    margin-left: auto; 
+    width:400px;
+}
+
+form.message-form{
+    padding: 10px 10% 1% 9%;
+}
+
+.submit-text{
+    padding-left: 50px;
+    margin-right: -30px;
+}
+.form-control.in-line{
+    width: 96%;
+}
+
+/* open_nav */
+nav.open_nav{
+    position: fixed;
+    background-color: #b2ccd9;
+    margin-top: 20%;
+    left: 0;
+    z-index: 6;
+}
+nav.open_nav:has(.mk_thread_open){
+    z-index: 4;
+}

@@ -1,0 +1,18 @@
+{
+    "name": "DIARY-APP",
+    "short_name": "DIARY",
+    "theme_color": "#111",
+    "background_color": "#9DC3E6",
+    "display": "standalone",
+    "start_url": "/diary_app/diary/templates/diary_app/home.html",
+    "gcm_sender_id": "78893226549",
+    "icons": [
+      {
+        "src": "/bbs_app/bbs/static/images/diary.png",
+        "sizes": "150x150",
+        "type": "image/png"
+      }
+    ]
+  }
+  
+  

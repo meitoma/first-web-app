@@ -1,0 +1,152 @@
+.row.justify-content-center{
+    margin-left: -5%;
+}
+.message-view{
+    padding-bottom: 21%;
+    padding-top: 9%;
+}
+
+nav .inner ul li a.delete_thread{
+    color:rgb(254, 76, 76);
+}
+
+/* nav2 */
+nav.nav2{
+    display: none;
+}
+
+
+.openbtn1{
+    position: fixed;
+    background:#57a2c7;
+    cursor: pointer;
+        width: 25px;
+        height:25px;
+    border-radius: 5px;
+    top: -1%;
+    left: 85%;
+    z-index: 3;
+}
+.openbtn1.active{
+    z-index: 5;
+}
+/*ボタン内側*/
+.openbtn1 span{
+    display: inline-block;
+    transition: all .4s;
+    position: absolute;
+    left: 7px;
+    height: 3px;
+    border-radius: 2px;
+    background: #fff;
+    width: 45%;
+}
+
+.openbtn1 span:nth-of-type(1) {
+    top:7.5px; 
+}
+
+.openbtn1 span:nth-of-type(2) {
+    top:11.5px;
+}
+
+.openbtn1 span:nth-of-type(3) {
+    top:15.5px;
+}
+
+.openbtn1.active span:nth-of-type(1) {
+    top: 9px;
+    left: 8px;
+    transform: translateY(3px) rotate(-45deg);
+    width: 35%;
+}
+
+.openbtn1.active span:nth-of-type(2) {
+    opacity: 0;
+}
+
+.openbtn1.active span:nth-of-type(3){
+    top: 15px;
+    left: 8px;
+    transform: translateY(-3px) rotate(45deg);
+    width: 35%;
+}
+
+.title-box{
+    position: fixed;
+    display: block;
+    background-color: #b2ccd9;
+    top:0;
+    left:0;
+    height: 40px;
+    width: 100%;
+    padding-top:20px;
+    padding-bottom:30px;
+    z-index: 2;
+    opacity: 0.9;
+}
+.h1-title{
+    position: fixed;
+    top: 20px;
+    color:rgb(13, 13, 13);
+    padding-left: 7%;
+    font-size:large;
+}
+.message-box{
+    font-size:small;
+}
+
+.justify-content-end .fix-btn:hover .inf-message{
+    margin-right: 70px;
+}
+.inf-message{
+    font-size:small;
+    margin-top: 15px;
+}
+
+
+.othre-message-box.multi-rows{
+    font-size:small;
+}
+.othre-message-box.multi-rows{
+    font-size:small;
+}
+
+.img-wrap .othre-message-box{
+    margin-right: auto; 
+    width:200px;
+}
+
+.my-message-box.multi-rows{
+    font-size:small;
+}
+
+.img-wrap .my-message-box{
+    margin-left: auto; 
+    width:200px;
+}
+
+form.message-form{
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 7%;
+}
+
+.submit-text{
+    padding-right: 10%;
+    font-size:small;
+}
+.submit-text input{
+    position: absolute;
+    top:0;
+}
+.form-control.in-line{
+    width: 85%;
+    z-index: 5;
+}
+
+/* open_nav */
+nav.open_nav{
+    background-color: #b2ccd9;
+    margin-top: 10%;
+}

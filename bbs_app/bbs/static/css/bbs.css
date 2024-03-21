@@ -1,0 +1,345 @@
+.logout-button{
+    align-self: center;
+}
+/* nav */
+nav.nav{
+    display: block;
+    position: fixed;
+    background-color: #b2ccd9;
+    width: 220px;
+    top: 0;
+    left: -300px;
+    bottom: 0;
+    transition: all 0.5s;
+    z-index: 5;
+    opacity: 0;
+}
+.nav.open  {
+    left: 0;
+    opacity: 1;
+}
+
+nav .inner {
+    padding: 15px;
+}
+
+nav .inner ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav .inner ul li {
+    margin: 0;
+    border-bottom: 1px solid #333;
+    text-align: left;
+}
+nav .inner ul details summary{
+    list-style: none;
+}
+nav .inner ul details summary li{
+    padding: 1rem 0rem 1rem 1rem;
+}
+nav .inner ul details > li{
+    margin-left: 1rem;
+}
+nav .inner ul li i{
+    padding-right: 10px
+}
+nav .inner ul li a {
+    display: block;
+    color: #333;
+    font-size: 14px;
+    padding: 1rem;
+    text-decoration: none;
+    transition-duration: 0.2s;
+}
+nav .inner ul li button {
+    color: #333;
+    font-size: 14px;
+    padding: 1rem 0rem 1rem 1rem;
+    border:none;
+    text-align: start;
+    width: 100%;
+    background-color: #0000;
+}
+nav .inner ul li button:not(:disabled) {
+    outline:none;
+}
+nav .inner ul li *:hover {
+    background: #e4e4e4;
+}
+nav .inner ul li:has(.summary):hover{
+    background: #e4e4e4;
+}
+
+/* mask */
+.mask {
+    display: none;
+}
+
+.mask.open{
+    display: block;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    opacity: 0.8;
+    z-index: 4;
+    cursor: pointer;
+}
+.mask.open.open_up{
+    z-index: 5;
+}
+
+/* ワークスペース招待 */
+.ws-invite{
+    display: none;
+    padding: 25px 25px 15px 25px;
+    position: fixed;
+    background-color: #d7e7f0;
+    border-radius: 15px;
+    width: 300px;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.5s;
+    z-index: 5;
+    opacity: 0;
+}
+.ws-invite h3{
+    font-size: medium;
+}
+.ws-invite pre{
+    background-color: white;
+    padding:10px;
+    margin-top: 20px;
+}
+.ws-invite button{
+    background-color: #0000;
+    padding:10px;
+    border: none;
+    color: #007bff;
+}
+.ws-invite button:nth-child(1){
+    position: absolute;
+    top:5px;
+    right: 15px;
+    padding:10px;
+    border: none;
+    color: #333;
+}
+
+.ws-invite.open{ 
+    display:block;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    /* z-index: 5; */
+    opacity: 1;
+}
+
+/* メンバ追加 */
+.add_member {
+    display: none;
+    padding: 25px;
+    position: fixed;
+    background-color: #d7e7f0;
+    border-radius: 15px;
+    width: 300px;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.5s;
+    z-index: 5;
+    opacity: 0;
+}
+.add_member  h3{
+    font-size: large;
+}
+
+.add_member.open{ 
+    display:block;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    /* z-index: 5; */
+    opacity: 1;
+}
+
+/* 新規スレッド */
+.make_thread {
+    display: none;
+    padding: 25px;
+    position: fixed;
+    background-color: #d7e7f0;
+    border-radius: 15px;
+    width: 350px;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.5s;
+    z-index: 5;
+    opacity: 0;
+}
+.make_thread h3{
+    font-size: large;
+}
+
+.make_thread.open{ 
+    display:block;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    /* z-index: 5; */
+    opacity: 1;
+}
+
+/* 削除スレッド */
+.delete_display {
+    display: none;
+    padding: 25px;
+    position: fixed;
+    background-color: #d7e7f0;
+    border-radius: 15px;
+    width: 300px;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.5s;
+    z-index: 5;
+    opacity: 0;
+}
+.delete_display h3{
+    font-size: large;
+}
+
+.delete_display.open{ 
+    display:block;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    /* z-index: 5; */
+    opacity: 1;
+}
+form ul{
+    overflow: hidden;
+}
+
+form.add_member li{
+    list-style: none;
+    float: left;
+    margin: auto;
+    margin-right: 10px;
+}
+
+form.make_thread li{
+    list-style: none;
+    float: left;
+    margin: auto;
+    margin-right: 10px;
+}
+
+form.delete_display ul li{
+    list-style: none;
+}
+
+.p-msg-name{
+    color:red;
+}
+.message-box{
+    margin-top: -10px;
+    padding: 9px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: white;
+    border-radius: 5px;
+    z-index: 2;
+    margin-bottom: 30px;
+}
+.small-screen-content.close{
+    display: none;
+}
+.small-screen-content .open{
+    display: block;
+}
+.large-screen-content.close{
+    display: none;
+}
+.large-screen-content .open{
+    display: block;
+}
+.form-control{
+    resize: none;
+}
+.fix-btn span:nth-child(2){
+    display: none;
+}
+.justify-content-end .fix-btn:hover span:nth-child(2){
+    position: absolute;
+    display: flex;
+    right:15px;
+    top:15px
+}
+img[alt] {
+    font-size: 0.8em;
+}
+.othre-message-box .back-color{
+    background-color:#ffe0d1;
+    padding: 9px;
+}
+.othre-message-box.multi-rows{
+    margin-top: -5px;
+    text-align:start;
+    background-color:#ffe0d1;
+    border-color: white;
+    border-radius: 5px;
+    padding: 9px;
+    border-width: 3px;
+    border-style: solid;
+}
+.my-message-box{
+    text-align:end;
+}
+.my-message-box.inf-message{
+    text-align:end;
+}
+.my-message-box.multi-rows{
+    margin-top: -5px;
+    text-align:start;
+    background-color:#ebffd1;
+    border-color: white;
+    border-radius: 5px;
+    padding: 9px;
+    border-width: 3px;
+    border-style: solid;
+}
+.my-message-box .back-color{
+    background-color:#ebffd1;
+    padding: 9px;
+}
+form.message-form{
+    position: fixed;
+    display: block;
+    border-bottom: 1px solid #b2ccd9;
+    background-color: #b2ccd9;
+    bottom: 0;
+}
+.in-line{
+    display: inline-block;
+}
+.select-image-btn{
+    position: relative;
+    top:-14px;
+    margin-right: 10px;
+    z-index: 2;
+}
+input[type="file"] {
+    display: none;
+}
+.msg-error{
+    color: crimson;
+    padding:10px;
+}
